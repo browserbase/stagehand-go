@@ -2,7 +2,7 @@ package apiform
 
 import (
 	"bytes"
-	"github.com/stainless-sdks/stagehand-go/packages/param"
+	"github.com/browserbase/stagehand-go/packages/param"
 	"io"
 	"mime/multipart"
 	"strings"

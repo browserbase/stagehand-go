@@ -1,8 +1,8 @@
 package sentinel_test
 
 import (
-	"github.com/stainless-sdks/stagehand-go/internal/encoding/json/sentinel"
-	"github.com/stainless-sdks/stagehand-go/packages/param"
+	"github.com/browserbase/stagehand-go/internal/encoding/json/sentinel"
+	"github.com/browserbase/stagehand-go/packages/param"
 	"reflect"
 	"slices"
 	"testing"

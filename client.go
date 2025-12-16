@@ -8,8 +8,8 @@ import (
 	"os"
 	"slices"
 
-	"github.com/stainless-sdks/stagehand-go/internal/requestconfig"
-	"github.com/stainless-sdks/stagehand-go/option"
+	"github.com/browserbase/stagehand-go/internal/requestconfig"
+	"github.com/browserbase/stagehand-go/option"
 )
 
 // Client creates a struct with services and top level methods that help with

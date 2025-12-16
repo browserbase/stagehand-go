@@ -10,11 +10,11 @@ import (
 	"net/http"
 	"slices"
 
-	"github.com/stainless-sdks/stagehand-go/internal/apijson"
-	"github.com/stainless-sdks/stagehand-go/internal/requestconfig"
-	"github.com/stainless-sdks/stagehand-go/option"
-	"github.com/stainless-sdks/stagehand-go/packages/param"
-	"github.com/stainless-sdks/stagehand-go/packages/respjson"
+	"github.com/browserbase/stagehand-go/internal/apijson"
+	"github.com/browserbase/stagehand-go/internal/requestconfig"
+	"github.com/browserbase/stagehand-go/option"
+	"github.com/browserbase/stagehand-go/packages/param"
+	"github.com/browserbase/stagehand-go/packages/respjson"
 )
 
 // SessionService contains methods and other services that help with interacting

@@ -1,8 +1,8 @@
 package paramutil
 
 import (
-	"github.com/stainless-sdks/stagehand-go/packages/param"
-	"github.com/stainless-sdks/stagehand-go/packages/respjson"
+	"github.com/browserbase/stagehand-go/packages/param"
+	"github.com/browserbase/stagehand-go/packages/respjson"
 )
 
 func AddrIfPresent[T comparable](v param.Opt[T]) *T {

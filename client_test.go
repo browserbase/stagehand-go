@@ -10,9 +10,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stainless-sdks/stagehand-go"
-	"github.com/stainless-sdks/stagehand-go/internal"
-	"github.com/stainless-sdks/stagehand-go/option"
+	"github.com/browserbase/stagehand-go"
+	"github.com/browserbase/stagehand-go/internal"
+	"github.com/browserbase/stagehand-go/option"
 )
 
 type closureTransport struct {
