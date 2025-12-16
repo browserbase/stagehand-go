@@ -20,23 +20,31 @@ type Client struct {
 	Sessions SessionService
 }
 
-// DefaultClientOptions read from the environment (STAGEHAND_API_KEY,
-// STAGEHAND_BASE_URL). This should be used to initialize new clients.
+// DefaultClientOptions read from the environment (BROWSERBASE_API_KEY,
+// MODEL_API_KEY, BROWSERBASE_PROJECT_ID, STAGEHAND_BASE_URL). This should be used
+// to initialize new clients.
 func DefaultClientOptions() []option.RequestOption {
 	defaults := []option.RequestOption{option.WithEnvironmentProduction()}
 	if o, ok := os.LookupEnv("STAGEHAND_BASE_URL"); ok {
 		defaults = append(defaults, option.WithBaseURL(o))
 	}
-	if o, ok := os.LookupEnv("STAGEHAND_API_KEY"); ok {
-		defaults = append(defaults, option.WithAPIKey(o))
+	if o, ok := os.LookupEnv("BROWSERBASE_API_KEY"); ok {
+		defaults = append(defaults, option.WithBrowserbaseAPIKey(o))
+	}
+	if o, ok := os.LookupEnv("BROWSERBASE_PROJECT_ID"); ok {
+		defaults = append(defaults, option.WithBrowserbaseProjectID(o))
+	}
+	if o, ok := os.LookupEnv("MODEL_API_KEY"); ok {
+		defaults = append(defaults, option.WithModelAPIKey(o))
 	}
 	return defaults
 }
 
 // NewClient generates a new client with the default option read from the
-// environment (STAGEHAND_API_KEY, STAGEHAND_BASE_URL). The option passed in as
-// arguments are applied after these default arguments, and all option will be
-// passed down to the services and requests that this client makes.
+// environment (BROWSERBASE_API_KEY, MODEL_API_KEY, BROWSERBASE_PROJECT_ID,
+// STAGEHAND_BASE_URL). The option passed in as arguments are applied after these
+// default arguments, and all option will be passed down to the services and
+// requests that this client makes.
 func NewClient(opts ...option.RequestOption) (r Client) {
 	opts = append(DefaultClientOptions(), opts...)
 
