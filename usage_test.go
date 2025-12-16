@@ -28,7 +28,7 @@ func TestUsage(t *testing.T) {
 	)
 	response, err := client.Sessions.Act(
 		context.TODO(),
-		"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+		"00000000-your-session-id-000000000000",
 		stagehand.SessionActParams{
 			Input: stagehand.SessionActParamsInputUnion{
 				OfString: stagehand.String("click the first link on the page"),
