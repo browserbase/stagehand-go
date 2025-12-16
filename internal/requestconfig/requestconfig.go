@@ -18,10 +18,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/stainless-sdks/stagehand-go/internal"
-	"github.com/stainless-sdks/stagehand-go/internal/apierror"
-	"github.com/stainless-sdks/stagehand-go/internal/apiform"
-	"github.com/stainless-sdks/stagehand-go/internal/apiquery"
+	"github.com/browserbase/stagehand-go/internal"
+	"github.com/browserbase/stagehand-go/internal/apierror"
+	"github.com/browserbase/stagehand-go/internal/apiform"
+	"github.com/browserbase/stagehand-go/internal/apiquery"
 )
 
 func getDefaultHeaders() map[string]string {

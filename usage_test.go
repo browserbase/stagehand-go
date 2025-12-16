@@ -7,9 +7,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/stainless-sdks/stagehand-go"
-	"github.com/stainless-sdks/stagehand-go/internal/testutil"
-	"github.com/stainless-sdks/stagehand-go/option"
+	"github.com/browserbase/stagehand-go"
+	"github.com/browserbase/stagehand-go/internal/testutil"
+	"github.com/browserbase/stagehand-go/option"
 )
 
 func TestUsage(t *testing.T) {
@@ -24,11 +24,17 @@ func TestUsage(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	response, err := client.Sessions.Start(context.TODO(), stagehand.SessionStartParams{
-		Env: stagehand.SessionStartParamsEnvLocal,
-	})
+	response, err := client.Sessions.Act(
+		context.TODO(),
+		"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+		stagehand.SessionActParams{
+			Input: stagehand.SessionActParamsInputUnion{
+				OfString: stagehand.String("click the first link on the page"),
+			},
+		},
+	)
 	if err != nil {
 		t.Fatalf("err should be nil: %s", err.Error())
 	}
-	t.Logf("%+v\n", response.Available)
+	t.Logf("%+v\n", response.Actions)
 }

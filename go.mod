@@ -1,4 +1,4 @@
-module github.com/stainless-sdks/stagehand-go
+module github.com/browserbase/stagehand-go
 
 go 1.22
 

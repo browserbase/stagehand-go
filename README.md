@@ -2,28 +2,36 @@
 
 <!-- x-release-please-start-version -->
 
-<a href="https://pkg.go.dev/github.com/stainless-sdks/stagehand-go"><img src="https://pkg.go.dev/badge/github.com/stainless-sdks/stagehand-go.svg" alt="Go Reference"></a>
+<a href="https://pkg.go.dev/github.com/browserbase/stagehand-go"><img src="https://pkg.go.dev/badge/github.com/browserbase/stagehand-go.svg" alt="Go Reference"></a>
 
 <!-- x-release-please-end -->
 
-The Stagehand Go library provides convenient access to the [Stagehand REST API](https://browserbase.com)
+The Stagehand Go library provides convenient access to the [Stagehand REST API](https://docs.stagehand.dev)
 from applications written in Go.
 
 It is generated with [Stainless](https://www.stainless.com/).
 
 ## Installation
 
+<!-- x-release-please-start-version -->
+
 ```go
 import (
-	"github.com/stainless-sdks/stagehand-go" // imported as stagehand
+	"github.com/browserbase/stagehand-go" // imported as stagehand
 )
 ```
 
+<!-- x-release-please-end -->
+
 Or to pin the version:
 
+<!-- x-release-please-start-version -->
+
 ```sh
-go get -u 'github.com/stainless-sdks/stagehand-go@v0.0.1'
+go get -u 'github.com/browserbase/stagehand-go@v0.1.0'
 ```
+
+<!-- x-release-please-end -->
 
 ## Requirements
 
@@ -40,22 +48,28 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/stainless-sdks/stagehand-go"
-	"github.com/stainless-sdks/stagehand-go/option"
+	"github.com/browserbase/stagehand-go"
+	"github.com/browserbase/stagehand-go/option"
 )
 
 func main() {
 	client := stagehand.NewClient(
-		option.WithAPIKey("My API Key"),      // defaults to os.LookupEnv("STAGEHAND_API_KEY")
-		option.WithEnvironmentEnvironment1(), // defaults to option.WithEnvironmentProduction()
+		option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("STAGEHAND_API_KEY")
+		option.WithEnvironmentDev(),     // or option.WithEnvironmentProduction() | option.WithEnvironmentLocal(); defaults to option.WithEnvironmentProduction()
 	)
-	response, err := client.Sessions.Start(context.TODO(), stagehand.SessionStartParams{
-		Env: stagehand.SessionStartParamsEnvLocal,
-	})
+	response, err := client.Sessions.Act(
+		context.TODO(),
+		"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+		stagehand.SessionActParams{
+			Input: stagehand.SessionActParamsInputUnion{
+				OfString: stagehand.String("click the first link on the page"),
+			},
+		},
+	)
 	if err != nil {
 		panic(err.Error())
 	}
-	fmt.Printf("%+v\n", response.Available)
+	fmt.Printf("%+v\n", response.Actions)
 }
 
 ```
@@ -271,7 +285,7 @@ client.Sessions.Start(context.TODO(), ...,
 
 The request option `option.WithDebugLog(nil)` may be helpful while debugging.
 
-See the [full list of request options](https://pkg.go.dev/github.com/stainless-sdks/stagehand-go/option).
+See the [full list of request options](https://pkg.go.dev/github.com/browserbase/stagehand-go/option).
 
 ### Pagination
 
@@ -293,7 +307,8 @@ To handle errors, we recommend that you use the `errors.As` pattern:
 
 ```go
 _, err := client.Sessions.Start(context.TODO(), stagehand.SessionStartParams{
-	Env: stagehand.SessionStartParamsEnvLocal,
+	BrowserbaseAPIKey:    "BROWSERBASE_API_KEY",
+	BrowserbaseProjectID: "BROWSERBASE_PROJECT_ID",
 })
 if err != nil {
 	var apierr *stagehand.Error
@@ -322,7 +337,8 @@ defer cancel()
 client.Sessions.Start(
 	ctx,
 	stagehand.SessionStartParams{
-		Env: stagehand.SessionStartParamsEnvLocal,
+		BrowserbaseAPIKey:    "BROWSERBASE_API_KEY",
+		BrowserbaseProjectID: "BROWSERBASE_PROJECT_ID",
 	},
 	// This sets the per-retry timeout
 	option.WithRequestTimeout(20*time.Second),
@@ -360,7 +376,8 @@ client := stagehand.NewClient(
 client.Sessions.Start(
 	context.TODO(),
 	stagehand.SessionStartParams{
-		Env: stagehand.SessionStartParamsEnvLocal,
+		BrowserbaseAPIKey:    "BROWSERBASE_API_KEY",
+		BrowserbaseProjectID: "BROWSERBASE_PROJECT_ID",
 	},
 	option.WithMaxRetries(5),
 )
@@ -377,7 +394,8 @@ var response *http.Response
 response, err := client.Sessions.Start(
 	context.TODO(),
 	stagehand.SessionStartParams{
-		Env: stagehand.SessionStartParamsEnvLocal,
+		BrowserbaseAPIKey:    "BROWSERBASE_API_KEY",
+		BrowserbaseProjectID: "BROWSERBASE_PROJECT_ID",
 	},
 	option.WithResponseInto(&response),
 )
@@ -485,7 +503,7 @@ This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) con
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
-We are keen for your feedback; please open an [issue](https://www.github.com/stainless-sdks/stagehand-go/issues) with questions, bugs, or suggestions.
+We are keen for your feedback; please open an [issue](https://www.github.com/browserbase/stagehand-go/issues) with questions, bugs, or suggestions.
 
 ## Contributing
 

@@ -9,7 +9,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/stainless-sdks/stagehand-go/packages/param"
+	"github.com/browserbase/stagehand-go/packages/param"
 )
 
 var encoders sync.Map // map[reflect.Type]encoderFunc

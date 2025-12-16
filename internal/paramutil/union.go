@@ -2,7 +2,7 @@ package paramutil
 
 import (
 	"fmt"
-	"github.com/stainless-sdks/stagehand-go/packages/param"
+	"github.com/browserbase/stagehand-go/packages/param"
 	"reflect"
 )
 
