@@ -290,16 +290,16 @@ func (r *SessionExecuteAgentResponse) UnmarshalJSON(data []byte) error {
 // Use the methods beginning with 'As' to cast the union to one of its variants.
 //
 // If the underlying value is not a json object, one of the following properties
-// will be valid: OfSessionExtractResponseMapItem]
+// will be valid: OfSessionExtractResponseCustomItem]
 type SessionExtractResponseUnion struct {
 	// This field will be present if the value is a [any] instead of an object.
-	OfSessionExtractResponseMapItem any `json:",inline"`
+	OfSessionExtractResponseCustomItem any `json:",inline"`
 	// This field is from variant [SessionExtractResponseExtraction].
 	Extraction string `json:"extraction"`
 	JSON       struct {
-		OfSessionExtractResponseMapItem respjson.Field
-		Extraction                      respjson.Field
-		raw                             string
+		OfSessionExtractResponseCustomItem respjson.Field
+		Extraction                         respjson.Field
+		raw                                string
 	} `json:"-"`
 }
 
@@ -308,7 +308,7 @@ func (u SessionExtractResponseUnion) AsSessionExtractResponseExtraction() (v Ses
 	return
 }
 
-func (u SessionExtractResponseUnion) AsAnyMap() (v map[string]any) {
+func (u SessionExtractResponseUnion) AsCustom() (v map[string]any) {
 	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
 	return
 }
