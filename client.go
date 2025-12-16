@@ -13,7 +13,7 @@ import (
 )
 
 // Client creates a struct with services and top level methods that help with
-// interacting with the stagehand API. You should not instantiate this client
+// interacting with the browserbase API. You should not instantiate this client
 // directly, and instead use the [NewClient] method instead.
 type Client struct {
 	Options  []option.RequestOption
@@ -21,10 +21,10 @@ type Client struct {
 }
 
 // DefaultClientOptions read from the environment (STAGEHAND_API_KEY,
-// STAGEHAND_BASE_URL). This should be used to initialize new clients.
+// BROWSERBASE_BASE_URL). This should be used to initialize new clients.
 func DefaultClientOptions() []option.RequestOption {
 	defaults := []option.RequestOption{option.WithEnvironmentProduction()}
-	if o, ok := os.LookupEnv("STAGEHAND_BASE_URL"); ok {
+	if o, ok := os.LookupEnv("BROWSERBASE_BASE_URL"); ok {
 		defaults = append(defaults, option.WithBaseURL(o))
 	}
 	if o, ok := os.LookupEnv("STAGEHAND_API_KEY"); ok {
@@ -34,7 +34,7 @@ func DefaultClientOptions() []option.RequestOption {
 }
 
 // NewClient generates a new client with the default option read from the
-// environment (STAGEHAND_API_KEY, STAGEHAND_BASE_URL). The option passed in as
+// environment (STAGEHAND_API_KEY, BROWSERBASE_BASE_URL). The option passed in as
 // arguments are applied after these default arguments, and all option will be
 // passed down to the services and requests that this client makes.
 func NewClient(opts ...option.RequestOption) (r Client) {

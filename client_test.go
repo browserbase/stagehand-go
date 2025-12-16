@@ -41,7 +41,7 @@ func TestUserAgentHeader(t *testing.T) {
 	client.Sessions.Start(context.Background(), stagehand.SessionStartParams{
 		Env: stagehand.SessionStartParamsEnvLocal,
 	})
-	if userAgent != fmt.Sprintf("Stagehand/Go %s", internal.PackageVersion) {
+	if userAgent != fmt.Sprintf("Browserbase/Go %s", internal.PackageVersion) {
 		t.Errorf("Expected User-Agent to be correct, but got: %#v", userAgent)
 	}
 }
