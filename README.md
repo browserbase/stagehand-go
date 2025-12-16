@@ -308,8 +308,8 @@ To handle errors, we recommend that you use the `errors.As` pattern:
 
 ```go
 _, err := client.Sessions.Start(context.TODO(), stagehand.SessionStartParams{
-	BrowserbaseAPIKey:    "<your API key here>",
-	BrowserbaseProjectID: "<your project ID here>",
+	BrowserbaseAPIKey:    "BROWSERBASE_API_KEY",
+	BrowserbaseProjectID: "BROWSERBASE_PROJECT_ID",
 })
 if err != nil {
 	var apierr *stagehand.Error
@@ -338,8 +338,8 @@ defer cancel()
 client.Sessions.Start(
 	ctx,
 	stagehand.SessionStartParams{
-		BrowserbaseAPIKey:    "<your API key here>",
-		BrowserbaseProjectID: "<your project ID here>",
+		BrowserbaseAPIKey:    "BROWSERBASE_API_KEY",
+		BrowserbaseProjectID: "BROWSERBASE_PROJECT_ID",
 	},
 	// This sets the per-retry timeout
 	option.WithRequestTimeout(20*time.Second),
@@ -377,8 +377,8 @@ client := stagehand.NewClient(
 client.Sessions.Start(
 	context.TODO(),
 	stagehand.SessionStartParams{
-		BrowserbaseAPIKey:    "<your API key here>",
-		BrowserbaseProjectID: "<your project ID here>",
+		BrowserbaseAPIKey:    "BROWSERBASE_API_KEY",
+		BrowserbaseProjectID: "BROWSERBASE_PROJECT_ID",
 	},
 	option.WithMaxRetries(5),
 )
@@ -395,8 +395,8 @@ var response *http.Response
 response, err := client.Sessions.Start(
 	context.TODO(),
 	stagehand.SessionStartParams{
-		BrowserbaseAPIKey:    "<your API key here>",
-		BrowserbaseProjectID: "<your project ID here>",
+		BrowserbaseAPIKey:    "BROWSERBASE_API_KEY",
+		BrowserbaseProjectID: "BROWSERBASE_PROJECT_ID",
 	},
 	option.WithResponseInto(&response),
 )
