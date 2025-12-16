@@ -672,26 +672,20 @@ const (
 )
 
 type SessionStartParams struct {
-	// Environment to run the browser in
-	//
-	// Any of "LOCAL", "BROWSERBASE".
-	Env SessionStartParamsEnv `json:"env,omitzero,required"`
-	// API key for Browserbase (required when env=BROWSERBASE)
-	APIKey param.Opt[string] `json:"apiKey,omitzero"`
+	// API key for Browserbase Cloud
+	BrowserbaseAPIKey string `json:"BROWSERBASE_API_KEY,required"`
+	// Project ID for Browserbase
+	BrowserbaseProjectID string `json:"BROWSERBASE_PROJECT_ID,required"`
 	// Timeout in ms to wait for DOM to settle
 	DomSettleTimeout param.Opt[int64] `json:"domSettleTimeout,omitzero"`
-	// AI model to use for actions
+	// AI model to use for actions (must be prefixed with provider/)
 	Model param.Opt[string] `json:"model,omitzero"`
-	// Project ID for Browserbase (required when env=BROWSERBASE)
-	ProjectID param.Opt[string] `json:"projectId,omitzero"`
 	// Enable self-healing for failed actions
 	SelfHeal param.Opt[bool] `json:"selfHeal,omitzero"`
 	// Custom system prompt for AI actions
 	SystemPrompt param.Opt[string] `json:"systemPrompt,omitzero"`
 	// Logging verbosity level
 	Verbose param.Opt[int64] `json:"verbose,omitzero"`
-	// Options for local browser launch
-	LocalBrowserLaunchOptions SessionStartParamsLocalBrowserLaunchOptions `json:"localBrowserLaunchOptions,omitzero"`
 	paramObj
 }
 
@@ -700,27 +694,5 @@ func (r SessionStartParams) MarshalJSON() (data []byte, err error) {
 	return param.MarshalObject(r, (*shadow)(&r))
 }
 func (r *SessionStartParams) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// Environment to run the browser in
-type SessionStartParamsEnv string
-
-const (
-	SessionStartParamsEnvLocal       SessionStartParamsEnv = "LOCAL"
-	SessionStartParamsEnvBrowserbase SessionStartParamsEnv = "BROWSERBASE"
-)
-
-// Options for local browser launch
-type SessionStartParamsLocalBrowserLaunchOptions struct {
-	Headless param.Opt[bool] `json:"headless,omitzero"`
-	paramObj
-}
-
-func (r SessionStartParamsLocalBrowserLaunchOptions) MarshalJSON() (data []byte, err error) {
-	type shadow SessionStartParamsLocalBrowserLaunchOptions
-	return param.MarshalObject(r, (*shadow)(&r))
-}
-func (r *SessionStartParamsLocalBrowserLaunchOptions) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }

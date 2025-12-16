@@ -57,13 +57,19 @@ func main() {
 		option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("STAGEHAND_API_KEY")
 		option.WithEnvironmentDev(),     // or option.WithEnvironmentProduction() | option.WithEnvironmentLocal(); defaults to option.WithEnvironmentProduction()
 	)
-	response, err := client.Sessions.Start(context.TODO(), stagehand.SessionStartParams{
-		Env: stagehand.SessionStartParamsEnvLocal,
-	})
+	response, err := client.Sessions.Act(
+		context.TODO(),
+		"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+		stagehand.SessionActParams{
+			Input: stagehand.SessionActParamsInputUnion{
+				OfString: stagehand.String("click the first link on the page"),
+			},
+		},
+	)
 	if err != nil {
 		panic(err.Error())
 	}
-	fmt.Printf("%+v\n", response.Available)
+	fmt.Printf("%+v\n", response.Actions)
 }
 
 ```
@@ -301,7 +307,8 @@ To handle errors, we recommend that you use the `errors.As` pattern:
 
 ```go
 _, err := client.Sessions.Start(context.TODO(), stagehand.SessionStartParams{
-	Env: stagehand.SessionStartParamsEnvLocal,
+	BrowserbaseAPIKey:    "BROWSERBASE_API_KEY",
+	BrowserbaseProjectID: "BROWSERBASE_PROJECT_ID",
 })
 if err != nil {
 	var apierr *stagehand.Error
@@ -330,7 +337,8 @@ defer cancel()
 client.Sessions.Start(
 	ctx,
 	stagehand.SessionStartParams{
-		Env: stagehand.SessionStartParamsEnvLocal,
+		BrowserbaseAPIKey:    "BROWSERBASE_API_KEY",
+		BrowserbaseProjectID: "BROWSERBASE_PROJECT_ID",
 	},
 	// This sets the per-retry timeout
 	option.WithRequestTimeout(20*time.Second),
@@ -368,7 +376,8 @@ client := stagehand.NewClient(
 client.Sessions.Start(
 	context.TODO(),
 	stagehand.SessionStartParams{
-		Env: stagehand.SessionStartParamsEnvLocal,
+		BrowserbaseAPIKey:    "BROWSERBASE_API_KEY",
+		BrowserbaseProjectID: "BROWSERBASE_PROJECT_ID",
 	},
 	option.WithMaxRetries(5),
 )
@@ -385,7 +394,8 @@ var response *http.Response
 response, err := client.Sessions.Start(
 	context.TODO(),
 	stagehand.SessionStartParams{
-		Env: stagehand.SessionStartParamsEnvLocal,
+		BrowserbaseAPIKey:    "BROWSERBASE_API_KEY",
+		BrowserbaseProjectID: "BROWSERBASE_PROJECT_ID",
 	},
 	option.WithResponseInto(&response),
 )

@@ -257,17 +257,13 @@ func TestSessionStartWithOptionalParams(t *testing.T) {
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Sessions.Start(context.TODO(), stagehand.SessionStartParams{
-		Env:              stagehand.SessionStartParamsEnvLocal,
-		APIKey:           stagehand.String("apiKey"),
-		DomSettleTimeout: stagehand.Int(0),
-		LocalBrowserLaunchOptions: stagehand.SessionStartParamsLocalBrowserLaunchOptions{
-			Headless: stagehand.Bool(true),
-		},
-		Model:        stagehand.String("openai/gpt-4o"),
-		ProjectID:    stagehand.String("projectId"),
-		SelfHeal:     stagehand.Bool(true),
-		SystemPrompt: stagehand.String("systemPrompt"),
-		Verbose:      stagehand.Int(1),
+		BrowserbaseAPIKey:    "BROWSERBASE_API_KEY",
+		BrowserbaseProjectID: "BROWSERBASE_PROJECT_ID",
+		DomSettleTimeout:     stagehand.Int(0),
+		Model:                stagehand.String("openai/gpt-4o"),
+		SelfHeal:             stagehand.Bool(true),
+		SystemPrompt:         stagehand.String("systemPrompt"),
+		Verbose:              stagehand.Int(1),
 	})
 	if err != nil {
 		var apierr *stagehand.Error
