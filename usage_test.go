@@ -22,7 +22,9 @@ func TestUsage(t *testing.T) {
 	}
 	client := stagehand.NewClient(
 		option.WithBaseURL(baseURL),
-		option.WithAPIKey("My API Key"),
+		option.WithBrowserbaseAPIKey("My Browserbase API Key"),
+		option.WithBrowserbaseProjectID("My Browserbase Project ID"),
+		option.WithModelAPIKey("My Model API Key"),
 	)
 	response, err := client.Sessions.Act(
 		context.TODO(),

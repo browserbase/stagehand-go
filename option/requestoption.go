@@ -266,24 +266,26 @@ func WithEnvironmentProduction() RequestOption {
 	return requestconfig.WithDefaultBaseURL("https://api.stagehand.browserbase.com/v1/")
 }
 
-// WithEnvironmentDev returns a RequestOption that sets the current
-// environment to be the "dev" environment. An environment specifies which base URL
-// to use by default.
-func WithEnvironmentDev() RequestOption {
-	return requestconfig.WithDefaultBaseURL("https://api.stagehand.dev.browserbase.com/v1/")
-}
-
-// WithEnvironmentLocal returns a RequestOption that sets the current
-// environment to be the "local" environment. An environment specifies which base URL
-// to use by default.
-func WithEnvironmentLocal() RequestOption {
-	return requestconfig.WithDefaultBaseURL("http://localhost:5000/v1/")
-}
-
-// WithAPIKey returns a RequestOption that sets the client setting "api_key".
-func WithAPIKey(value string) RequestOption {
+// WithBrowserbaseAPIKey returns a RequestOption that sets the client setting "BROWSERBASE_API_KEY".
+func WithBrowserbaseAPIKey(value string) RequestOption {
 	return requestconfig.RequestOptionFunc(func(r *requestconfig.RequestConfig) error {
-		r.APIKey = value
-		return r.Apply(WithHeader("authorization", fmt.Sprintf("Bearer %s", r.APIKey)))
+		r.BrowserbaseAPIKey = value
+		return r.Apply(WithHeader("x-bb-api-key", r.BrowserbaseAPIKey))
+	})
+}
+
+// WithBrowserbaseProjectID returns a RequestOption that sets the client setting "BROWSERBASE_PROJECT_ID".
+func WithBrowserbaseProjectID(value string) RequestOption {
+	return requestconfig.RequestOptionFunc(func(r *requestconfig.RequestConfig) error {
+		r.BrowserbaseProjectID = value
+		return r.Apply(WithHeader("x-bb-project-id", r.BrowserbaseProjectID))
+	})
+}
+
+// WithModelAPIKey returns a RequestOption that sets the client setting "MODEL_API_KEY".
+func WithModelAPIKey(value string) RequestOption {
+	return requestconfig.RequestOptionFunc(func(r *requestconfig.RequestConfig) error {
+		r.ModelAPIKey = value
+		return r.Apply(WithHeader("x-model-api-key", r.ModelAPIKey))
 	})
 }

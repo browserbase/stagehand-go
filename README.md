@@ -54,8 +54,9 @@ import (
 
 func main() {
 	client := stagehand.NewClient(
-		option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("STAGEHAND_API_KEY")
-		option.WithEnvironmentDev(),     // or option.WithEnvironmentProduction() | option.WithEnvironmentLocal(); defaults to option.WithEnvironmentProduction()
+		option.WithBrowserbaseAPIKey("My Browserbase API Key"),       // defaults to os.LookupEnv("BROWSERBASE_API_KEY")
+		option.WithBrowserbaseProjectID("My Browserbase Project ID"), // defaults to os.LookupEnv("BROWSERBASE_PROJECT_ID")
+		option.WithModelAPIKey("My Model API Key"),                   // defaults to os.LookupEnv("MODEL_API_KEY")
 	)
 	response, err := client.Sessions.Act(
 		context.TODO(),

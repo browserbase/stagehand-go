@@ -24,7 +24,9 @@ func TestSessionActWithOptionalParams(t *testing.T) {
 	}
 	client := stagehand.NewClient(
 		option.WithBaseURL(baseURL),
-		option.WithAPIKey("My API Key"),
+		option.WithBrowserbaseAPIKey("My Browserbase API Key"),
+		option.WithBrowserbaseProjectID("My Browserbase Project ID"),
+		option.WithModelAPIKey("My Model API Key"),
 	)
 	_, err := client.Sessions.Act(
 		context.TODO(),
@@ -69,7 +71,9 @@ func TestSessionEnd(t *testing.T) {
 	}
 	client := stagehand.NewClient(
 		option.WithBaseURL(baseURL),
-		option.WithAPIKey("My API Key"),
+		option.WithBrowserbaseAPIKey("My Browserbase API Key"),
+		option.WithBrowserbaseProjectID("My Browserbase Project ID"),
+		option.WithModelAPIKey("My Model API Key"),
 	)
 	_, err := client.Sessions.End(context.TODO(), "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
 	if err != nil {
@@ -92,7 +96,9 @@ func TestSessionExecuteAgentWithOptionalParams(t *testing.T) {
 	}
 	client := stagehand.NewClient(
 		option.WithBaseURL(baseURL),
-		option.WithAPIKey("My API Key"),
+		option.WithBrowserbaseAPIKey("My Browserbase API Key"),
+		option.WithBrowserbaseProjectID("My Browserbase Project ID"),
+		option.WithModelAPIKey("My Model API Key"),
 	)
 	_, err := client.Sessions.ExecuteAgent(
 		context.TODO(),
@@ -135,7 +141,9 @@ func TestSessionExtractWithOptionalParams(t *testing.T) {
 	}
 	client := stagehand.NewClient(
 		option.WithBaseURL(baseURL),
-		option.WithAPIKey("My API Key"),
+		option.WithBrowserbaseAPIKey("My Browserbase API Key"),
+		option.WithBrowserbaseProjectID("My Browserbase Project ID"),
+		option.WithModelAPIKey("My Model API Key"),
 	)
 	_, err := client.Sessions.Extract(
 		context.TODO(),
@@ -179,7 +187,9 @@ func TestSessionNavigateWithOptionalParams(t *testing.T) {
 	}
 	client := stagehand.NewClient(
 		option.WithBaseURL(baseURL),
-		option.WithAPIKey("My API Key"),
+		option.WithBrowserbaseAPIKey("My Browserbase API Key"),
+		option.WithBrowserbaseProjectID("My Browserbase Project ID"),
+		option.WithModelAPIKey("My Model API Key"),
 	)
 	_, err := client.Sessions.Navigate(
 		context.TODO(),
@@ -213,7 +223,9 @@ func TestSessionObserveWithOptionalParams(t *testing.T) {
 	}
 	client := stagehand.NewClient(
 		option.WithBaseURL(baseURL),
-		option.WithAPIKey("My API Key"),
+		option.WithBrowserbaseAPIKey("My Browserbase API Key"),
+		option.WithBrowserbaseProjectID("My Browserbase Project ID"),
+		option.WithModelAPIKey("My Model API Key"),
 	)
 	_, err := client.Sessions.Observe(
 		context.TODO(),
@@ -254,7 +266,9 @@ func TestSessionStartWithOptionalParams(t *testing.T) {
 	}
 	client := stagehand.NewClient(
 		option.WithBaseURL(baseURL),
-		option.WithAPIKey("My API Key"),
+		option.WithBrowserbaseAPIKey("My Browserbase API Key"),
+		option.WithBrowserbaseProjectID("My Browserbase Project ID"),
+		option.WithModelAPIKey("My Model API Key"),
 	)
 	_, err := client.Sessions.Start(context.TODO(), stagehand.SessionStartParams{
 		BrowserbaseAPIKey:    "BROWSERBASE_API_KEY",
