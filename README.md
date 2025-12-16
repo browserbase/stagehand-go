@@ -1,4 +1,4 @@
-# Browserbase Go API Library
+# Stagehand Go API Library
 
 <!-- x-release-please-start-version -->
 
@@ -6,7 +6,7 @@
 
 <!-- x-release-please-end -->
 
-The Browserbase Go library provides convenient access to the [Browserbase REST API](https://browserbase.com)
+The Stagehand Go library provides convenient access to the [Stagehand REST API](https://docs.stagehand.dev)
 from applications written in Go.
 
 It is generated with [Stainless](https://www.stainless.com/).
