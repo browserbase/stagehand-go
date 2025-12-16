@@ -267,12 +267,9 @@ func (r *SessionEndResponse) UnmarshalJSON(data []byte) error {
 type SessionExecuteAgentResponse struct {
 	// Final message from the agent
 	Message string `json:"message"`
-	// Steps taken by the agent
-	Steps []any `json:"steps"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Message     respjson.Field
-		Steps       respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`

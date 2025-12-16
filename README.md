@@ -28,7 +28,7 @@ Or to pin the version:
 <!-- x-release-please-start-version -->
 
 ```sh
-go get -u 'github.com/browserbase/stagehand-go@v0.2.0'
+go get -u 'github.com/browserbase/stagehand-go@v0.3.0'
 ```
 
 <!-- x-release-please-end -->
@@ -60,7 +60,7 @@ func main() {
 	)
 	response, err := client.Sessions.Act(
 		context.TODO(),
-		"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+		"00000000-your-session-id-000000000000",
 		stagehand.SessionActParams{
 			Input: stagehand.SessionActParamsInputUnion{
 				OfString: stagehand.String("click the first link on the page"),
@@ -308,8 +308,8 @@ To handle errors, we recommend that you use the `errors.As` pattern:
 
 ```go
 _, err := client.Sessions.Start(context.TODO(), stagehand.SessionStartParams{
-	BrowserbaseAPIKey:    "BROWSERBASE_API_KEY",
-	BrowserbaseProjectID: "BROWSERBASE_PROJECT_ID",
+	BrowserbaseAPIKey:    "your Browserbase API key",
+	BrowserbaseProjectID: "your Browserbase Project ID",
 })
 if err != nil {
 	var apierr *stagehand.Error
@@ -338,8 +338,8 @@ defer cancel()
 client.Sessions.Start(
 	ctx,
 	stagehand.SessionStartParams{
-		BrowserbaseAPIKey:    "BROWSERBASE_API_KEY",
-		BrowserbaseProjectID: "BROWSERBASE_PROJECT_ID",
+		BrowserbaseAPIKey:    "your Browserbase API key",
+		BrowserbaseProjectID: "your Browserbase Project ID",
 	},
 	// This sets the per-retry timeout
 	option.WithRequestTimeout(20*time.Second),
@@ -377,8 +377,8 @@ client := stagehand.NewClient(
 client.Sessions.Start(
 	context.TODO(),
 	stagehand.SessionStartParams{
-		BrowserbaseAPIKey:    "BROWSERBASE_API_KEY",
-		BrowserbaseProjectID: "BROWSERBASE_PROJECT_ID",
+		BrowserbaseAPIKey:    "your Browserbase API key",
+		BrowserbaseProjectID: "your Browserbase Project ID",
 	},
 	option.WithMaxRetries(5),
 )
@@ -395,8 +395,8 @@ var response *http.Response
 response, err := client.Sessions.Start(
 	context.TODO(),
 	stagehand.SessionStartParams{
-		BrowserbaseAPIKey:    "BROWSERBASE_API_KEY",
-		BrowserbaseProjectID: "BROWSERBASE_PROJECT_ID",
+		BrowserbaseAPIKey:    "your Browserbase API key",
+		BrowserbaseProjectID: "your Browserbase Project ID",
 	},
 	option.WithResponseInto(&response),
 )
