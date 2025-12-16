@@ -1,4 +1,4 @@
-# Stagehand Go API Library
+# Browserbase Go API Library
 
 <!-- x-release-please-start-version -->
 
@@ -6,7 +6,7 @@
 
 <!-- x-release-please-end -->
 
-The Stagehand Go library provides convenient access to the [Stagehand REST API](https://browserbase.com)
+The Browserbase Go library provides convenient access to the [Browserbase REST API](https://browserbase.com)
 from applications written in Go.
 
 It is generated with [Stainless](https://www.stainless.com/).
@@ -54,8 +54,8 @@ import (
 
 func main() {
 	client := stagehand.NewClient(
-		option.WithAPIKey("My API Key"),      // defaults to os.LookupEnv("STAGEHAND_API_KEY")
-		option.WithEnvironmentEnvironment1(), // defaults to option.WithEnvironmentProduction()
+		option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("STAGEHAND_API_KEY")
+		option.WithEnvironmentDev(),     // or option.WithEnvironmentProduction() | option.WithEnvironmentLocal(); defaults to option.WithEnvironmentProduction()
 	)
 	response, err := client.Sessions.Start(context.TODO(), stagehand.SessionStartParams{
 		Env: stagehand.SessionStartParamsEnvLocal,

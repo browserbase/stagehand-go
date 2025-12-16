@@ -15,7 +15,7 @@ import (
 	"github.com/tidwall/sjson"
 )
 
-// RequestOption is an option for the requests made by the stagehand API Client
+// RequestOption is an option for the requests made by the browserbase API Client
 // which can be supplied to clients, services, and methods. You can read more about this functional
 // options pattern in our [README].
 //
@@ -263,14 +263,21 @@ func WithRequestTimeout(dur time.Duration) RequestOption {
 // environment to be the "production" environment. An environment specifies which base URL
 // to use by default.
 func WithEnvironmentProduction() RequestOption {
-	return requestconfig.WithDefaultBaseURL("http://localhost:3000/v1/")
+	return requestconfig.WithDefaultBaseURL("https://api.stagehand.browserbase.com/v1/")
 }
 
-// WithEnvironmentEnvironment1 returns a RequestOption that sets the current
-// environment to be the "environment_1" environment. An environment specifies which base URL
+// WithEnvironmentDev returns a RequestOption that sets the current
+// environment to be the "dev" environment. An environment specifies which base URL
 // to use by default.
-func WithEnvironmentEnvironment1() RequestOption {
-	return requestconfig.WithDefaultBaseURL("https://api.stagehand.browserbase.com/v1/")
+func WithEnvironmentDev() RequestOption {
+	return requestconfig.WithDefaultBaseURL("https://api.stagehand.dev.browserbase.com/v1/")
+}
+
+// WithEnvironmentLocal returns a RequestOption that sets the current
+// environment to be the "local" environment. An environment specifies which base URL
+// to use by default.
+func WithEnvironmentLocal() RequestOption {
+	return requestconfig.WithDefaultBaseURL("http://localhost:5000/v1/")
 }
 
 // WithAPIKey returns a RequestOption that sets the client setting "api_key".
