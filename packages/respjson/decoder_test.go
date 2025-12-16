@@ -3,8 +3,8 @@ package respjson_test
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/stainless-sdks/stagehand-go/internal/apijson"
-	rj "github.com/stainless-sdks/stagehand-go/packages/respjson"
+	"github.com/browserbase/stagehand-go/internal/apijson"
+	rj "github.com/browserbase/stagehand-go/packages/respjson"
 	"reflect"
 	"testing"
 )

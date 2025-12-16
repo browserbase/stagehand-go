@@ -2,7 +2,7 @@ package param_test
 
 import (
 	"encoding/json"
-	"github.com/stainless-sdks/stagehand-go/packages/param"
+	"github.com/browserbase/stagehand-go/packages/param"
 	"testing"
 )
 

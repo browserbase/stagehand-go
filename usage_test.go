@@ -7,9 +7,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/stainless-sdks/stagehand-go"
-	"github.com/stainless-sdks/stagehand-go/internal/testutil"
-	"github.com/stainless-sdks/stagehand-go/option"
+	"github.com/browserbase/stagehand-go"
+	"github.com/browserbase/stagehand-go/internal/testutil"
+	"github.com/browserbase/stagehand-go/option"
 )
 
 func TestUsage(t *testing.T) {

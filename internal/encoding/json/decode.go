@@ -14,7 +14,7 @@ import (
 	"encoding"
 	"encoding/base64"
 	"fmt"
-	"github.com/stainless-sdks/stagehand-go/internal/encoding/json/shims"
+	"github.com/browserbase/stagehand-go/internal/encoding/json/shims"
 	"reflect"
 	"strconv"
 	"strings"

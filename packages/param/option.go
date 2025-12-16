@@ -3,7 +3,7 @@ package param
 import (
 	"encoding/json"
 	"fmt"
-	shimjson "github.com/stainless-sdks/stagehand-go/internal/encoding/json"
+	shimjson "github.com/browserbase/stagehand-go/internal/encoding/json"
 	"time"
 )
 
