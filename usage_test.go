@@ -31,7 +31,7 @@ func TestUsage(t *testing.T) {
 		"c4dbf3a9-9a58-4b22-8a1c-9f20f9f9e123",
 		stagehand.SessionActParams{
 			Input: stagehand.SessionActParamsInputUnion{
-				OfString: stagehand.String("Click the login button"),
+				OfString: stagehand.String("click the first link on the page"),
 			},
 		},
 	)
