@@ -39,7 +39,7 @@ func TestSessionActWithOptionalParams(t *testing.T) {
 			FrameID: stagehand.String("frameId"),
 			Options: stagehand.SessionActParamsOptions{
 				Model: stagehand.ModelConfigUnionParam{
-					OfString: stagehand.String("string"),
+					OfString: stagehand.String("openai/gpt-5-nano"),
 				},
 				Timeout: stagehand.Float(30000),
 				Variables: map[string]string{
@@ -117,7 +117,7 @@ func TestSessionExecuteWithOptionalParams(t *testing.T) {
 			AgentConfig: stagehand.SessionExecuteParamsAgentConfig{
 				Cua: stagehand.Bool(true),
 				Model: stagehand.ModelConfigUnionParam{
-					OfString: stagehand.String("string"),
+					OfString: stagehand.String("openai/gpt-5-nano"),
 				},
 				SystemPrompt: stagehand.String("systemPrompt"),
 			},
@@ -165,7 +165,7 @@ func TestSessionExtractWithOptionalParams(t *testing.T) {
 			Instruction: stagehand.String("Extract all product names and prices from the page"),
 			Options: stagehand.SessionExtractParamsOptions{
 				Model: stagehand.ModelConfigUnionParam{
-					OfString: stagehand.String("string"),
+					OfString: stagehand.String("openai/gpt-5-nano"),
 				},
 				Selector: stagehand.String("#main-content"),
 				Timeout:  stagehand.Float(30000),
@@ -252,7 +252,7 @@ func TestSessionObserveWithOptionalParams(t *testing.T) {
 			Instruction: stagehand.String("Find all clickable navigation links"),
 			Options: stagehand.SessionObserveParamsOptions{
 				Model: stagehand.ModelConfigUnionParam{
-					OfString: stagehand.String("string"),
+					OfString: stagehand.String("openai/gpt-5-nano"),
 				},
 				Selector: stagehand.String("nav"),
 				Timeout:  stagehand.Float(30000),
@@ -372,7 +372,7 @@ func TestSessionStartWithOptionalParams(t *testing.T) {
 		Experimental:         stagehand.Bool(true),
 		SelfHeal:             stagehand.Bool(true),
 		SystemPrompt:         stagehand.String("systemPrompt"),
-		Verbose:              stagehand.Int(1),
+		Verbose:              1,
 		WaitForCaptchaSolves: stagehand.Bool(true),
 		XLanguage:            stagehand.SessionStartParamsXLanguageTypescript,
 		XSDKVersion:          stagehand.String("3.0.6"),
