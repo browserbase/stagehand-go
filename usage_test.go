@@ -26,9 +26,17 @@ func TestUsage(t *testing.T) {
 		option.WithBrowserbaseProjectID("My Browserbase Project ID"),
 		option.WithModelAPIKey("My Model API Key"),
 	)
-	response, err := client.Sessions.Start(context.TODO(), stagehand.SessionStartParams{})
+	response, err := client.Sessions.Act(
+		context.TODO(),
+		"c4dbf3a9-9a58-4b22-8a1c-9f20f9f9e123",
+		stagehand.SessionActParams{
+			Input: stagehand.SessionActParamsInputUnion{
+				OfString: stagehand.String("Click the login button"),
+			},
+		},
+	)
 	if err != nil {
 		t.Fatalf("err should be nil: %s", err.Error())
 	}
-	t.Logf("%+v\n", response)
+	t.Logf("%+v\n", response.Data)
 }
