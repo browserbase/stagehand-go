@@ -231,23 +231,23 @@ func (r *Action) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-func ModelConfigParamOfModelConfigObject(modelName string) ModelConfigUnionParam {
-	var variant ModelConfigObjectParam
+func ModelConfigParamOfModelConfigModelConfigObject(modelName string) ModelConfigUnionParam {
+	var variant ModelConfigModelConfigObjectParam
 	variant.ModelName = modelName
-	return ModelConfigUnionParam{OfModelConfigObject: &variant}
+	return ModelConfigUnionParam{OfModelConfigModelConfigObject: &variant}
 }
 
 // Only one field can be non-zero.
 //
 // Use [param.IsOmitted] to confirm if a field is set.
 type ModelConfigUnionParam struct {
-	OfString            param.Opt[string]       `json:",omitzero,inline"`
-	OfModelConfigObject *ModelConfigObjectParam `json:",omitzero,inline"`
+	OfString                       param.Opt[string]                  `json:",omitzero,inline"`
+	OfModelConfigModelConfigObject *ModelConfigModelConfigObjectParam `json:",omitzero,inline"`
 	paramUnion
 }
 
 func (u ModelConfigUnionParam) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion(u, u.OfString, u.OfModelConfigObject)
+	return param.MarshalUnion(u, u.OfString, u.OfModelConfigModelConfigObject)
 }
 func (u *ModelConfigUnionParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
@@ -256,25 +256,28 @@ func (u *ModelConfigUnionParam) UnmarshalJSON(data []byte) error {
 func (u *ModelConfigUnionParam) asAny() any {
 	if !param.IsOmitted(u.OfString) {
 		return &u.OfString.Value
-	} else if !param.IsOmitted(u.OfModelConfigObject) {
-		return u.OfModelConfigObject
+	} else if !param.IsOmitted(u.OfModelConfigModelConfigObject) {
+		return u.OfModelConfigModelConfigObject
 	}
 	return nil
 }
 
 // The property ModelName is required.
-type ModelConfigObjectParam struct {
-	ModelName string            `json:"modelName,required"`
-	APIKey    param.Opt[string] `json:"apiKey,omitzero"`
-	BaseURL   param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
+type ModelConfigModelConfigObjectParam struct {
+	// Model name string without prefix (e.g., 'gpt-5-nano', 'claude-4.5-opus')
+	ModelName string `json:"modelName,required"`
+	// API key for the model provider
+	APIKey param.Opt[string] `json:"apiKey,omitzero"`
+	// Base URL for the model provider
+	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
 	paramObj
 }
 
-func (r ModelConfigObjectParam) MarshalJSON() (data []byte, err error) {
-	type shadow ModelConfigObjectParam
+func (r ModelConfigModelConfigObjectParam) MarshalJSON() (data []byte, err error) {
+	type shadow ModelConfigModelConfigObjectParam
 	return param.MarshalObject(r, (*shadow)(&r))
 }
-func (r *ModelConfigObjectParam) UnmarshalJSON(data []byte) error {
+func (r *ModelConfigModelConfigObjectParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -343,6 +346,7 @@ func (r *SessionActResponseDataResult) UnmarshalJSON(data []byte) error {
 }
 
 type SessionEndResponse struct {
+	// Indicates whether the request was successful
 	Success bool `json:"success,required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -713,8 +717,10 @@ func (r *SessionActParamsInputActionInput) UnmarshalJSON(data []byte) error {
 
 type SessionActParamsOptions struct {
 	// Timeout in ms for the action
-	Timeout param.Opt[float64]    `json:"timeout,omitzero"`
-	Model   ModelConfigUnionParam `json:"model,omitzero"`
+	Timeout param.Opt[float64] `json:"timeout,omitzero"`
+	// Model name string with provider prefix (e.g., 'openai/gpt-5-nano',
+	// 'anthropic/claude-4.5-opus')
+	Model ModelConfigUnionParam `json:"model,omitzero"`
 	// Variables to substitute in the action instruction
 	Variables map[string]string `json:"variables,omitzero"`
 	paramObj
@@ -810,8 +816,10 @@ type SessionExecuteParamsAgentConfig struct {
 	// Enable Computer Use Agent mode
 	Cua param.Opt[bool] `json:"cua,omitzero"`
 	// Custom system prompt for the agent
-	SystemPrompt param.Opt[string]     `json:"systemPrompt,omitzero"`
-	Model        ModelConfigUnionParam `json:"model,omitzero"`
+	SystemPrompt param.Opt[string] `json:"systemPrompt,omitzero"`
+	// Model name string with provider prefix (e.g., 'openai/gpt-5-nano',
+	// 'anthropic/claude-4.5-opus')
+	Model ModelConfigUnionParam `json:"model,omitzero"`
 	paramObj
 }
 
@@ -894,8 +902,10 @@ type SessionExtractParamsOptions struct {
 	// CSS selector to scope extraction to a specific element
 	Selector param.Opt[string] `json:"selector,omitzero"`
 	// Timeout in ms for the extraction
-	Timeout param.Opt[float64]    `json:"timeout,omitzero"`
-	Model   ModelConfigUnionParam `json:"model,omitzero"`
+	Timeout param.Opt[float64] `json:"timeout,omitzero"`
+	// Model name string with provider prefix (e.g., 'openai/gpt-5-nano',
+	// 'anthropic/claude-4.5-opus')
+	Model ModelConfigUnionParam `json:"model,omitzero"`
 	paramObj
 }
 
@@ -1029,8 +1039,10 @@ type SessionObserveParamsOptions struct {
 	// CSS selector to scope observation to a specific element
 	Selector param.Opt[string] `json:"selector,omitzero"`
 	// Timeout in ms for the observation
-	Timeout param.Opt[float64]    `json:"timeout,omitzero"`
-	Model   ModelConfigUnionParam `json:"model,omitzero"`
+	Timeout param.Opt[float64] `json:"timeout,omitzero"`
+	// Model name string with provider prefix (e.g., 'openai/gpt-5-nano',
+	// 'anthropic/claude-4.5-opus')
+	Model ModelConfigUnionParam `json:"model,omitzero"`
 	paramObj
 }
 
@@ -1073,16 +1085,18 @@ type SessionStartParams struct {
 	// Enable self-healing for failed actions
 	SelfHeal param.Opt[bool] `json:"selfHeal,omitzero"`
 	// Custom system prompt for AI operations
-	SystemPrompt param.Opt[string] `json:"systemPrompt,omitzero"`
-	// Logging verbosity level (0=quiet, 1=normal, 2=debug)
-	Verbose              param.Opt[int64] `json:"verbose,omitzero"`
-	WaitForCaptchaSolves param.Opt[bool]  `json:"waitForCaptchaSolves,omitzero"`
+	SystemPrompt         param.Opt[string] `json:"systemPrompt,omitzero"`
+	WaitForCaptchaSolves param.Opt[bool]   `json:"waitForCaptchaSolves,omitzero"`
 	// Version of the Stagehand SDK
 	XSDKVersion param.Opt[string] `header:"x-sdk-version,omitzero" json:"-"`
 	// ISO timestamp when request was sent
 	XSentAt                        param.Opt[time.Time]                             `header:"x-sent-at,omitzero" format:"date-time" json:"-"`
 	Browser                        SessionStartParamsBrowser                        `json:"browser,omitzero"`
 	BrowserbaseSessionCreateParams SessionStartParamsBrowserbaseSessionCreateParams `json:"browserbaseSessionCreateParams,omitzero"`
+	// Logging verbosity level (0=quiet, 1=normal, 2=debug)
+	//
+	// Any of 0, 1, 2.
+	Verbose int64 `json:"verbose,omitzero"`
 	// Client SDK language
 	//
 	// Any of "typescript", "python", "playground".
@@ -1364,30 +1378,30 @@ func (u *SessionStartParamsBrowserbaseSessionCreateParamsProxiesUnion) asAny() a
 //
 // Use [param.IsOmitted] to confirm if a field is set.
 type SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemUnion struct {
-	OfSessionStartsBrowserbaseSessionCreateParamsProxiesArrayItemBrowserbaseProxyConfig *SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemBrowserbaseProxyConfig `json:",omitzero,inline"`
-	OfSessionStartsBrowserbaseSessionCreateParamsProxiesArrayItemExternalProxyConfig    *SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemExternalProxyConfig    `json:",omitzero,inline"`
+	OfBrowserbase *SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemBrowserbase `json:",omitzero,inline"`
+	OfExternal    *SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemExternal    `json:",omitzero,inline"`
 	paramUnion
 }
 
 func (u SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemUnion) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion(u, u.OfSessionStartsBrowserbaseSessionCreateParamsProxiesArrayItemBrowserbaseProxyConfig, u.OfSessionStartsBrowserbaseSessionCreateParamsProxiesArrayItemExternalProxyConfig)
+	return param.MarshalUnion(u, u.OfBrowserbase, u.OfExternal)
 }
 func (u *SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemUnion) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
 }
 
 func (u *SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemUnion) asAny() any {
-	if !param.IsOmitted(u.OfSessionStartsBrowserbaseSessionCreateParamsProxiesArrayItemBrowserbaseProxyConfig) {
-		return u.OfSessionStartsBrowserbaseSessionCreateParamsProxiesArrayItemBrowserbaseProxyConfig
-	} else if !param.IsOmitted(u.OfSessionStartsBrowserbaseSessionCreateParamsProxiesArrayItemExternalProxyConfig) {
-		return u.OfSessionStartsBrowserbaseSessionCreateParamsProxiesArrayItemExternalProxyConfig
+	if !param.IsOmitted(u.OfBrowserbase) {
+		return u.OfBrowserbase
+	} else if !param.IsOmitted(u.OfExternal) {
+		return u.OfExternal
 	}
 	return nil
 }
 
 // Returns a pointer to the underlying variant's property, if present.
-func (u SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemUnion) GetGeolocation() *SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemBrowserbaseProxyConfigGeolocation {
-	if vt := u.OfSessionStartsBrowserbaseSessionCreateParamsProxiesArrayItemBrowserbaseProxyConfig; vt != nil {
+func (u SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemUnion) GetGeolocation() *SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemBrowserbaseGeolocation {
+	if vt := u.OfBrowserbase; vt != nil {
 		return &vt.Geolocation
 	}
 	return nil
@@ -1395,7 +1409,7 @@ func (u SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemUnion) G
 
 // Returns a pointer to the underlying variant's property, if present.
 func (u SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemUnion) GetServer() *string {
-	if vt := u.OfSessionStartsBrowserbaseSessionCreateParamsProxiesArrayItemExternalProxyConfig; vt != nil {
+	if vt := u.OfExternal; vt != nil {
 		return &vt.Server
 	}
 	return nil
@@ -1403,7 +1417,7 @@ func (u SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemUnion) G
 
 // Returns a pointer to the underlying variant's property, if present.
 func (u SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemUnion) GetPassword() *string {
-	if vt := u.OfSessionStartsBrowserbaseSessionCreateParamsProxiesArrayItemExternalProxyConfig; vt != nil && vt.Password.Valid() {
+	if vt := u.OfExternal; vt != nil && vt.Password.Valid() {
 		return &vt.Password.Value
 	}
 	return nil
@@ -1411,7 +1425,7 @@ func (u SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemUnion) G
 
 // Returns a pointer to the underlying variant's property, if present.
 func (u SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemUnion) GetUsername() *string {
-	if vt := u.OfSessionStartsBrowserbaseSessionCreateParamsProxiesArrayItemExternalProxyConfig; vt != nil && vt.Username.Valid() {
+	if vt := u.OfExternal; vt != nil && vt.Username.Valid() {
 		return &vt.Username.Value
 	}
 	return nil
@@ -1419,9 +1433,9 @@ func (u SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemUnion) G
 
 // Returns a pointer to the underlying variant's property, if present.
 func (u SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemUnion) GetType() *string {
-	if vt := u.OfSessionStartsBrowserbaseSessionCreateParamsProxiesArrayItemBrowserbaseProxyConfig; vt != nil {
+	if vt := u.OfBrowserbase; vt != nil {
 		return (*string)(&vt.Type)
-	} else if vt := u.OfSessionStartsBrowserbaseSessionCreateParamsProxiesArrayItemExternalProxyConfig; vt != nil {
+	} else if vt := u.OfExternal; vt != nil {
 		return (*string)(&vt.Type)
 	}
 	return nil
@@ -1429,49 +1443,57 @@ func (u SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemUnion) G
 
 // Returns a pointer to the underlying variant's property, if present.
 func (u SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemUnion) GetDomainPattern() *string {
-	if vt := u.OfSessionStartsBrowserbaseSessionCreateParamsProxiesArrayItemBrowserbaseProxyConfig; vt != nil && vt.DomainPattern.Valid() {
+	if vt := u.OfBrowserbase; vt != nil && vt.DomainPattern.Valid() {
 		return &vt.DomainPattern.Value
-	} else if vt := u.OfSessionStartsBrowserbaseSessionCreateParamsProxiesArrayItemExternalProxyConfig; vt != nil && vt.DomainPattern.Valid() {
+	} else if vt := u.OfExternal; vt != nil && vt.DomainPattern.Valid() {
 		return &vt.DomainPattern.Value
 	}
 	return nil
 }
 
+func init() {
+	apijson.RegisterUnion[SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemUnion](
+		"type",
+		apijson.Discriminator[SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemBrowserbase]("browserbase"),
+		apijson.Discriminator[SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemExternal]("external"),
+	)
+}
+
 // The property Type is required.
-type SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemBrowserbaseProxyConfig struct {
-	DomainPattern param.Opt[string]                                                                                 `json:"domainPattern,omitzero"`
-	Geolocation   SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemBrowserbaseProxyConfigGeolocation `json:"geolocation,omitzero"`
+type SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemBrowserbase struct {
+	DomainPattern param.Opt[string]                                                                      `json:"domainPattern,omitzero"`
+	Geolocation   SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemBrowserbaseGeolocation `json:"geolocation,omitzero"`
 	// This field can be elided, and will marshal its zero value as "browserbase".
 	Type constant.Browserbase `json:"type,required"`
 	paramObj
 }
 
-func (r SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemBrowserbaseProxyConfig) MarshalJSON() (data []byte, err error) {
-	type shadow SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemBrowserbaseProxyConfig
+func (r SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemBrowserbase) MarshalJSON() (data []byte, err error) {
+	type shadow SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemBrowserbase
 	return param.MarshalObject(r, (*shadow)(&r))
 }
-func (r *SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemBrowserbaseProxyConfig) UnmarshalJSON(data []byte) error {
+func (r *SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemBrowserbase) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
 // The property Country is required.
-type SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemBrowserbaseProxyConfigGeolocation struct {
+type SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemBrowserbaseGeolocation struct {
 	Country string            `json:"country,required"`
 	City    param.Opt[string] `json:"city,omitzero"`
 	State   param.Opt[string] `json:"state,omitzero"`
 	paramObj
 }
 
-func (r SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemBrowserbaseProxyConfigGeolocation) MarshalJSON() (data []byte, err error) {
-	type shadow SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemBrowserbaseProxyConfigGeolocation
+func (r SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemBrowserbaseGeolocation) MarshalJSON() (data []byte, err error) {
+	type shadow SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemBrowserbaseGeolocation
 	return param.MarshalObject(r, (*shadow)(&r))
 }
-func (r *SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemBrowserbaseProxyConfigGeolocation) UnmarshalJSON(data []byte) error {
+func (r *SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemBrowserbaseGeolocation) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
 // The properties Server, Type are required.
-type SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemExternalProxyConfig struct {
+type SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemExternal struct {
 	Server        string            `json:"server,required"`
 	DomainPattern param.Opt[string] `json:"domainPattern,omitzero"`
 	Password      param.Opt[string] `json:"password,omitzero"`
@@ -1481,11 +1503,11 @@ type SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemExternalPro
 	paramObj
 }
 
-func (r SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemExternalProxyConfig) MarshalJSON() (data []byte, err error) {
-	type shadow SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemExternalProxyConfig
+func (r SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemExternal) MarshalJSON() (data []byte, err error) {
+	type shadow SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemExternal
 	return param.MarshalObject(r, (*shadow)(&r))
 }
-func (r *SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemExternalProxyConfig) UnmarshalJSON(data []byte) error {
+func (r *SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemExternal) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
