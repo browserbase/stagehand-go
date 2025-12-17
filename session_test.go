@@ -372,7 +372,7 @@ func TestSessionStartWithOptionalParams(t *testing.T) {
 		Experimental:         stagehand.Bool(true),
 		SelfHeal:             stagehand.Bool(true),
 		SystemPrompt:         stagehand.String("systemPrompt"),
-		Verbose:              1,
+		Verbose:              stagehand.Int(1),
 		WaitForCaptchaSolves: stagehand.Bool(true),
 		XLanguage:            stagehand.SessionStartParamsXLanguageTypescript,
 		XSDKVersion:          stagehand.String("3.0.6"),

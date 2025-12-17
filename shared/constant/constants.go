@@ -18,6 +18,15 @@ func ValueOf[T Constant[T]]() T {
 	return t.Default()
 }
 
+type Browserbase string // Always "browserbase"
+type External string    // Always "external"
+
+func (c Browserbase) Default() Browserbase { return "browserbase" }
+func (c External) Default() External       { return "external" }
+
+func (c Browserbase) MarshalJSON() ([]byte, error) { return marshalString(c) }
+func (c External) MarshalJSON() ([]byte, error)    { return marshalString(c) }
+
 type constant[T any] interface {
 	Constant[T]
 	*T
