@@ -15,6 +15,7 @@ import (
 	"github.com/browserbase/stagehand-go/option"
 	"github.com/browserbase/stagehand-go/packages/param"
 	"github.com/browserbase/stagehand-go/packages/respjson"
+	"github.com/browserbase/stagehand-go/shared/constant"
 )
 
 // SessionService contains methods and other services that help with interacting
@@ -279,7 +280,7 @@ func (r *ModelConfigObjectParam) UnmarshalJSON(data []byte) error {
 
 type SessionActResponse struct {
 	Data SessionActResponseData `json:"data,required"`
-	// Any of true.
+	// Indicates whether the request was successful
 	Success bool `json:"success,required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -342,7 +343,6 @@ func (r *SessionActResponseDataResult) UnmarshalJSON(data []byte) error {
 }
 
 type SessionEndResponse struct {
-	// Any of true.
 	Success bool `json:"success,required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -360,7 +360,7 @@ func (r *SessionEndResponse) UnmarshalJSON(data []byte) error {
 
 type SessionExecuteResponse struct {
 	Data SessionExecuteResponseData `json:"data,required"`
-	// Any of true.
+	// Indicates whether the request was successful
 	Success bool `json:"success,required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -482,7 +482,7 @@ func (r *SessionExecuteResponseDataResultUsage) UnmarshalJSON(data []byte) error
 
 type SessionExtractResponse struct {
 	Data SessionExtractResponseData `json:"data,required"`
-	// Any of true.
+	// Indicates whether the request was successful
 	Success bool `json:"success,required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -521,7 +521,7 @@ func (r *SessionExtractResponseData) UnmarshalJSON(data []byte) error {
 
 type SessionNavigateResponse struct {
 	Data SessionNavigateResponseData `json:"data,required"`
-	// Any of true.
+	// Indicates whether the request was successful
 	Success bool `json:"success,required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -560,7 +560,7 @@ func (r *SessionNavigateResponseData) UnmarshalJSON(data []byte) error {
 
 type SessionObserveResponse struct {
 	Data SessionObserveResponseData `json:"data,required"`
-	// Any of true.
+	// Indicates whether the request was successful
 	Success bool `json:"success,required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -598,7 +598,7 @@ func (r *SessionObserveResponseData) UnmarshalJSON(data []byte) error {
 
 type SessionStartResponse struct {
 	Data SessionStartResponseData `json:"data,required"`
-	// Any of true.
+	// Indicates whether the request was successful
 	Success bool `json:"success,required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -1073,18 +1073,16 @@ type SessionStartParams struct {
 	// Enable self-healing for failed actions
 	SelfHeal param.Opt[bool] `json:"selfHeal,omitzero"`
 	// Custom system prompt for AI operations
-	SystemPrompt         param.Opt[string] `json:"systemPrompt,omitzero"`
-	WaitForCaptchaSolves param.Opt[bool]   `json:"waitForCaptchaSolves,omitzero"`
+	SystemPrompt param.Opt[string] `json:"systemPrompt,omitzero"`
+	// Logging verbosity level (0=quiet, 1=normal, 2=debug)
+	Verbose              param.Opt[int64] `json:"verbose,omitzero"`
+	WaitForCaptchaSolves param.Opt[bool]  `json:"waitForCaptchaSolves,omitzero"`
 	// Version of the Stagehand SDK
 	XSDKVersion param.Opt[string] `header:"x-sdk-version,omitzero" json:"-"`
 	// ISO timestamp when request was sent
 	XSentAt                        param.Opt[time.Time]                             `header:"x-sent-at,omitzero" format:"date-time" json:"-"`
 	Browser                        SessionStartParamsBrowser                        `json:"browser,omitzero"`
 	BrowserbaseSessionCreateParams SessionStartParamsBrowserbaseSessionCreateParams `json:"browserbaseSessionCreateParams,omitzero"`
-	// Logging verbosity level (0=quiet, 1=normal, 2=debug)
-	//
-	// Any of 0, 1, 2.
-	Verbose float64 `json:"verbose,omitzero"`
 	// Client SDK language
 	//
 	// Any of "typescript", "python", "playground".
@@ -1441,10 +1439,10 @@ func (u SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemUnion) G
 
 // The property Type is required.
 type SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemBrowserbaseProxyConfig struct {
-	// Any of "browserbase".
-	Type          string                                                                                            `json:"type,omitzero,required"`
 	DomainPattern param.Opt[string]                                                                                 `json:"domainPattern,omitzero"`
 	Geolocation   SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemBrowserbaseProxyConfigGeolocation `json:"geolocation,omitzero"`
+	// This field can be elided, and will marshal its zero value as "browserbase".
+	Type constant.Browserbase `json:"type,required"`
 	paramObj
 }
 
@@ -1454,12 +1452,6 @@ func (r SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemBrowserb
 }
 func (r *SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemBrowserbaseProxyConfig) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
-}
-
-func init() {
-	apijson.RegisterFieldValidator[SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemBrowserbaseProxyConfig](
-		"type", "browserbase",
-	)
 }
 
 // The property Country is required.
@@ -1480,12 +1472,12 @@ func (r *SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemBrowser
 
 // The properties Server, Type are required.
 type SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemExternalProxyConfig struct {
-	Server string `json:"server,required"`
-	// Any of "external".
-	Type          string            `json:"type,omitzero,required"`
+	Server        string            `json:"server,required"`
 	DomainPattern param.Opt[string] `json:"domainPattern,omitzero"`
 	Password      param.Opt[string] `json:"password,omitzero"`
 	Username      param.Opt[string] `json:"username,omitzero"`
+	// This field can be elided, and will marshal its zero value as "external".
+	Type constant.External `json:"type,required"`
 	paramObj
 }
 
@@ -1495,12 +1487,6 @@ func (r SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemExternal
 }
 func (r *SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemExternalProxyConfig) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
-}
-
-func init() {
-	apijson.RegisterFieldValidator[SessionStartParamsBrowserbaseSessionCreateParamsProxiesArrayItemExternalProxyConfig](
-		"type", "external",
-	)
 }
 
 // Client SDK language
