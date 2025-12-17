@@ -58,19 +58,11 @@ func main() {
 		option.WithBrowserbaseProjectID("My Browserbase Project ID"), // defaults to os.LookupEnv("BROWSERBASE_PROJECT_ID")
 		option.WithModelAPIKey("My Model API Key"),                   // defaults to os.LookupEnv("MODEL_API_KEY")
 	)
-	response, err := client.Sessions.Act(
-		context.TODO(),
-		"00000000-your-session-id-000000000000",
-		stagehand.SessionActParams{
-			Input: stagehand.SessionActParamsInputUnion{
-				OfString: stagehand.String("click the first link on the page"),
-			},
-		},
-	)
+	response, err := client.Sessions.Start(context.TODO(), stagehand.SessionStartParams{})
 	if err != nil {
 		panic(err.Error())
 	}
-	fmt.Printf("%+v\n", response.Actions)
+	fmt.Printf("%+v\n", response)
 }
 
 ```
@@ -307,10 +299,7 @@ When the API returns a non-success status code, we return an error with type
 To handle errors, we recommend that you use the `errors.As` pattern:
 
 ```go
-_, err := client.Sessions.Start(context.TODO(), stagehand.SessionStartParams{
-	BrowserbaseAPIKey:    "your Browserbase API key",
-	BrowserbaseProjectID: "your Browserbase Project ID",
-})
+_, err := client.Sessions.Start(context.TODO(), stagehand.SessionStartParams{})
 if err != nil {
 	var apierr *stagehand.Error
 	if errors.As(err, &apierr) {
@@ -337,10 +326,7 @@ ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
 defer cancel()
 client.Sessions.Start(
 	ctx,
-	stagehand.SessionStartParams{
-		BrowserbaseAPIKey:    "your Browserbase API key",
-		BrowserbaseProjectID: "your Browserbase Project ID",
-	},
+	stagehand.SessionStartParams{},
 	// This sets the per-retry timeout
 	option.WithRequestTimeout(20*time.Second),
 )
@@ -376,10 +362,7 @@ client := stagehand.NewClient(
 // Override per-request:
 client.Sessions.Start(
 	context.TODO(),
-	stagehand.SessionStartParams{
-		BrowserbaseAPIKey:    "your Browserbase API key",
-		BrowserbaseProjectID: "your Browserbase Project ID",
-	},
+	stagehand.SessionStartParams{},
 	option.WithMaxRetries(5),
 )
 ```
@@ -394,10 +377,7 @@ you need to examine response headers, status codes, or other details.
 var response *http.Response
 response, err := client.Sessions.Start(
 	context.TODO(),
-	stagehand.SessionStartParams{
-		BrowserbaseAPIKey:    "your Browserbase API key",
-		BrowserbaseProjectID: "your Browserbase Project ID",
-	},
+	stagehand.SessionStartParams{},
 	option.WithResponseInto(&response),
 )
 if err != nil {
