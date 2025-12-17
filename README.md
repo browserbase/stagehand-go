@@ -58,11 +58,19 @@ func main() {
 		option.WithBrowserbaseProjectID("My Browserbase Project ID"), // defaults to os.LookupEnv("BROWSERBASE_PROJECT_ID")
 		option.WithModelAPIKey("My Model API Key"),                   // defaults to os.LookupEnv("MODEL_API_KEY")
 	)
-	response, err := client.Sessions.Start(context.TODO(), stagehand.SessionStartParams{})
+	response, err := client.Sessions.Act(
+		context.TODO(),
+		"c4dbf3a9-9a58-4b22-8a1c-9f20f9f9e123",
+		stagehand.SessionActParams{
+			Input: stagehand.SessionActParamsInputUnion{
+				OfString: stagehand.String("Click the login button"),
+			},
+		},
+	)
 	if err != nil {
 		panic(err.Error())
 	}
-	fmt.Printf("%+v\n", response)
+	fmt.Printf("%+v\n", response.Data)
 }
 
 ```
@@ -268,7 +276,7 @@ client := stagehand.NewClient(
 	option.WithHeader("X-Some-Header", "custom_header_info"),
 )
 
-client.Sessions.Start(context.TODO(), ...,
+client.Sessions.Act(context.TODO(), ...,
 	// Override the header
 	option.WithHeader("X-Some-Header", "some_other_custom_header_info"),
 	// Add an undocumented field to the request body, using sjson syntax
@@ -299,14 +307,22 @@ When the API returns a non-success status code, we return an error with type
 To handle errors, we recommend that you use the `errors.As` pattern:
 
 ```go
-_, err := client.Sessions.Start(context.TODO(), stagehand.SessionStartParams{})
+_, err := client.Sessions.Act(
+	context.TODO(),
+	"c4dbf3a9-9a58-4b22-8a1c-9f20f9f9e123",
+	stagehand.SessionActParams{
+		Input: stagehand.SessionActParamsInputUnion{
+			OfString: stagehand.String("Click the login button"),
+		},
+	},
+)
 if err != nil {
 	var apierr *stagehand.Error
 	if errors.As(err, &apierr) {
 		println(string(apierr.DumpRequest(true)))  // Prints the serialized HTTP request
 		println(string(apierr.DumpResponse(true))) // Prints the serialized HTTP response
 	}
-	panic(err.Error()) // GET "/sessions/start": 400 Bad Request { ... }
+	panic(err.Error()) // GET "/v1/sessions/{id}/act": 400 Bad Request { ... }
 }
 ```
 
@@ -324,9 +340,14 @@ To set a per-retry timeout, use `option.WithRequestTimeout()`.
 // This sets the timeout for the request, including all the retries.
 ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
 defer cancel()
-client.Sessions.Start(
+client.Sessions.Act(
 	ctx,
-	stagehand.SessionStartParams{},
+	"c4dbf3a9-9a58-4b22-8a1c-9f20f9f9e123",
+	stagehand.SessionActParams{
+		Input: stagehand.SessionActParamsInputUnion{
+			OfString: stagehand.String("Click the login button"),
+		},
+	},
 	// This sets the per-retry timeout
 	option.WithRequestTimeout(20*time.Second),
 )
@@ -360,9 +381,14 @@ client := stagehand.NewClient(
 )
 
 // Override per-request:
-client.Sessions.Start(
+client.Sessions.Act(
 	context.TODO(),
-	stagehand.SessionStartParams{},
+	"c4dbf3a9-9a58-4b22-8a1c-9f20f9f9e123",
+	stagehand.SessionActParams{
+		Input: stagehand.SessionActParamsInputUnion{
+			OfString: stagehand.String("Click the login button"),
+		},
+	},
 	option.WithMaxRetries(5),
 )
 ```
@@ -375,9 +401,14 @@ you need to examine response headers, status codes, or other details.
 ```go
 // Create a variable to store the HTTP response
 var response *http.Response
-response, err := client.Sessions.Start(
+response, err := client.Sessions.Act(
 	context.TODO(),
-	stagehand.SessionStartParams{},
+	"c4dbf3a9-9a58-4b22-8a1c-9f20f9f9e123",
+	stagehand.SessionActParams{
+		Input: stagehand.SessionActParamsInputUnion{
+			OfString: stagehand.String("Click the login button"),
+		},
+	},
 	option.WithResponseInto(&response),
 )
 if err != nil {
