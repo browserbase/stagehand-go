@@ -4,6 +4,7 @@ package stagehand
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -15,6 +16,7 @@ import (
 	"github.com/browserbase/stagehand-go/option"
 	"github.com/browserbase/stagehand-go/packages/param"
 	"github.com/browserbase/stagehand-go/packages/respjson"
+	"github.com/browserbase/stagehand-go/packages/ssestream"
 	"github.com/browserbase/stagehand-go/shared/constant"
 )
 
@@ -60,6 +62,36 @@ func (r *SessionService) Act(ctx context.Context, id string, params SessionActPa
 	path := fmt.Sprintf("v1/sessions/%s/act", id)
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
 	return
+}
+
+// Executes a browser action using natural language instructions or a predefined
+// Action object.
+func (r *SessionService) ActStreaming(ctx context.Context, id string, params SessionActParams, opts ...option.RequestOption) (stream *ssestream.Stream[StreamEvent]) {
+	var (
+		raw *http.Response
+		err error
+	)
+	if !param.IsOmitted(params.XLanguage) {
+		opts = append(opts, option.WithHeader("x-language", fmt.Sprintf("%s", params.XLanguage)))
+	}
+	if !param.IsOmitted(params.XSDKVersion) {
+		opts = append(opts, option.WithHeader("x-sdk-version", fmt.Sprintf("%s", params.XSDKVersion.Value)))
+	}
+	if !param.IsOmitted(params.XSentAt) {
+		opts = append(opts, option.WithHeader("x-sent-at", fmt.Sprintf("%s", params.XSentAt.Value)))
+	}
+	if !param.IsOmitted(params.XStreamResponse) {
+		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%s", params.XStreamResponse)))
+	}
+	opts = slices.Concat(r.Options, opts)
+	opts = append([]option.RequestOption{option.WithJSONSet("streamResponse", true)}, opts...)
+	if id == "" {
+		err = errors.New("missing required id parameter")
+		return
+	}
+	path := fmt.Sprintf("v1/sessions/%s/act", id)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &raw, opts...)
+	return ssestream.NewStream[StreamEvent](ssestream.NewDecoder(raw), err)
 }
 
 // Terminates the browser session and releases all associated resources.
@@ -110,6 +142,35 @@ func (r *SessionService) Execute(ctx context.Context, id string, params SessionE
 	return
 }
 
+// Runs an autonomous AI agent that can perform complex multi-step browser tasks.
+func (r *SessionService) ExecuteStreaming(ctx context.Context, id string, params SessionExecuteParams, opts ...option.RequestOption) (stream *ssestream.Stream[StreamEvent]) {
+	var (
+		raw *http.Response
+		err error
+	)
+	if !param.IsOmitted(params.XLanguage) {
+		opts = append(opts, option.WithHeader("x-language", fmt.Sprintf("%s", params.XLanguage)))
+	}
+	if !param.IsOmitted(params.XSDKVersion) {
+		opts = append(opts, option.WithHeader("x-sdk-version", fmt.Sprintf("%s", params.XSDKVersion.Value)))
+	}
+	if !param.IsOmitted(params.XSentAt) {
+		opts = append(opts, option.WithHeader("x-sent-at", fmt.Sprintf("%s", params.XSentAt.Value)))
+	}
+	if !param.IsOmitted(params.XStreamResponse) {
+		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%s", params.XStreamResponse)))
+	}
+	opts = slices.Concat(r.Options, opts)
+	opts = append([]option.RequestOption{option.WithJSONSet("streamResponse", true)}, opts...)
+	if id == "" {
+		err = errors.New("missing required id parameter")
+		return
+	}
+	path := fmt.Sprintf("v1/sessions/%s/agentExecute", id)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &raw, opts...)
+	return ssestream.NewStream[StreamEvent](ssestream.NewDecoder(raw), err)
+}
+
 // Extracts structured data from the current page using AI-powered analysis.
 func (r *SessionService) Extract(ctx context.Context, id string, params SessionExtractParams, opts ...option.RequestOption) (res *SessionExtractResponse, err error) {
 	if !param.IsOmitted(params.XLanguage) {
@@ -132,6 +193,35 @@ func (r *SessionService) Extract(ctx context.Context, id string, params SessionE
 	path := fmt.Sprintf("v1/sessions/%s/extract", id)
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
 	return
+}
+
+// Extracts structured data from the current page using AI-powered analysis.
+func (r *SessionService) ExtractStreaming(ctx context.Context, id string, params SessionExtractParams, opts ...option.RequestOption) (stream *ssestream.Stream[StreamEvent]) {
+	var (
+		raw *http.Response
+		err error
+	)
+	if !param.IsOmitted(params.XLanguage) {
+		opts = append(opts, option.WithHeader("x-language", fmt.Sprintf("%s", params.XLanguage)))
+	}
+	if !param.IsOmitted(params.XSDKVersion) {
+		opts = append(opts, option.WithHeader("x-sdk-version", fmt.Sprintf("%s", params.XSDKVersion.Value)))
+	}
+	if !param.IsOmitted(params.XSentAt) {
+		opts = append(opts, option.WithHeader("x-sent-at", fmt.Sprintf("%s", params.XSentAt.Value)))
+	}
+	if !param.IsOmitted(params.XStreamResponse) {
+		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%s", params.XStreamResponse)))
+	}
+	opts = slices.Concat(r.Options, opts)
+	opts = append([]option.RequestOption{option.WithJSONSet("streamResponse", true)}, opts...)
+	if id == "" {
+		err = errors.New("missing required id parameter")
+		return
+	}
+	path := fmt.Sprintf("v1/sessions/%s/extract", id)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &raw, opts...)
+	return ssestream.NewStream[StreamEvent](ssestream.NewDecoder(raw), err)
 }
 
 // Navigates the browser to the specified URL.
@@ -183,6 +273,36 @@ func (r *SessionService) Observe(ctx context.Context, id string, params SessionO
 	return
 }
 
+// Identifies and returns available actions on the current page that match the
+// given instruction.
+func (r *SessionService) ObserveStreaming(ctx context.Context, id string, params SessionObserveParams, opts ...option.RequestOption) (stream *ssestream.Stream[StreamEvent]) {
+	var (
+		raw *http.Response
+		err error
+	)
+	if !param.IsOmitted(params.XLanguage) {
+		opts = append(opts, option.WithHeader("x-language", fmt.Sprintf("%s", params.XLanguage)))
+	}
+	if !param.IsOmitted(params.XSDKVersion) {
+		opts = append(opts, option.WithHeader("x-sdk-version", fmt.Sprintf("%s", params.XSDKVersion.Value)))
+	}
+	if !param.IsOmitted(params.XSentAt) {
+		opts = append(opts, option.WithHeader("x-sent-at", fmt.Sprintf("%s", params.XSentAt.Value)))
+	}
+	if !param.IsOmitted(params.XStreamResponse) {
+		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%s", params.XStreamResponse)))
+	}
+	opts = slices.Concat(r.Options, opts)
+	opts = append([]option.RequestOption{option.WithJSONSet("streamResponse", true)}, opts...)
+	if id == "" {
+		err = errors.New("missing required id parameter")
+		return
+	}
+	path := fmt.Sprintf("v1/sessions/%s/observe", id)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &raw, opts...)
+	return ssestream.NewStream[StreamEvent](ssestream.NewDecoder(raw), err)
+}
+
 // Creates a new browser session with the specified configuration. Returns a
 // session ID used for all subsequent operations.
 func (r *SessionService) Start(ctx context.Context, params SessionStartParams, opts ...option.RequestOption) (res *SessionStartResponse, err error) {
@@ -228,6 +348,38 @@ type Action struct {
 // Returns the unmodified JSON received from the API
 func (r Action) RawJSON() string { return r.JSON.raw }
 func (r *Action) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// ToParam converts this Action to a ActionParam.
+//
+// Warning: the fields of the param type will not be present. ToParam should only
+// be used at the last possible moment before sending a request. Test for this with
+// ActionParam.Overrides()
+func (r Action) ToParam() ActionParam {
+	return param.Override[ActionParam](json.RawMessage(r.RawJSON()))
+}
+
+// Action object returned by observe and used by act
+//
+// The properties Description, Selector are required.
+type ActionParam struct {
+	// Human-readable description of the action
+	Description string `json:"description,required"`
+	// CSS selector or XPath for the element
+	Selector string `json:"selector,required"`
+	// The method to execute (click, fill, etc.)
+	Method param.Opt[string] `json:"method,omitzero"`
+	// Arguments to pass to the method
+	Arguments []string `json:"arguments,omitzero"`
+	paramObj
+}
+
+func (r ActionParam) MarshalJSON() (data []byte, err error) {
+	type shadow ActionParam
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *ActionParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -280,6 +432,123 @@ func (r ModelConfigModelConfigObjectParam) MarshalJSON() (data []byte, err error
 func (r *ModelConfigModelConfigObjectParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
+
+// Server-Sent Event emitted during streaming responses. Events are sent as
+// `data: <JSON>\n\n`.
+type StreamEvent struct {
+	// Unique identifier for this event
+	ID   string               `json:"id,required" format:"uuid"`
+	Data StreamEventDataUnion `json:"data,required"`
+	// Type of stream event - system events or log messages
+	//
+	// Any of "system", "log".
+	Type StreamEventType `json:"type,required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		ID          respjson.Field
+		Data        respjson.Field
+		Type        respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r StreamEvent) RawJSON() string { return r.JSON.raw }
+func (r *StreamEvent) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// StreamEventDataUnion contains all possible properties and values from
+// [StreamEventDataStreamEventSystemDataOutput],
+// [StreamEventDataStreamEventLogDataOutput].
+//
+// Use the methods beginning with 'As' to cast the union to one of its variants.
+type StreamEventDataUnion struct {
+	Status string `json:"status"`
+	// This field is from variant [StreamEventDataStreamEventSystemDataOutput].
+	Error string `json:"error"`
+	// This field is from variant [StreamEventDataStreamEventSystemDataOutput].
+	Result any `json:"result"`
+	// This field is from variant [StreamEventDataStreamEventLogDataOutput].
+	Message string `json:"message"`
+	JSON    struct {
+		Status  respjson.Field
+		Error   respjson.Field
+		Result  respjson.Field
+		Message respjson.Field
+		raw     string
+	} `json:"-"`
+}
+
+func (u StreamEventDataUnion) AsStreamEventDataStreamEventSystemDataOutput() (v StreamEventDataStreamEventSystemDataOutput) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+func (u StreamEventDataUnion) AsStreamEventDataStreamEventLogDataOutput() (v StreamEventDataStreamEventLogDataOutput) {
+	apijson.UnmarshalRoot(json.RawMessage(u.JSON.raw), &v)
+	return
+}
+
+// Returns the unmodified JSON received from the API
+func (u StreamEventDataUnion) RawJSON() string { return u.JSON.raw }
+
+func (r *StreamEventDataUnion) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type StreamEventDataStreamEventSystemDataOutput struct {
+	// Current status of the streaming operation
+	//
+	// Any of "starting", "connected", "running", "finished", "error".
+	Status string `json:"status,required"`
+	// Error message (present when status is 'error')
+	Error string `json:"error"`
+	// Operation result (present when status is 'finished')
+	Result any `json:"result"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Status      respjson.Field
+		Error       respjson.Field
+		Result      respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r StreamEventDataStreamEventSystemDataOutput) RawJSON() string { return r.JSON.raw }
+func (r *StreamEventDataStreamEventSystemDataOutput) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type StreamEventDataStreamEventLogDataOutput struct {
+	// Log message from the operation
+	Message string           `json:"message,required"`
+	Status  constant.Running `json:"status,required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Message     respjson.Field
+		Status      respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r StreamEventDataStreamEventLogDataOutput) RawJSON() string { return r.JSON.raw }
+func (r *StreamEventDataStreamEventLogDataOutput) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Type of stream event - system events or log messages
+type StreamEventType string
+
+const (
+	StreamEventTypeSystem StreamEventType = "system"
+	StreamEventTypeLog    StreamEventType = "log"
+)
 
 type SessionActResponse struct {
 	Data SessionActResponseData `json:"data,required"`
@@ -621,11 +890,14 @@ func (r *SessionStartResponse) UnmarshalJSON(data []byte) error {
 
 type SessionStartResponseData struct {
 	Available bool `json:"available,required"`
-	// Unique session identifier
+	// CDP WebSocket URL for connecting to the Browserbase cloud browser
+	ConnectURL string `json:"connectUrl,required"`
+	// Unique Browserbase session identifier
 	SessionID string `json:"sessionId,required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Available   respjson.Field
+		ConnectURL  respjson.Field
 		SessionID   respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
@@ -671,13 +943,13 @@ func (r *SessionActParams) UnmarshalJSON(data []byte) error {
 //
 // Use [param.IsOmitted] to confirm if a field is set.
 type SessionActParamsInputUnion struct {
-	OfString                      param.Opt[string]                 `json:",omitzero,inline"`
-	OfSessionActsInputActionInput *SessionActParamsInputActionInput `json:",omitzero,inline"`
+	OfString param.Opt[string] `json:",omitzero,inline"`
+	OfAction *ActionParam      `json:",omitzero,inline"`
 	paramUnion
 }
 
 func (u SessionActParamsInputUnion) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion(u, u.OfString, u.OfSessionActsInputActionInput)
+	return param.MarshalUnion(u, u.OfString, u.OfAction)
 }
 func (u *SessionActParamsInputUnion) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
@@ -686,33 +958,10 @@ func (u *SessionActParamsInputUnion) UnmarshalJSON(data []byte) error {
 func (u *SessionActParamsInputUnion) asAny() any {
 	if !param.IsOmitted(u.OfString) {
 		return &u.OfString.Value
-	} else if !param.IsOmitted(u.OfSessionActsInputActionInput) {
-		return u.OfSessionActsInputActionInput
+	} else if !param.IsOmitted(u.OfAction) {
+		return u.OfAction
 	}
 	return nil
-}
-
-// Action object returned by observe and used by act
-//
-// The properties Description, Selector are required.
-type SessionActParamsInputActionInput struct {
-	// Human-readable description of the action
-	Description string `json:"description,required"`
-	// CSS selector or XPath for the element
-	Selector string `json:"selector,required"`
-	// The method to execute (click, fill, etc.)
-	Method param.Opt[string] `json:"method,omitzero"`
-	// Arguments to pass to the method
-	Arguments []string `json:"arguments,omitzero"`
-	paramObj
-}
-
-func (r SessionActParamsInputActionInput) MarshalJSON() (data []byte, err error) {
-	type shadow SessionActParamsInputActionInput
-	return param.MarshalObject(r, (*shadow)(&r))
-}
-func (r *SessionActParamsInputActionInput) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
 }
 
 type SessionActParamsOptions struct {
@@ -939,6 +1188,8 @@ type SessionNavigateParams struct {
 	URL string `json:"url,required"`
 	// Target frame ID for the navigation
 	FrameID param.Opt[string] `json:"frameId,omitzero"`
+	// Whether to stream the response via SSE
+	StreamResponse param.Opt[bool] `json:"streamResponse,omitzero"`
 	// Version of the Stagehand SDK
 	XSDKVersion param.Opt[string] `header:"x-sdk-version,omitzero" json:"-"`
 	// ISO timestamp when request was sent

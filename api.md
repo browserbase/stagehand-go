@@ -2,11 +2,13 @@
 
 Params Types:
 
+- <a href="https://pkg.go.dev/github.com/browserbase/stagehand-go">stagehand</a>.<a href="https://pkg.go.dev/github.com/browserbase/stagehand-go#ActionParam">ActionParam</a>
 - <a href="https://pkg.go.dev/github.com/browserbase/stagehand-go">stagehand</a>.<a href="https://pkg.go.dev/github.com/browserbase/stagehand-go#ModelConfigUnionParam">ModelConfigUnionParam</a>
 
 Response Types:
 
 - <a href="https://pkg.go.dev/github.com/browserbase/stagehand-go">stagehand</a>.<a href="https://pkg.go.dev/github.com/browserbase/stagehand-go#Action">Action</a>
+- <a href="https://pkg.go.dev/github.com/browserbase/stagehand-go">stagehand</a>.<a href="https://pkg.go.dev/github.com/browserbase/stagehand-go#StreamEvent">StreamEvent</a>
 - <a href="https://pkg.go.dev/github.com/browserbase/stagehand-go">stagehand</a>.<a href="https://pkg.go.dev/github.com/browserbase/stagehand-go#SessionActResponse">SessionActResponse</a>
 - <a href="https://pkg.go.dev/github.com/browserbase/stagehand-go">stagehand</a>.<a href="https://pkg.go.dev/github.com/browserbase/stagehand-go#SessionEndResponse">SessionEndResponse</a>
 - <a href="https://pkg.go.dev/github.com/browserbase/stagehand-go">stagehand</a>.<a href="https://pkg.go.dev/github.com/browserbase/stagehand-go#SessionExecuteResponse">SessionExecuteResponse</a>
