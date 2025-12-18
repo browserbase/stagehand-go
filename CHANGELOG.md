@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.13.1 (2025-12-18)
+
+Full Changelog: [v0.13.0...v0.13.1](https://github.com/browserbase/stagehand-go/compare/v0.13.0...v0.13.1)
+
+### Bug Fixes
+
+* skip usage tests that don't work with Prism ([f2d182f](https://github.com/browserbase/stagehand-go/commit/f2d182f52018b3a2115f146819464275fb65f92a))
+
 ## 0.13.0 (2025-12-18)
 
 Full Changelog: [v0.12.0...v0.13.0](https://github.com/browserbase/stagehand-go/compare/v0.12.0...v0.13.0)
