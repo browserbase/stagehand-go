@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.13.0 (2025-12-18)
+
+Full Changelog: [v0.12.0...v0.13.0](https://github.com/browserbase/stagehand-go/compare/v0.12.0...v0.13.0)
+
+### Features
+
+* **api:** manual updates ([383fcb0](https://github.com/browserbase/stagehand-go/commit/383fcb07074929fe80fa54fff32dd5288c78250e))
+
 ## 0.12.0 (2025-12-17)
 
 Full Changelog: [v0.11.0...v0.12.0](https://github.com/browserbase/stagehand-go/compare/v0.11.0...v0.12.0)
