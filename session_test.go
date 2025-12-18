@@ -214,6 +214,7 @@ func TestSessionNavigateWithOptionalParams(t *testing.T) {
 				Timeout:   stagehand.Float(30000),
 				WaitUntil: "networkidle",
 			},
+			StreamResponse:  stagehand.Bool(true),
 			XLanguage:       stagehand.SessionNavigateParamsXLanguageTypescript,
 			XSDKVersion:     stagehand.String("3.0.6"),
 			XSentAt:         stagehand.Time(time.Now()),
