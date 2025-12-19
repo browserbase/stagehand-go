@@ -119,6 +119,7 @@ func TestSessionExecuteWithOptionalParams(t *testing.T) {
 				Model: stagehand.ModelConfigUnionParam{
 					OfString: stagehand.String("openai/gpt-5-nano"),
 				},
+				Provider:     "openai",
 				SystemPrompt: stagehand.String("systemPrompt"),
 			},
 			ExecuteOptions: stagehand.SessionExecuteParamsExecuteOptions{
@@ -290,7 +291,7 @@ func TestSessionStartWithOptionalParams(t *testing.T) {
 	)
 	_, err := client.Sessions.Start(context.TODO(), stagehand.SessionStartParams{
 		ModelName:    "gpt-4o",
-		ActTimeoutMs: stagehand.Float(30000),
+		ActTimeoutMs: stagehand.Float(0),
 		Browser: stagehand.SessionStartParamsBrowser{
 			CdpURL: stagehand.String("ws://localhost:9222"),
 			LaunchOptions: stagehand.SessionStartParamsBrowserLaunchOptions{
@@ -368,12 +369,11 @@ func TestSessionStartWithOptionalParams(t *testing.T) {
 			},
 		},
 		BrowserbaseSessionID: stagehand.String("browserbaseSessionID"),
-		DebugDom:             stagehand.Bool(true),
 		DomSettleTimeoutMs:   stagehand.Float(5000),
 		Experimental:         stagehand.Bool(true),
 		SelfHeal:             stagehand.Bool(true),
 		SystemPrompt:         stagehand.String("systemPrompt"),
-		Verbose:              stagehand.Int(1),
+		Verbose:              stagehand.SessionStartParamsVerbose1,
 		WaitForCaptchaSolves: stagehand.Bool(true),
 		XLanguage:            stagehand.SessionStartParamsXLanguageTypescript,
 		XSDKVersion:          stagehand.String("3.0.6"),
