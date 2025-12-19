@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.13.2 (2025-12-19)
+
+Full Changelog: [v0.13.1...v0.13.2](https://github.com/browserbase/stagehand-go/compare/v0.13.1...v0.13.2)
+
+### Chores
+
+* add float64 to valid types for RegisterFieldValidator ([d791908](https://github.com/browserbase/stagehand-go/commit/d791908ebaddb13d8cd91262080053eea486f1cb))
+
 ## 0.13.1 (2025-12-18)
 
 Full Changelog: [v0.13.0...v0.13.1](https://github.com/browserbase/stagehand-go/compare/v0.13.0...v0.13.1)
