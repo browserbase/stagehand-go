@@ -325,42 +325,6 @@ func (r *SessionService) Start(ctx context.Context, params SessionStartParams, o
 }
 
 // Action object returned by observe and used by act
-type Action struct {
-	// Human-readable description of the action
-	Description string `json:"description,required"`
-	// CSS selector or XPath for the element
-	Selector string `json:"selector,required"`
-	// Arguments to pass to the method
-	Arguments []string `json:"arguments"`
-	// The method to execute (click, fill, etc.)
-	Method string `json:"method"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		Description respjson.Field
-		Selector    respjson.Field
-		Arguments   respjson.Field
-		Method      respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r Action) RawJSON() string { return r.JSON.raw }
-func (r *Action) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// ToParam converts this Action to a ActionParam.
-//
-// Warning: the fields of the param type will not be present. ToParam should only
-// be used at the last possible moment before sending a request. Test for this with
-// ActionParam.Overrides()
-func (r Action) ToParam() ActionParam {
-	return param.Override[ActionParam](json.RawMessage(r.RawJSON()))
-}
-
-// Action object returned by observe and used by act
 //
 // The properties Description, Selector are required.
 type ActionParam struct {
@@ -368,6 +332,8 @@ type ActionParam struct {
 	Description string `json:"description,required"`
 	// CSS selector or XPath for the element
 	Selector string `json:"selector,required"`
+	// Backend node ID for the element
+	BackendNodeID param.Opt[float64] `json:"backendNodeId,omitzero"`
 	// The method to execute (click, fill, etc.)
 	Method param.Opt[string] `json:"method,omitzero"`
 	// Arguments to pass to the method
@@ -422,6 +388,10 @@ type ModelConfigModelConfigObjectParam struct {
 	APIKey param.Opt[string] `json:"apiKey,omitzero"`
 	// Base URL for the model provider
 	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
+	// AI provider for the model (or provide a baseURL endpoint instead)
+	//
+	// Any of "openai", "anthropic", "google", "microsoft".
+	Provider string `json:"provider,omitzero"`
 	paramObj
 }
 
@@ -433,8 +403,14 @@ func (r *ModelConfigModelConfigObjectParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+func init() {
+	apijson.RegisterFieldValidator[ModelConfigModelConfigObjectParam](
+		"provider", "openai", "anthropic", "google", "microsoft",
+	)
+}
+
 // Server-Sent Event emitted during streaming responses. Events are sent as
-// `data: <JSON>\n\n`.
+// `data: <JSON>\n\n`. Key order: data (with status first), type, id.
 type StreamEvent struct {
 	// Unique identifier for this event
 	ID   string               `json:"id,required" format:"uuid"`
@@ -592,7 +568,7 @@ type SessionActResponseDataResult struct {
 	// Description of the action that was performed
 	ActionDescription string `json:"actionDescription,required"`
 	// List of actions that were executed
-	Actions []Action `json:"actions,required"`
+	Actions []SessionActResponseDataResultAction `json:"actions,required"`
 	// Human-readable result message
 	Message string `json:"message,required"`
 	// Whether the action completed successfully
@@ -611,6 +587,36 @@ type SessionActResponseDataResult struct {
 // Returns the unmodified JSON received from the API
 func (r SessionActResponseDataResult) RawJSON() string { return r.JSON.raw }
 func (r *SessionActResponseDataResult) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Action object returned by observe and used by act
+type SessionActResponseDataResultAction struct {
+	// Human-readable description of the action
+	Description string `json:"description,required"`
+	// CSS selector or XPath for the element
+	Selector string `json:"selector,required"`
+	// Arguments to pass to the method
+	Arguments []string `json:"arguments"`
+	// Backend node ID for the element
+	BackendNodeID float64 `json:"backendNodeId"`
+	// The method to execute (click, fill, etc.)
+	Method string `json:"method"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Description   respjson.Field
+		Selector      respjson.Field
+		Arguments     respjson.Field
+		BackendNodeID respjson.Field
+		Method        respjson.Field
+		ExtraFields   map[string]respjson.Field
+		raw           string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r SessionActResponseDataResultAction) RawJSON() string { return r.JSON.raw }
+func (r *SessionActResponseDataResultAction) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -851,7 +857,7 @@ func (r *SessionObserveResponse) UnmarshalJSON(data []byte) error {
 }
 
 type SessionObserveResponseData struct {
-	Result []Action `json:"result,required"`
+	Result []SessionObserveResponseDataResult `json:"result,required"`
 	// Action ID for tracking
 	ActionID string `json:"actionId"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
@@ -866,6 +872,36 @@ type SessionObserveResponseData struct {
 // Returns the unmodified JSON received from the API
 func (r SessionObserveResponseData) RawJSON() string { return r.JSON.raw }
 func (r *SessionObserveResponseData) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Action object returned by observe and used by act
+type SessionObserveResponseDataResult struct {
+	// Human-readable description of the action
+	Description string `json:"description,required"`
+	// CSS selector or XPath for the element
+	Selector string `json:"selector,required"`
+	// Arguments to pass to the method
+	Arguments []string `json:"arguments"`
+	// Backend node ID for the element
+	BackendNodeID float64 `json:"backendNodeId"`
+	// The method to execute (click, fill, etc.)
+	Method string `json:"method"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Description   respjson.Field
+		Selector      respjson.Field
+		Arguments     respjson.Field
+		BackendNodeID respjson.Field
+		Method        respjson.Field
+		ExtraFields   map[string]respjson.Field
+		raw           string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r SessionObserveResponseDataResult) RawJSON() string { return r.JSON.raw }
+func (r *SessionObserveResponseDataResult) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -890,15 +926,16 @@ func (r *SessionStartResponse) UnmarshalJSON(data []byte) error {
 
 type SessionStartResponseData struct {
 	Available bool `json:"available,required"`
-	// CDP WebSocket URL for connecting to the Browserbase cloud browser
-	ConnectURL string `json:"connectUrl,required"`
 	// Unique Browserbase session identifier
 	SessionID string `json:"sessionId,required"`
+	// CDP WebSocket URL for connecting to the Browserbase cloud browser (present when
+	// available)
+	CdpURL string `json:"cdpUrl,nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Available   respjson.Field
-		ConnectURL  respjson.Field
 		SessionID   respjson.Field
+		CdpURL      respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -1069,6 +1106,10 @@ type SessionExecuteParamsAgentConfig struct {
 	// Model name string with provider prefix (e.g., 'openai/gpt-5-nano',
 	// 'anthropic/claude-4.5-opus')
 	Model ModelConfigUnionParam `json:"model,omitzero"`
+	// AI provider for the agent (legacy, use model: openai/gpt-5-nano instead)
+	//
+	// Any of "openai", "anthropic", "google", "microsoft".
+	Provider string `json:"provider,omitzero"`
 	paramObj
 }
 
@@ -1078,6 +1119,12 @@ func (r SessionExecuteParamsAgentConfig) MarshalJSON() (data []byte, err error) 
 }
 func (r *SessionExecuteParamsAgentConfig) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
+}
+
+func init() {
+	apijson.RegisterFieldValidator[SessionExecuteParamsAgentConfig](
+		"provider", "openai", "anthropic", "google", "microsoft",
+	)
 }
 
 // The property Instruction is required.
@@ -1325,11 +1372,10 @@ const (
 type SessionStartParams struct {
 	// Model name to use for AI operations
 	ModelName string `json:"modelName,required"`
-	// Timeout in ms for act operations
+	// Timeout in ms for act operations (deprecated, v2 only)
 	ActTimeoutMs param.Opt[float64] `json:"actTimeoutMs,omitzero"`
 	// Existing Browserbase session ID to resume
 	BrowserbaseSessionID param.Opt[string] `json:"browserbaseSessionID,omitzero"`
-	DebugDom             param.Opt[bool]   `json:"debugDom,omitzero"`
 	// Timeout in ms to wait for DOM to settle
 	DomSettleTimeoutMs param.Opt[float64] `json:"domSettleTimeoutMs,omitzero"`
 	Experimental       param.Opt[bool]    `json:"experimental,omitzero"`
@@ -1337,15 +1383,18 @@ type SessionStartParams struct {
 	SelfHeal param.Opt[bool] `json:"selfHeal,omitzero"`
 	// Custom system prompt for AI operations
 	SystemPrompt param.Opt[string] `json:"systemPrompt,omitzero"`
-	// Logging verbosity level (0=quiet, 1=normal, 2=debug)
-	Verbose              param.Opt[int64] `json:"verbose,omitzero"`
-	WaitForCaptchaSolves param.Opt[bool]  `json:"waitForCaptchaSolves,omitzero"`
+	// Wait for captcha solves (deprecated, v2 only)
+	WaitForCaptchaSolves param.Opt[bool] `json:"waitForCaptchaSolves,omitzero"`
 	// Version of the Stagehand SDK
 	XSDKVersion param.Opt[string] `header:"x-sdk-version,omitzero" json:"-"`
 	// ISO timestamp when request was sent
 	XSentAt                        param.Opt[time.Time]                             `header:"x-sent-at,omitzero" format:"date-time" json:"-"`
 	Browser                        SessionStartParamsBrowser                        `json:"browser,omitzero"`
 	BrowserbaseSessionCreateParams SessionStartParamsBrowserbaseSessionCreateParams `json:"browserbaseSessionCreateParams,omitzero"`
+	// Logging verbosity level (0=quiet, 1=normal, 2=debug)
+	//
+	// Any of "0", "1", "2".
+	Verbose SessionStartParamsVerbose `json:"verbose,omitzero"`
 	// Client SDK language
 	//
 	// Any of "typescript", "python", "playground".
@@ -1759,6 +1808,15 @@ func (r SessionStartParamsBrowserbaseSessionCreateParamsProxiesProxyConfigListIt
 func (r *SessionStartParamsBrowserbaseSessionCreateParamsProxiesProxyConfigListItemExternal) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
+
+// Logging verbosity level (0=quiet, 1=normal, 2=debug)
+type SessionStartParamsVerbose string
+
+const (
+	SessionStartParamsVerbose0 SessionStartParamsVerbose = "0"
+	SessionStartParamsVerbose1 SessionStartParamsVerbose = "1"
+	SessionStartParamsVerbose2 SessionStartParamsVerbose = "2"
+)
 
 // Client SDK language
 type SessionStartParamsXLanguage string
