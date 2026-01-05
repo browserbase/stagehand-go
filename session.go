@@ -1393,8 +1393,8 @@ type SessionStartParams struct {
 	BrowserbaseSessionCreateParams SessionStartParamsBrowserbaseSessionCreateParams `json:"browserbaseSessionCreateParams,omitzero"`
 	// Logging verbosity level (0=quiet, 1=normal, 2=debug)
 	//
-	// Any of "0", "1", "2".
-	Verbose SessionStartParamsVerbose `json:"verbose,omitzero"`
+	// Any of 0, 1, 2.
+	Verbose float64 `json:"verbose,omitzero"`
 	// Client SDK language
 	//
 	// Any of "typescript", "python", "playground".
@@ -1808,15 +1808,6 @@ func (r SessionStartParamsBrowserbaseSessionCreateParamsProxiesProxyConfigListIt
 func (r *SessionStartParamsBrowserbaseSessionCreateParamsProxiesProxyConfigListItemExternal) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
-
-// Logging verbosity level (0=quiet, 1=normal, 2=debug)
-type SessionStartParamsVerbose string
-
-const (
-	SessionStartParamsVerbose0 SessionStartParamsVerbose = "0"
-	SessionStartParamsVerbose1 SessionStartParamsVerbose = "1"
-	SessionStartParamsVerbose2 SessionStartParamsVerbose = "2"
-)
 
 // Client SDK language
 type SessionStartParamsXLanguage string

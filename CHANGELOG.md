@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.15.0 (2025-12-23)
+
+Full Changelog: [v0.14.0...v0.15.0](https://github.com/browserbase/stagehand-go/compare/v0.14.0...v0.15.0)
+
+### Features
+
+* [STG-1053] [server] Use fastify-zod-openapi + zod v4 for openapi generation ([00248f3](https://github.com/browserbase/stagehand-go/commit/00248f34223b4bbb242d76d4f6780d0daeefa467))
+
 ## 0.14.0 (2025-12-19)
 
 Full Changelog: [v0.13.2...v0.14.0](https://github.com/browserbase/stagehand-go/compare/v0.13.2...v0.14.0)
