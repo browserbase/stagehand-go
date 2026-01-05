@@ -53,26 +53,164 @@ import (
 )
 
 func main() {
+	// Create a new Stagehand client with your credentials
 	client := stagehand.NewClient(
 		option.WithBrowserbaseAPIKey("My Browserbase API Key"),       // defaults to os.LookupEnv("BROWSERBASE_API_KEY")
 		option.WithBrowserbaseProjectID("My Browserbase Project ID"), // defaults to os.LookupEnv("BROWSERBASE_PROJECT_ID")
 		option.WithModelAPIKey("My Model API Key"),                   // defaults to os.LookupEnv("MODEL_API_KEY")
 	)
-	response, err := client.Sessions.Act(
+
+	// Start a new browser session
+	// XLanguage and XSDKVersion headers are required for the v3 API
+	startResponse, err := client.Sessions.Start(context.TODO(), stagehand.SessionStartParams{
+		ModelName:   "gpt-5-nano",
+		XLanguage:   stagehand.SessionStartParamsXLanguageTypescript,   // required for now until out of ALPHA
+		XSDKVersion: stagehand.String("3.0.6"),
+	})
+	if err != nil {
+		panic(err.Error())
+	}
+	fmt.Printf("Session started: %s\n", startResponse.Data.SessionID)
+
+	sessionID := startResponse.Data.SessionID
+
+	// Navigate to a webpage
+	// FrameID is required - use empty string for the main frame
+	_, err = client.Sessions.Navigate(
 		context.TODO(),
-		"00000000-your-session-id-000000000000",
-		stagehand.SessionActParams{
-			Input: stagehand.SessionActParamsInputUnion{
-				OfString: stagehand.String("click the first link on the page"),
-			},
+		sessionID,
+		stagehand.SessionNavigateParams{
+			URL:         "https://news.ycombinator.com",
+			FrameID:     stagehand.String(""),                 // emptystring = use main default tab
+			XLanguage:   stagehand.SessionNavigateParamsXLanguageTypescript,
+			XSDKVersion: stagehand.String("3.0.6"),
 		},
 	)
 	if err != nil {
 		panic(err.Error())
 	}
-	fmt.Printf("%+v\n", response.Data)
-}
+	fmt.Println("Navigated to Hacker News")
 
+	// Use Observe to find possible actions on the page
+	observeResponse, err := client.Sessions.Observe(
+		context.TODO(),
+		sessionID,
+		stagehand.SessionObserveParams{
+			Instruction: stagehand.String("find the link to view comments for the top post"),
+			XLanguage:   stagehand.SessionObserveParamsXLanguageTypescript,
+			XSDKVersion: stagehand.String("3.0.6"),
+		},
+	)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	actions := observeResponse.Data.Result
+	fmt.Printf("Found %d possible actions\n", len(actions))
+
+	if len(actions) == 0 {
+		fmt.Println("No actions found")
+		return
+	}
+
+	// Take the first action returned by Observe
+	action := actions[0]
+	fmt.Printf("Acting on: %s\n", action.Description)
+
+	// Pass the structured action to Act
+	// The action contains selector, description, method, and arguments
+	actResponse, err := client.Sessions.Act(
+		context.TODO(),
+		sessionID,
+		stagehand.SessionActParams{
+			Input: stagehand.SessionActParamsInputUnion{
+				OfAction: &stagehand.ActionParam{
+					Description: action.Description,
+					Selector:    action.Selector,
+					Method:      stagehand.String(action.Method),
+					Arguments:   action.Arguments,
+				},
+			},
+			XLanguage:   stagehand.SessionActParamsXLanguageTypescript,
+			XSDKVersion: stagehand.String("3.0.6"),
+		},
+	)
+	if err != nil {
+		panic(err.Error())
+	}
+	fmt.Printf("Act completed: %s\n", actResponse.Data.Result.Message)
+
+	// Extract structured data from the page using a JSON schema
+	extractResponse, err := client.Sessions.Extract(
+		context.TODO(),
+		sessionID,
+		stagehand.SessionExtractParams{
+			Instruction: stagehand.String("extract the text of the top comment"),
+			Schema: map[string]any{
+				"type": "object",
+				"properties": map[string]any{
+					"commentText": map[string]any{
+						"type":        "string",
+						"description": "The text content of the top comment",
+					},
+					"author": map[string]any{
+						"type":        "string",
+						"description": "The username of the comment author",
+					},
+				},
+			},
+			XLanguage:   stagehand.SessionExtractParamsXLanguageTypescript,
+			XSDKVersion: stagehand.String("3.0.6"),
+		},
+	)
+	if err != nil {
+		panic(err.Error())
+	}
+	fmt.Printf("Extracted: %+v\n", extractResponse.Data.Result)
+
+	// Run an autonomous agent to accomplish a goal
+	// The agent can navigate, click, type, and interact with pages
+	executeResponse, err := client.Sessions.Execute(
+		context.TODO(),
+		sessionID,
+		stagehand.SessionExecuteParams{
+			ExecuteOptions: stagehand.SessionExecuteParamsExecuteOptions{
+				Instruction: "Find the profile page for the top commenter",
+				MaxSteps:    stagehand.Float(10),
+			},
+			AgentConfig: stagehand.SessionExecuteParamsAgentConfig{
+				// Model config with provider/model format and API key
+				Model: stagehand.ModelConfigUnionParam{
+					OfModelConfigModelConfigObject: &stagehand.ModelConfigModelConfigObjectParam{
+						ModelName: "openai/gpt-4.1-mini",
+						APIKey:    stagehand.String("sk-your-api-key"),
+					},
+				},
+				Cua: stagehand.Bool(false),
+			},
+			XLanguage:   stagehand.SessionExecuteParamsXLanguageTypescript,
+			XSDKVersion: stagehand.String("3.0.6"),
+		},
+	)
+	if err != nil {
+		panic(err.Error())
+	}
+	fmt.Printf("Agent result: %s\n", executeResponse.Data.Result.Message)
+
+	// End the session to clean up resources
+	_, err = client.Sessions.End(
+		context.TODO(),
+		sessionID,
+		stagehand.SessionEndParams{
+			XLanguage:   stagehand.SessionEndParamsXLanguageTypescript,
+			XSDKVersion: stagehand.String("3.0.6"),
+		},
+	)
+	if err != nil {
+		panic(err.Error())
+	}
+	fmt.Println("Session ended")
+}
 ```
 
 ### Request fields
@@ -288,15 +426,6 @@ The request option `option.WithDebugLog(nil)` may be helpful while debugging.
 
 See the [full list of request options](https://pkg.go.dev/github.com/browserbase/stagehand-go/option).
 
-### Pagination
-
-This library provides some conveniences for working with paginated list endpoints.
-
-You can use `.ListAutoPaging()` methods to iterate through items across all pages:
-
-Or you can use simple `.List()` methods to fetch a single page and receive a standard response object
-with additional helper methods like `.GetNextPage()`, e.g.:
-
 ### Errors
 
 When the API returns a non-success status code, we return an error with type
@@ -343,19 +472,6 @@ client.Sessions.Start(
 	option.WithRequestTimeout(20*time.Second),
 )
 ```
-
-### File uploads
-
-Request parameters that correspond to file uploads in multipart requests are typed as
-`io.Reader`. The contents of the `io.Reader` will by default be sent as a multipart form
-part with the file name of "anonymous_file" and content-type of "application/octet-stream".
-
-The file name and content-type can be customized by implementing `Name() string` or `ContentType()
-string` on the run-time type of `io.Reader`. Note that `os.File` implements `Name() string`, so a
-file returned by `os.Open` will be sent with the file name on disk.
-
-We also provide a helper `stagehand.File(reader io.Reader, filename string, contentType string)`
-which can be used to wrap any `io.Reader` with the appropriate file name and content type.
 
 ### Retries
 
