@@ -213,6 +213,34 @@ func main() {
 }
 ```
 
+### Running the example
+
+A complete working example is available in `examples/basic.go`. To run it:
+
+1. **Set up environment variables** by creating a `.env` file in the repository root:
+
+```bash
+BROWSERBASE_API_KEY=your_browserbase_api_key
+BROWSERBASE_PROJECT_ID=your_browserbase_project_id
+MODEL_API_KEY=your_openai_api_key
+```
+
+You can get your Browserbase API key and project ID from the [Browserbase dashboard](https://www.browserbase.com/).
+
+2. **Install dependencies**:
+
+```bash
+go mod tidy
+```
+
+3. **Run the example**:
+
+```bash
+go run examples/basic.go
+```
+
+The example demonstrates the full Stagehand workflow: starting a session, navigating to a page, observing actions, clicking elements, extracting data, and running an autonomous agent.
+
 ### Request fields
 
 The stagehand library uses the [`omitzero`](https://tip.golang.org/doc/go1.24#encodingjsonpkgencodingjson)
