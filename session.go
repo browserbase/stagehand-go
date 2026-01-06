@@ -95,18 +95,18 @@ func (r *SessionService) ActStreaming(ctx context.Context, id string, params Ses
 }
 
 // Terminates the browser session and releases all associated resources.
-func (r *SessionService) End(ctx context.Context, id string, body SessionEndParams, opts ...option.RequestOption) (res *SessionEndResponse, err error) {
-	if !param.IsOmitted(body.XLanguage) {
-		opts = append(opts, option.WithHeader("x-language", fmt.Sprintf("%s", body.XLanguage)))
+func (r *SessionService) End(ctx context.Context, id string, params SessionEndParams, opts ...option.RequestOption) (res *SessionEndResponse, err error) {
+	if !param.IsOmitted(params.XLanguage) {
+		opts = append(opts, option.WithHeader("x-language", fmt.Sprintf("%s", params.XLanguage)))
 	}
-	if !param.IsOmitted(body.XSDKVersion) {
-		opts = append(opts, option.WithHeader("x-sdk-version", fmt.Sprintf("%s", body.XSDKVersion.Value)))
+	if !param.IsOmitted(params.XSDKVersion) {
+		opts = append(opts, option.WithHeader("x-sdk-version", fmt.Sprintf("%s", params.XSDKVersion.Value)))
 	}
-	if !param.IsOmitted(body.XSentAt) {
-		opts = append(opts, option.WithHeader("x-sent-at", fmt.Sprintf("%s", body.XSentAt.Value)))
+	if !param.IsOmitted(params.XSentAt) {
+		opts = append(opts, option.WithHeader("x-sent-at", fmt.Sprintf("%s", params.XSentAt.Value)))
 	}
-	if !param.IsOmitted(body.XStreamResponse) {
-		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%s", body.XStreamResponse)))
+	if !param.IsOmitted(params.XStreamResponse) {
+		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%s", params.XStreamResponse)))
 	}
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -114,7 +114,7 @@ func (r *SessionService) End(ctx context.Context, id string, body SessionEndPara
 		return
 	}
 	path := fmt.Sprintf("v1/sessions/%s/end", id)
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
 	return
 }
 
@@ -1041,7 +1041,8 @@ type SessionEndParams struct {
 	// Version of the Stagehand SDK
 	XSDKVersion param.Opt[string] `header:"x-sdk-version,omitzero" json:"-"`
 	// ISO timestamp when request was sent
-	XSentAt param.Opt[time.Time] `header:"x-sent-at,omitzero" format:"date-time" json:"-"`
+	XSentAt   param.Opt[time.Time] `header:"x-sent-at,omitzero" format:"date-time" json:"-"`
+	ForceBody any                  `json:"_forceBody,omitzero"`
 	// Client SDK language
 	//
 	// Any of "typescript", "python", "playground".

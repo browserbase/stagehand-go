@@ -80,6 +80,7 @@ func TestSessionEndWithOptionalParams(t *testing.T) {
 		context.TODO(),
 		"c4dbf3a9-9a58-4b22-8a1c-9f20f9f9e123",
 		stagehand.SessionEndParams{
+			ForceBody:       map[string]any{},
 			XLanguage:       stagehand.SessionEndParamsXLanguageTypescript,
 			XSDKVersion:     stagehand.String("3.0.6"),
 			XSentAt:         stagehand.Time(time.Now()),
