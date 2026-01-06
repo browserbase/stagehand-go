@@ -114,7 +114,7 @@ func (r *SessionService) End(ctx context.Context, id string, body SessionEndPara
 		return
 	}
 	path := fmt.Sprintf("v1/sessions/%s/end", id)
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, nil, &res, opts...)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
 	return
 }
 
@@ -1051,6 +1051,14 @@ type SessionEndParams struct {
 	// Any of "true", "false".
 	XStreamResponse SessionEndParamsXStreamResponse `header:"x-stream-response,omitzero" json:"-"`
 	paramObj
+}
+
+func (r SessionEndParams) MarshalJSON() (data []byte, err error) {
+	type shadow SessionEndParams
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionEndParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
 }
 
 // Client SDK language
