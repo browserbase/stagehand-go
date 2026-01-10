@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.17.0 (2026-01-10)
+
+Full Changelog: [v0.16.1...v0.17.0](https://github.com/browserbase/stagehand-go/compare/v0.16.1...v0.17.0)
+
+### Features
+
+* /end endpoint returns empty object ([af4b8a5](https://github.com/browserbase/stagehand-go/commit/af4b8a5d5025f4bad9e93d02f854c00b80380e46))
+* Added optional param to force empty object ([f4b3511](https://github.com/browserbase/stagehand-go/commit/f4b3511ce275895ef9bce6fc9348813e6b860321))
+* Removed requiring x-language and x-sdk-version from openapi spec ([fd90d99](https://github.com/browserbase/stagehand-go/commit/fd90d99e87719080546ab183c6c655e4b3b02df5))
+
+
+### Documentation
+
+* add section on how to run the example ([#21](https://github.com/browserbase/stagehand-go/issues/21)) ([5e6109c](https://github.com/browserbase/stagehand-go/commit/5e6109c937b94dbb4e0a2a4fd5382dc7f77ee9d6))
+* prominently feature MCP server setup in root SDK readmes ([26a71e9](https://github.com/browserbase/stagehand-go/commit/26a71e9fe7f3a3413ffb5aeac71df1f5ac5f9007))
+
 ## 0.16.1 (2026-01-05)
 
 Full Changelog: [v0.16.0...v0.16.1](https://github.com/browserbase/stagehand-go/compare/v0.16.0...v0.16.1)
