@@ -316,7 +316,7 @@ func (u *ModelConfigUnionParam) asAny() any {
 
 // The property ModelName is required.
 type ModelConfigModelConfigObjectParam struct {
-	// Model name string without prefix (e.g., 'gpt-5-nano', 'claude-4.5-opus')
+	// Model name string (e.g., 'openai/gpt-5-nano', 'anthropic/claude-4.5-opus')
 	ModelName string `json:"modelName,required"`
 	// API key for the model provider
 	APIKey param.Opt[string] `json:"apiKey,omitzero"`
