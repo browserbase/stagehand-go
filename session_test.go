@@ -279,7 +279,7 @@ func TestSessionStartWithOptionalParams(t *testing.T) {
 		option.WithModelAPIKey("My Model API Key"),
 	)
 	_, err := client.Sessions.Start(context.TODO(), stagehand.SessionStartParams{
-		ModelName:    "gpt-4o",
+		ModelName:    "openai/gpt-4o",
 		ActTimeoutMs: stagehand.Float(0),
 		Browser: stagehand.SessionStartParamsBrowser{
 			CdpURL: stagehand.String("ws://localhost:9222"),
