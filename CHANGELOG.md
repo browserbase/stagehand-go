@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.17.1 (2026-01-13)
+
+Full Changelog: [v0.17.0...v0.17.1](https://github.com/browserbase/stagehand-go/compare/v0.17.0...v0.17.1)
+
 ## 0.17.0 (2026-01-13)
 
 Full Changelog: [v0.16.1...v0.17.0](https://github.com/browserbase/stagehand-go/compare/v0.16.1...v0.17.0)
