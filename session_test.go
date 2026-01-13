@@ -36,7 +36,6 @@ func TestSessionActWithOptionalParams(t *testing.T) {
 			Input: stagehand.SessionActParamsInputUnion{
 				OfString: stagehand.String("Click the login button"),
 			},
-			FrameID: stagehand.String("frameId"),
 			Options: stagehand.SessionActParamsOptions{
 				Model: stagehand.ModelConfigUnionParam{
 					OfString: stagehand.String("openai/gpt-5-nano"),
@@ -78,7 +77,6 @@ func TestSessionEndWithOptionalParams(t *testing.T) {
 		context.TODO(),
 		"c4dbf3a9-9a58-4b22-8a1c-9f20f9f9e123",
 		stagehand.SessionEndParams{
-			ForceBody:       map[string]any{},
 			XSentAt:         stagehand.Time(time.Now()),
 			XStreamResponse: stagehand.SessionEndParamsXStreamResponseTrue,
 		},
@@ -124,7 +122,6 @@ func TestSessionExecuteWithOptionalParams(t *testing.T) {
 				HighlightCursor: stagehand.Bool(true),
 				MaxSteps:        stagehand.Float(20),
 			},
-			FrameID:         stagehand.String("frameId"),
 			XSentAt:         stagehand.Time(time.Now()),
 			XStreamResponse: stagehand.SessionExecuteParamsXStreamResponseTrue,
 		},
@@ -157,7 +154,6 @@ func TestSessionExtractWithOptionalParams(t *testing.T) {
 		context.TODO(),
 		"c4dbf3a9-9a58-4b22-8a1c-9f20f9f9e123",
 		stagehand.SessionExtractParams{
-			FrameID:     stagehand.String("frameId"),
 			Instruction: stagehand.String("Extract all product names and prices from the page"),
 			Options: stagehand.SessionExtractParamsOptions{
 				Model: stagehand.ModelConfigUnionParam{
@@ -201,8 +197,7 @@ func TestSessionNavigateWithOptionalParams(t *testing.T) {
 		context.TODO(),
 		"c4dbf3a9-9a58-4b22-8a1c-9f20f9f9e123",
 		stagehand.SessionNavigateParams{
-			URL:     "https://example.com",
-			FrameID: stagehand.String("frameId"),
+			URL: "https://example.com",
 			Options: stagehand.SessionNavigateParamsOptions{
 				Referer:   stagehand.String("referer"),
 				Timeout:   stagehand.Float(30000),
@@ -241,7 +236,6 @@ func TestSessionObserveWithOptionalParams(t *testing.T) {
 		context.TODO(),
 		"c4dbf3a9-9a58-4b22-8a1c-9f20f9f9e123",
 		stagehand.SessionObserveParams{
-			FrameID:     stagehand.String("frameId"),
 			Instruction: stagehand.String("Find all clickable navigation links"),
 			Options: stagehand.SessionObserveParamsOptions{
 				Model: stagehand.ModelConfigUnionParam{
