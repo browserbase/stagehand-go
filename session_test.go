@@ -46,8 +46,6 @@ func TestSessionActWithOptionalParams(t *testing.T) {
 					"username": "john_doe",
 				},
 			},
-			XLanguage:       stagehand.SessionActParamsXLanguageTypescript,
-			XSDKVersion:     stagehand.String("3.0.6"),
 			XSentAt:         stagehand.Time(time.Now()),
 			XStreamResponse: stagehand.SessionActParamsXStreamResponseTrue,
 		},
@@ -80,8 +78,7 @@ func TestSessionEndWithOptionalParams(t *testing.T) {
 		context.TODO(),
 		"c4dbf3a9-9a58-4b22-8a1c-9f20f9f9e123",
 		stagehand.SessionEndParams{
-			XLanguage:       stagehand.SessionEndParamsXLanguageTypescript,
-			XSDKVersion:     stagehand.String("3.0.6"),
+			ForceBody:       map[string]any{},
 			XSentAt:         stagehand.Time(time.Now()),
 			XStreamResponse: stagehand.SessionEndParamsXStreamResponseTrue,
 		},
@@ -128,8 +125,6 @@ func TestSessionExecuteWithOptionalParams(t *testing.T) {
 				MaxSteps:        stagehand.Float(20),
 			},
 			FrameID:         stagehand.String("frameId"),
-			XLanguage:       stagehand.SessionExecuteParamsXLanguageTypescript,
-			XSDKVersion:     stagehand.String("3.0.6"),
 			XSentAt:         stagehand.Time(time.Now()),
 			XStreamResponse: stagehand.SessionExecuteParamsXStreamResponseTrue,
 		},
@@ -174,8 +169,6 @@ func TestSessionExtractWithOptionalParams(t *testing.T) {
 			Schema: map[string]any{
 				"foo": "bar",
 			},
-			XLanguage:       stagehand.SessionExtractParamsXLanguageTypescript,
-			XSDKVersion:     stagehand.String("3.0.6"),
 			XSentAt:         stagehand.Time(time.Now()),
 			XStreamResponse: stagehand.SessionExtractParamsXStreamResponseTrue,
 		},
@@ -216,8 +209,6 @@ func TestSessionNavigateWithOptionalParams(t *testing.T) {
 				WaitUntil: "networkidle",
 			},
 			StreamResponse:  stagehand.Bool(true),
-			XLanguage:       stagehand.SessionNavigateParamsXLanguageTypescript,
-			XSDKVersion:     stagehand.String("3.0.6"),
 			XSentAt:         stagehand.Time(time.Now()),
 			XStreamResponse: stagehand.SessionNavigateParamsXStreamResponseTrue,
 		},
@@ -259,8 +250,6 @@ func TestSessionObserveWithOptionalParams(t *testing.T) {
 				Selector: stagehand.String("nav"),
 				Timeout:  stagehand.Float(30000),
 			},
-			XLanguage:       stagehand.SessionObserveParamsXLanguageTypescript,
-			XSDKVersion:     stagehand.String("3.0.6"),
 			XSentAt:         stagehand.Time(time.Now()),
 			XStreamResponse: stagehand.SessionObserveParamsXStreamResponseTrue,
 		},
@@ -290,7 +279,7 @@ func TestSessionStartWithOptionalParams(t *testing.T) {
 		option.WithModelAPIKey("My Model API Key"),
 	)
 	_, err := client.Sessions.Start(context.TODO(), stagehand.SessionStartParams{
-		ModelName:    "gpt-4o",
+		ModelName:    "openai/gpt-4o",
 		ActTimeoutMs: stagehand.Float(0),
 		Browser: stagehand.SessionStartParamsBrowser{
 			CdpURL: stagehand.String("ws://localhost:9222"),
@@ -375,8 +364,6 @@ func TestSessionStartWithOptionalParams(t *testing.T) {
 		SystemPrompt:         stagehand.String("systemPrompt"),
 		Verbose:              1,
 		WaitForCaptchaSolves: stagehand.Bool(true),
-		XLanguage:            stagehand.SessionStartParamsXLanguageTypescript,
-		XSDKVersion:          stagehand.String("3.0.6"),
 		XSentAt:              stagehand.Time(time.Now()),
 		XStreamResponse:      stagehand.SessionStartParamsXStreamResponseTrue,
 	})
