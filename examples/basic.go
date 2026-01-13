@@ -15,9 +15,7 @@ func main() {
 	client := stagehand.NewClient() // Uses env vars: BROWSERBASE_API_KEY, BROWSERBASE_PROJECT_ID, MODEL_API_KEY
 
 	startResponse, err := client.Sessions.Start(context.TODO(), stagehand.SessionStartParams{
-		ModelName:   "gpt-4o",
-		XLanguage:   stagehand.SessionStartParamsXLanguageTypescript,
-		XSDKVersion: stagehand.String("3.0.6"),
+		ModelName: "gpt-4o",
 	})
 	if err != nil {
 		panic(err.Error())
@@ -31,10 +29,7 @@ func main() {
 		context.TODO(),
 		sessionID,
 		stagehand.SessionNavigateParams{
-			URL:         "https://news.ycombinator.com",
-			FrameID:     stagehand.String(""),
-			XLanguage:   stagehand.SessionNavigateParamsXLanguageTypescript,
-			XSDKVersion: stagehand.String("3.0.6"),
+			URL: "https://news.ycombinator.com",
 		},
 	)
 	if err != nil {
@@ -48,8 +43,6 @@ func main() {
 		sessionID,
 		stagehand.SessionObserveParams{
 			Instruction: stagehand.String("find the link to view comments for the top post"),
-			XLanguage:   stagehand.SessionObserveParamsXLanguageTypescript,
-			XSDKVersion: stagehand.String("3.0.6"),
 		},
 	)
 	if err != nil {
@@ -81,8 +74,6 @@ func main() {
 					Arguments:   action.Arguments,
 				},
 			},
-			XLanguage:   stagehand.SessionActParamsXLanguageTypescript,
-			XSDKVersion: stagehand.String("3.0.6"),
 		},
 	)
 	if err != nil {
@@ -111,8 +102,6 @@ func main() {
 				},
 				"required": []string{"commentText"},
 			},
-			XLanguage:   stagehand.SessionExtractParamsXLanguageTypescript,
-			XSDKVersion: stagehand.String("3.0.6"),
 		},
 	)
 	if err != nil {
@@ -149,8 +138,6 @@ func main() {
 				},
 				Cua: stagehand.Bool(false),
 			},
-			XLanguage:   stagehand.SessionExecuteParamsXLanguageTypescript,
-			XSDKVersion: stagehand.String("3.0.6"),
 		},
 	)
 	if err != nil {
@@ -164,10 +151,7 @@ func main() {
 	_, err = client.Sessions.End(
 		context.TODO(),
 		sessionID,
-		stagehand.SessionEndParams{
-			XLanguage:   stagehand.SessionEndParamsXLanguageTypescript,
-			XSDKVersion: stagehand.String("3.0.6"),
-		},
+		stagehand.SessionEndParams{},
 	)
 	if err != nil {
 		panic(err.Error())
