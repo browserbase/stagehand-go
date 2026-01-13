@@ -42,12 +42,6 @@ func NewSessionService(opts ...option.RequestOption) (r SessionService) {
 // Executes a browser action using natural language instructions or a predefined
 // Action object.
 func (r *SessionService) Act(ctx context.Context, id string, params SessionActParams, opts ...option.RequestOption) (res *SessionActResponse, err error) {
-	if !param.IsOmitted(params.XLanguage) {
-		opts = append(opts, option.WithHeader("x-language", fmt.Sprintf("%s", params.XLanguage)))
-	}
-	if !param.IsOmitted(params.XSDKVersion) {
-		opts = append(opts, option.WithHeader("x-sdk-version", fmt.Sprintf("%s", params.XSDKVersion.Value)))
-	}
 	if !param.IsOmitted(params.XSentAt) {
 		opts = append(opts, option.WithHeader("x-sent-at", fmt.Sprintf("%s", params.XSentAt.Value)))
 	}
@@ -71,12 +65,6 @@ func (r *SessionService) ActStreaming(ctx context.Context, id string, params Ses
 		raw *http.Response
 		err error
 	)
-	if !param.IsOmitted(params.XLanguage) {
-		opts = append(opts, option.WithHeader("x-language", fmt.Sprintf("%s", params.XLanguage)))
-	}
-	if !param.IsOmitted(params.XSDKVersion) {
-		opts = append(opts, option.WithHeader("x-sdk-version", fmt.Sprintf("%s", params.XSDKVersion.Value)))
-	}
 	if !param.IsOmitted(params.XSentAt) {
 		opts = append(opts, option.WithHeader("x-sent-at", fmt.Sprintf("%s", params.XSentAt.Value)))
 	}
@@ -95,18 +83,12 @@ func (r *SessionService) ActStreaming(ctx context.Context, id string, params Ses
 }
 
 // Terminates the browser session and releases all associated resources.
-func (r *SessionService) End(ctx context.Context, id string, body SessionEndParams, opts ...option.RequestOption) (res *SessionEndResponse, err error) {
-	if !param.IsOmitted(body.XLanguage) {
-		opts = append(opts, option.WithHeader("x-language", fmt.Sprintf("%s", body.XLanguage)))
+func (r *SessionService) End(ctx context.Context, id string, params SessionEndParams, opts ...option.RequestOption) (res *SessionEndResponse, err error) {
+	if !param.IsOmitted(params.XSentAt) {
+		opts = append(opts, option.WithHeader("x-sent-at", fmt.Sprintf("%s", params.XSentAt.Value)))
 	}
-	if !param.IsOmitted(body.XSDKVersion) {
-		opts = append(opts, option.WithHeader("x-sdk-version", fmt.Sprintf("%s", body.XSDKVersion.Value)))
-	}
-	if !param.IsOmitted(body.XSentAt) {
-		opts = append(opts, option.WithHeader("x-sent-at", fmt.Sprintf("%s", body.XSentAt.Value)))
-	}
-	if !param.IsOmitted(body.XStreamResponse) {
-		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%s", body.XStreamResponse)))
+	if !param.IsOmitted(params.XStreamResponse) {
+		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%s", params.XStreamResponse)))
 	}
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -114,18 +96,12 @@ func (r *SessionService) End(ctx context.Context, id string, body SessionEndPara
 		return
 	}
 	path := fmt.Sprintf("v1/sessions/%s/end", id)
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, nil, &res, opts...)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
 	return
 }
 
 // Runs an autonomous AI agent that can perform complex multi-step browser tasks.
 func (r *SessionService) Execute(ctx context.Context, id string, params SessionExecuteParams, opts ...option.RequestOption) (res *SessionExecuteResponse, err error) {
-	if !param.IsOmitted(params.XLanguage) {
-		opts = append(opts, option.WithHeader("x-language", fmt.Sprintf("%s", params.XLanguage)))
-	}
-	if !param.IsOmitted(params.XSDKVersion) {
-		opts = append(opts, option.WithHeader("x-sdk-version", fmt.Sprintf("%s", params.XSDKVersion.Value)))
-	}
 	if !param.IsOmitted(params.XSentAt) {
 		opts = append(opts, option.WithHeader("x-sent-at", fmt.Sprintf("%s", params.XSentAt.Value)))
 	}
@@ -148,12 +124,6 @@ func (r *SessionService) ExecuteStreaming(ctx context.Context, id string, params
 		raw *http.Response
 		err error
 	)
-	if !param.IsOmitted(params.XLanguage) {
-		opts = append(opts, option.WithHeader("x-language", fmt.Sprintf("%s", params.XLanguage)))
-	}
-	if !param.IsOmitted(params.XSDKVersion) {
-		opts = append(opts, option.WithHeader("x-sdk-version", fmt.Sprintf("%s", params.XSDKVersion.Value)))
-	}
 	if !param.IsOmitted(params.XSentAt) {
 		opts = append(opts, option.WithHeader("x-sent-at", fmt.Sprintf("%s", params.XSentAt.Value)))
 	}
@@ -173,12 +143,6 @@ func (r *SessionService) ExecuteStreaming(ctx context.Context, id string, params
 
 // Extracts structured data from the current page using AI-powered analysis.
 func (r *SessionService) Extract(ctx context.Context, id string, params SessionExtractParams, opts ...option.RequestOption) (res *SessionExtractResponse, err error) {
-	if !param.IsOmitted(params.XLanguage) {
-		opts = append(opts, option.WithHeader("x-language", fmt.Sprintf("%s", params.XLanguage)))
-	}
-	if !param.IsOmitted(params.XSDKVersion) {
-		opts = append(opts, option.WithHeader("x-sdk-version", fmt.Sprintf("%s", params.XSDKVersion.Value)))
-	}
 	if !param.IsOmitted(params.XSentAt) {
 		opts = append(opts, option.WithHeader("x-sent-at", fmt.Sprintf("%s", params.XSentAt.Value)))
 	}
@@ -201,12 +165,6 @@ func (r *SessionService) ExtractStreaming(ctx context.Context, id string, params
 		raw *http.Response
 		err error
 	)
-	if !param.IsOmitted(params.XLanguage) {
-		opts = append(opts, option.WithHeader("x-language", fmt.Sprintf("%s", params.XLanguage)))
-	}
-	if !param.IsOmitted(params.XSDKVersion) {
-		opts = append(opts, option.WithHeader("x-sdk-version", fmt.Sprintf("%s", params.XSDKVersion.Value)))
-	}
 	if !param.IsOmitted(params.XSentAt) {
 		opts = append(opts, option.WithHeader("x-sent-at", fmt.Sprintf("%s", params.XSentAt.Value)))
 	}
@@ -226,12 +184,6 @@ func (r *SessionService) ExtractStreaming(ctx context.Context, id string, params
 
 // Navigates the browser to the specified URL.
 func (r *SessionService) Navigate(ctx context.Context, id string, params SessionNavigateParams, opts ...option.RequestOption) (res *SessionNavigateResponse, err error) {
-	if !param.IsOmitted(params.XLanguage) {
-		opts = append(opts, option.WithHeader("x-language", fmt.Sprintf("%s", params.XLanguage)))
-	}
-	if !param.IsOmitted(params.XSDKVersion) {
-		opts = append(opts, option.WithHeader("x-sdk-version", fmt.Sprintf("%s", params.XSDKVersion.Value)))
-	}
 	if !param.IsOmitted(params.XSentAt) {
 		opts = append(opts, option.WithHeader("x-sent-at", fmt.Sprintf("%s", params.XSentAt.Value)))
 	}
@@ -251,12 +203,6 @@ func (r *SessionService) Navigate(ctx context.Context, id string, params Session
 // Identifies and returns available actions on the current page that match the
 // given instruction.
 func (r *SessionService) Observe(ctx context.Context, id string, params SessionObserveParams, opts ...option.RequestOption) (res *SessionObserveResponse, err error) {
-	if !param.IsOmitted(params.XLanguage) {
-		opts = append(opts, option.WithHeader("x-language", fmt.Sprintf("%s", params.XLanguage)))
-	}
-	if !param.IsOmitted(params.XSDKVersion) {
-		opts = append(opts, option.WithHeader("x-sdk-version", fmt.Sprintf("%s", params.XSDKVersion.Value)))
-	}
 	if !param.IsOmitted(params.XSentAt) {
 		opts = append(opts, option.WithHeader("x-sent-at", fmt.Sprintf("%s", params.XSentAt.Value)))
 	}
@@ -280,12 +226,6 @@ func (r *SessionService) ObserveStreaming(ctx context.Context, id string, params
 		raw *http.Response
 		err error
 	)
-	if !param.IsOmitted(params.XLanguage) {
-		opts = append(opts, option.WithHeader("x-language", fmt.Sprintf("%s", params.XLanguage)))
-	}
-	if !param.IsOmitted(params.XSDKVersion) {
-		opts = append(opts, option.WithHeader("x-sdk-version", fmt.Sprintf("%s", params.XSDKVersion.Value)))
-	}
 	if !param.IsOmitted(params.XSentAt) {
 		opts = append(opts, option.WithHeader("x-sent-at", fmt.Sprintf("%s", params.XSentAt.Value)))
 	}
@@ -306,12 +246,6 @@ func (r *SessionService) ObserveStreaming(ctx context.Context, id string, params
 // Creates a new browser session with the specified configuration. Returns a
 // session ID used for all subsequent operations.
 func (r *SessionService) Start(ctx context.Context, params SessionStartParams, opts ...option.RequestOption) (res *SessionStartResponse, err error) {
-	if !param.IsOmitted(params.XLanguage) {
-		opts = append(opts, option.WithHeader("x-language", fmt.Sprintf("%s", params.XLanguage)))
-	}
-	if !param.IsOmitted(params.XSDKVersion) {
-		opts = append(opts, option.WithHeader("x-sdk-version", fmt.Sprintf("%s", params.XSDKVersion.Value)))
-	}
 	if !param.IsOmitted(params.XSentAt) {
 		opts = append(opts, option.WithHeader("x-sent-at", fmt.Sprintf("%s", params.XSentAt.Value)))
 	}
@@ -382,7 +316,7 @@ func (u *ModelConfigUnionParam) asAny() any {
 
 // The property ModelName is required.
 type ModelConfigModelConfigObjectParam struct {
-	// Model name string without prefix (e.g., 'gpt-5-nano', 'claude-4.5-opus')
+	// Model name string (e.g., 'openai/gpt-5-nano', 'anthropic/claude-4.5-opus')
 	ModelName string `json:"modelName,required"`
 	// API key for the model provider
 	APIKey param.Opt[string] `json:"apiKey,omitzero"`
@@ -952,15 +886,9 @@ type SessionActParams struct {
 	Input SessionActParamsInputUnion `json:"input,omitzero,required"`
 	// Target frame ID for the action
 	FrameID param.Opt[string] `json:"frameId,omitzero"`
-	// Version of the Stagehand SDK
-	XSDKVersion param.Opt[string] `header:"x-sdk-version,omitzero" json:"-"`
 	// ISO timestamp when request was sent
 	XSentAt param.Opt[time.Time]    `header:"x-sent-at,omitzero" format:"date-time" json:"-"`
 	Options SessionActParamsOptions `json:"options,omitzero"`
-	// Client SDK language
-	//
-	// Any of "typescript", "python", "playground".
-	XLanguage SessionActParamsXLanguage `header:"x-language,omitzero" json:"-"`
 	// Whether to stream the response via SSE
 	//
 	// Any of "true", "false".
@@ -1020,15 +948,6 @@ func (r *SessionActParamsOptions) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// Client SDK language
-type SessionActParamsXLanguage string
-
-const (
-	SessionActParamsXLanguageTypescript SessionActParamsXLanguage = "typescript"
-	SessionActParamsXLanguagePython     SessionActParamsXLanguage = "python"
-	SessionActParamsXLanguagePlayground SessionActParamsXLanguage = "playground"
-)
-
 // Whether to stream the response via SSE
 type SessionActParamsXStreamResponse string
 
@@ -1038,14 +957,9 @@ const (
 )
 
 type SessionEndParams struct {
-	// Version of the Stagehand SDK
-	XSDKVersion param.Opt[string] `header:"x-sdk-version,omitzero" json:"-"`
 	// ISO timestamp when request was sent
-	XSentAt param.Opt[time.Time] `header:"x-sent-at,omitzero" format:"date-time" json:"-"`
-	// Client SDK language
-	//
-	// Any of "typescript", "python", "playground".
-	XLanguage SessionEndParamsXLanguage `header:"x-language,omitzero" json:"-"`
+	XSentAt   param.Opt[time.Time] `header:"x-sent-at,omitzero" format:"date-time" json:"-"`
+	ForceBody any                  `json:"_forceBody,omitzero"`
 	// Whether to stream the response via SSE
 	//
 	// Any of "true", "false".
@@ -1053,14 +967,13 @@ type SessionEndParams struct {
 	paramObj
 }
 
-// Client SDK language
-type SessionEndParamsXLanguage string
-
-const (
-	SessionEndParamsXLanguageTypescript SessionEndParamsXLanguage = "typescript"
-	SessionEndParamsXLanguagePython     SessionEndParamsXLanguage = "python"
-	SessionEndParamsXLanguagePlayground SessionEndParamsXLanguage = "playground"
-)
+func (r SessionEndParams) MarshalJSON() (data []byte, err error) {
+	type shadow SessionEndParams
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionEndParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
 
 // Whether to stream the response via SSE
 type SessionEndParamsXStreamResponse string
@@ -1075,14 +988,8 @@ type SessionExecuteParams struct {
 	ExecuteOptions SessionExecuteParamsExecuteOptions `json:"executeOptions,omitzero,required"`
 	// Target frame ID for the agent
 	FrameID param.Opt[string] `json:"frameId,omitzero"`
-	// Version of the Stagehand SDK
-	XSDKVersion param.Opt[string] `header:"x-sdk-version,omitzero" json:"-"`
 	// ISO timestamp when request was sent
 	XSentAt param.Opt[time.Time] `header:"x-sent-at,omitzero" format:"date-time" json:"-"`
-	// Client SDK language
-	//
-	// Any of "typescript", "python", "playground".
-	XLanguage SessionExecuteParamsXLanguage `header:"x-language,omitzero" json:"-"`
 	// Whether to stream the response via SSE
 	//
 	// Any of "true", "false".
@@ -1146,15 +1053,6 @@ func (r *SessionExecuteParamsExecuteOptions) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// Client SDK language
-type SessionExecuteParamsXLanguage string
-
-const (
-	SessionExecuteParamsXLanguageTypescript SessionExecuteParamsXLanguage = "typescript"
-	SessionExecuteParamsXLanguagePython     SessionExecuteParamsXLanguage = "python"
-	SessionExecuteParamsXLanguagePlayground SessionExecuteParamsXLanguage = "playground"
-)
-
 // Whether to stream the response via SSE
 type SessionExecuteParamsXStreamResponse string
 
@@ -1168,17 +1066,11 @@ type SessionExtractParams struct {
 	FrameID param.Opt[string] `json:"frameId,omitzero"`
 	// Natural language instruction for what to extract
 	Instruction param.Opt[string] `json:"instruction,omitzero"`
-	// Version of the Stagehand SDK
-	XSDKVersion param.Opt[string] `header:"x-sdk-version,omitzero" json:"-"`
 	// ISO timestamp when request was sent
 	XSentAt param.Opt[time.Time]        `header:"x-sent-at,omitzero" format:"date-time" json:"-"`
 	Options SessionExtractParamsOptions `json:"options,omitzero"`
 	// JSON Schema defining the structure of data to extract
 	Schema map[string]any `json:"schema,omitzero"`
-	// Client SDK language
-	//
-	// Any of "typescript", "python", "playground".
-	XLanguage SessionExtractParamsXLanguage `header:"x-language,omitzero" json:"-"`
 	// Whether to stream the response via SSE
 	//
 	// Any of "true", "false".
@@ -1213,15 +1105,6 @@ func (r *SessionExtractParamsOptions) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// Client SDK language
-type SessionExtractParamsXLanguage string
-
-const (
-	SessionExtractParamsXLanguageTypescript SessionExtractParamsXLanguage = "typescript"
-	SessionExtractParamsXLanguagePython     SessionExtractParamsXLanguage = "python"
-	SessionExtractParamsXLanguagePlayground SessionExtractParamsXLanguage = "playground"
-)
-
 // Whether to stream the response via SSE
 type SessionExtractParamsXStreamResponse string
 
@@ -1237,15 +1120,9 @@ type SessionNavigateParams struct {
 	FrameID param.Opt[string] `json:"frameId,omitzero"`
 	// Whether to stream the response via SSE
 	StreamResponse param.Opt[bool] `json:"streamResponse,omitzero"`
-	// Version of the Stagehand SDK
-	XSDKVersion param.Opt[string] `header:"x-sdk-version,omitzero" json:"-"`
 	// ISO timestamp when request was sent
 	XSentAt param.Opt[time.Time]         `header:"x-sent-at,omitzero" format:"date-time" json:"-"`
 	Options SessionNavigateParamsOptions `json:"options,omitzero"`
-	// Client SDK language
-	//
-	// Any of "typescript", "python", "playground".
-	XLanguage SessionNavigateParamsXLanguage `header:"x-language,omitzero" json:"-"`
 	// Whether to stream the response via SSE
 	//
 	// Any of "true", "false".
@@ -1287,15 +1164,6 @@ func init() {
 	)
 }
 
-// Client SDK language
-type SessionNavigateParamsXLanguage string
-
-const (
-	SessionNavigateParamsXLanguageTypescript SessionNavigateParamsXLanguage = "typescript"
-	SessionNavigateParamsXLanguagePython     SessionNavigateParamsXLanguage = "python"
-	SessionNavigateParamsXLanguagePlayground SessionNavigateParamsXLanguage = "playground"
-)
-
 // Whether to stream the response via SSE
 type SessionNavigateParamsXStreamResponse string
 
@@ -1309,15 +1177,9 @@ type SessionObserveParams struct {
 	FrameID param.Opt[string] `json:"frameId,omitzero"`
 	// Natural language instruction for what actions to find
 	Instruction param.Opt[string] `json:"instruction,omitzero"`
-	// Version of the Stagehand SDK
-	XSDKVersion param.Opt[string] `header:"x-sdk-version,omitzero" json:"-"`
 	// ISO timestamp when request was sent
 	XSentAt param.Opt[time.Time]        `header:"x-sent-at,omitzero" format:"date-time" json:"-"`
 	Options SessionObserveParamsOptions `json:"options,omitzero"`
-	// Client SDK language
-	//
-	// Any of "typescript", "python", "playground".
-	XLanguage SessionObserveParamsXLanguage `header:"x-language,omitzero" json:"-"`
 	// Whether to stream the response via SSE
 	//
 	// Any of "true", "false".
@@ -1352,15 +1214,6 @@ func (r *SessionObserveParamsOptions) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// Client SDK language
-type SessionObserveParamsXLanguage string
-
-const (
-	SessionObserveParamsXLanguageTypescript SessionObserveParamsXLanguage = "typescript"
-	SessionObserveParamsXLanguagePython     SessionObserveParamsXLanguage = "python"
-	SessionObserveParamsXLanguagePlayground SessionObserveParamsXLanguage = "playground"
-)
-
 // Whether to stream the response via SSE
 type SessionObserveParamsXStreamResponse string
 
@@ -1385,8 +1238,6 @@ type SessionStartParams struct {
 	SystemPrompt param.Opt[string] `json:"systemPrompt,omitzero"`
 	// Wait for captcha solves (deprecated, v2 only)
 	WaitForCaptchaSolves param.Opt[bool] `json:"waitForCaptchaSolves,omitzero"`
-	// Version of the Stagehand SDK
-	XSDKVersion param.Opt[string] `header:"x-sdk-version,omitzero" json:"-"`
 	// ISO timestamp when request was sent
 	XSentAt                        param.Opt[time.Time]                             `header:"x-sent-at,omitzero" format:"date-time" json:"-"`
 	Browser                        SessionStartParamsBrowser                        `json:"browser,omitzero"`
@@ -1395,10 +1246,6 @@ type SessionStartParams struct {
 	//
 	// Any of 0, 1, 2.
 	Verbose float64 `json:"verbose,omitzero"`
-	// Client SDK language
-	//
-	// Any of "typescript", "python", "playground".
-	XLanguage SessionStartParamsXLanguage `header:"x-language,omitzero" json:"-"`
 	// Whether to stream the response via SSE
 	//
 	// Any of "true", "false".
@@ -1808,15 +1655,6 @@ func (r SessionStartParamsBrowserbaseSessionCreateParamsProxiesProxyConfigListIt
 func (r *SessionStartParamsBrowserbaseSessionCreateParamsProxiesProxyConfigListItemExternal) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
-
-// Client SDK language
-type SessionStartParamsXLanguage string
-
-const (
-	SessionStartParamsXLanguageTypescript SessionStartParamsXLanguage = "typescript"
-	SessionStartParamsXLanguagePython     SessionStartParamsXLanguage = "python"
-	SessionStartParamsXLanguagePlayground SessionStartParamsXLanguage = "playground"
-)
 
 // Whether to stream the response via SSE
 type SessionStartParamsXStreamResponse string
