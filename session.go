@@ -72,7 +72,7 @@ func (r *SessionService) ActStreaming(ctx context.Context, id string, params Ses
 		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%s", params.XStreamResponse)))
 	}
 	opts = slices.Concat(r.Options, opts)
-	opts = append([]option.RequestOption{option.WithJSONSet("streamResponse", true)}, opts...)
+	opts = append(opts, option.WithJSONSet("streamResponse", true))
 	if id == "" {
 		err = errors.New("missing required id parameter")
 		return
@@ -131,7 +131,7 @@ func (r *SessionService) ExecuteStreaming(ctx context.Context, id string, params
 		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%s", params.XStreamResponse)))
 	}
 	opts = slices.Concat(r.Options, opts)
-	opts = append([]option.RequestOption{option.WithJSONSet("streamResponse", true)}, opts...)
+	opts = append(opts, option.WithJSONSet("streamResponse", true))
 	if id == "" {
 		err = errors.New("missing required id parameter")
 		return
@@ -172,7 +172,7 @@ func (r *SessionService) ExtractStreaming(ctx context.Context, id string, params
 		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%s", params.XStreamResponse)))
 	}
 	opts = slices.Concat(r.Options, opts)
-	opts = append([]option.RequestOption{option.WithJSONSet("streamResponse", true)}, opts...)
+	opts = append(opts, option.WithJSONSet("streamResponse", true))
 	if id == "" {
 		err = errors.New("missing required id parameter")
 		return
@@ -233,7 +233,7 @@ func (r *SessionService) ObserveStreaming(ctx context.Context, id string, params
 		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%s", params.XStreamResponse)))
 	}
 	opts = slices.Concat(r.Options, opts)
-	opts = append([]option.RequestOption{option.WithJSONSet("streamResponse", true)}, opts...)
+	opts = append(opts, option.WithJSONSet("streamResponse", true))
 	if id == "" {
 		err = errors.New("missing required id parameter")
 		return
