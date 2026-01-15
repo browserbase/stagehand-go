@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package stagehand_test
+package stagehandsdk_test
 
 import (
 	"context"
@@ -23,7 +23,7 @@ func TestSessionActWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := stagehand.NewClient(
+	client := stagehandsdk.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithBrowserbaseAPIKey("My Browserbase API Key"),
 		option.WithBrowserbaseProjectID("My Browserbase Project ID"),
@@ -32,25 +32,25 @@ func TestSessionActWithOptionalParams(t *testing.T) {
 	_, err := client.Sessions.Act(
 		context.TODO(),
 		"c4dbf3a9-9a58-4b22-8a1c-9f20f9f9e123",
-		stagehand.SessionActParams{
-			Input: stagehand.SessionActParamsInputUnion{
-				OfString: stagehand.String("Click the login button"),
+		stagehandsdk.SessionActParams{
+			Input: stagehandsdk.SessionActParamsInputUnion{
+				OfString: stagehandsdk.String("Click the login button"),
 			},
 			Options: stagehand.SessionActParamsOptions{
 				Model: stagehand.ModelConfigUnionParam{
 					OfString: stagehand.String("openai/gpt-5-nano"),
 				},
-				Timeout: stagehand.Float(30000),
+				Timeout: stagehandsdk.Float(30000),
 				Variables: map[string]string{
 					"username": "john_doe",
 				},
 			},
-			XSentAt:         stagehand.Time(time.Now()),
-			XStreamResponse: stagehand.SessionActParamsXStreamResponseTrue,
+			XSentAt:         stagehandsdk.Time(time.Now()),
+			XStreamResponse: stagehandsdk.SessionActParamsXStreamResponseTrue,
 		},
 	)
 	if err != nil {
-		var apierr *stagehand.Error
+		var apierr *stagehandsdk.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -67,7 +67,7 @@ func TestSessionEndWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := stagehand.NewClient(
+	client := stagehandsdk.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithBrowserbaseAPIKey("My Browserbase API Key"),
 		option.WithBrowserbaseProjectID("My Browserbase Project ID"),
@@ -76,13 +76,13 @@ func TestSessionEndWithOptionalParams(t *testing.T) {
 	_, err := client.Sessions.End(
 		context.TODO(),
 		"c4dbf3a9-9a58-4b22-8a1c-9f20f9f9e123",
-		stagehand.SessionEndParams{
-			XSentAt:         stagehand.Time(time.Now()),
-			XStreamResponse: stagehand.SessionEndParamsXStreamResponseTrue,
+		stagehandsdk.SessionEndParams{
+			XSentAt:         stagehandsdk.Time(time.Now()),
+			XStreamResponse: stagehandsdk.SessionEndParamsXStreamResponseTrue,
 		},
 	)
 	if err != nil {
-		var apierr *stagehand.Error
+		var apierr *stagehandsdk.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -99,7 +99,7 @@ func TestSessionExecuteWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := stagehand.NewClient(
+	client := stagehandsdk.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithBrowserbaseAPIKey("My Browserbase API Key"),
 		option.WithBrowserbaseProjectID("My Browserbase Project ID"),
@@ -108,26 +108,26 @@ func TestSessionExecuteWithOptionalParams(t *testing.T) {
 	_, err := client.Sessions.Execute(
 		context.TODO(),
 		"c4dbf3a9-9a58-4b22-8a1c-9f20f9f9e123",
-		stagehand.SessionExecuteParams{
-			AgentConfig: stagehand.SessionExecuteParamsAgentConfig{
-				Cua: stagehand.Bool(true),
-				Model: stagehand.ModelConfigUnionParam{
-					OfString: stagehand.String("openai/gpt-5-nano"),
+		stagehandsdk.SessionExecuteParams{
+			AgentConfig: stagehandsdk.SessionExecuteParamsAgentConfig{
+				Cua: stagehandsdk.Bool(true),
+				Model: stagehandsdk.ModelConfigUnionParam{
+					OfString: stagehandsdk.String("openai/gpt-5-nano"),
 				},
 				Provider:     "openai",
-				SystemPrompt: stagehand.String("systemPrompt"),
+				SystemPrompt: stagehandsdk.String("systemPrompt"),
 			},
-			ExecuteOptions: stagehand.SessionExecuteParamsExecuteOptions{
+			ExecuteOptions: stagehandsdk.SessionExecuteParamsExecuteOptions{
 				Instruction:     "Log in with username 'demo' and password 'test123', then navigate to settings",
-				HighlightCursor: stagehand.Bool(true),
-				MaxSteps:        stagehand.Float(20),
+				HighlightCursor: stagehandsdk.Bool(true),
+				MaxSteps:        stagehandsdk.Float(20),
 			},
 			XSentAt:         stagehand.Time(time.Now()),
 			XStreamResponse: stagehand.SessionExecuteParamsXStreamResponseTrue,
 		},
 	)
 	if err != nil {
-		var apierr *stagehand.Error
+		var apierr *stagehandsdk.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -144,7 +144,7 @@ func TestSessionExtractWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := stagehand.NewClient(
+	client := stagehandsdk.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithBrowserbaseAPIKey("My Browserbase API Key"),
 		option.WithBrowserbaseProjectID("My Browserbase Project ID"),
@@ -153,24 +153,24 @@ func TestSessionExtractWithOptionalParams(t *testing.T) {
 	_, err := client.Sessions.Extract(
 		context.TODO(),
 		"c4dbf3a9-9a58-4b22-8a1c-9f20f9f9e123",
-		stagehand.SessionExtractParams{
+		stagehandsdk.SessionExtractParams{
 			Instruction: stagehand.String("Extract all product names and prices from the page"),
 			Options: stagehand.SessionExtractParamsOptions{
 				Model: stagehand.ModelConfigUnionParam{
 					OfString: stagehand.String("openai/gpt-5-nano"),
 				},
-				Selector: stagehand.String("#main-content"),
-				Timeout:  stagehand.Float(30000),
+				Selector: stagehandsdk.String("#main-content"),
+				Timeout:  stagehandsdk.Float(30000),
 			},
 			Schema: map[string]any{
 				"foo": "bar",
 			},
-			XSentAt:         stagehand.Time(time.Now()),
-			XStreamResponse: stagehand.SessionExtractParamsXStreamResponseTrue,
+			XSentAt:         stagehandsdk.Time(time.Now()),
+			XStreamResponse: stagehandsdk.SessionExtractParamsXStreamResponseTrue,
 		},
 	)
 	if err != nil {
-		var apierr *stagehand.Error
+		var apierr *stagehandsdk.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -187,7 +187,7 @@ func TestSessionNavigateWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := stagehand.NewClient(
+	client := stagehandsdk.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithBrowserbaseAPIKey("My Browserbase API Key"),
 		option.WithBrowserbaseProjectID("My Browserbase Project ID"),
@@ -196,20 +196,20 @@ func TestSessionNavigateWithOptionalParams(t *testing.T) {
 	_, err := client.Sessions.Navigate(
 		context.TODO(),
 		"c4dbf3a9-9a58-4b22-8a1c-9f20f9f9e123",
-		stagehand.SessionNavigateParams{
+		stagehandsdk.SessionNavigateParams{
 			URL: "https://example.com",
 			Options: stagehand.SessionNavigateParamsOptions{
 				Referer:   stagehand.String("referer"),
 				Timeout:   stagehand.Float(30000),
 				WaitUntil: "networkidle",
 			},
-			StreamResponse:  stagehand.Bool(true),
-			XSentAt:         stagehand.Time(time.Now()),
-			XStreamResponse: stagehand.SessionNavigateParamsXStreamResponseTrue,
+			StreamResponse:  stagehandsdk.Bool(true),
+			XSentAt:         stagehandsdk.Time(time.Now()),
+			XStreamResponse: stagehandsdk.SessionNavigateParamsXStreamResponseTrue,
 		},
 	)
 	if err != nil {
-		var apierr *stagehand.Error
+		var apierr *stagehandsdk.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -226,7 +226,7 @@ func TestSessionObserveWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := stagehand.NewClient(
+	client := stagehandsdk.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithBrowserbaseAPIKey("My Browserbase API Key"),
 		option.WithBrowserbaseProjectID("My Browserbase Project ID"),
@@ -235,21 +235,21 @@ func TestSessionObserveWithOptionalParams(t *testing.T) {
 	_, err := client.Sessions.Observe(
 		context.TODO(),
 		"c4dbf3a9-9a58-4b22-8a1c-9f20f9f9e123",
-		stagehand.SessionObserveParams{
+		stagehandsdk.SessionObserveParams{
 			Instruction: stagehand.String("Find all clickable navigation links"),
 			Options: stagehand.SessionObserveParamsOptions{
 				Model: stagehand.ModelConfigUnionParam{
 					OfString: stagehand.String("openai/gpt-5-nano"),
 				},
-				Selector: stagehand.String("nav"),
-				Timeout:  stagehand.Float(30000),
+				Selector: stagehandsdk.String("nav"),
+				Timeout:  stagehandsdk.Float(30000),
 			},
-			XSentAt:         stagehand.Time(time.Now()),
-			XStreamResponse: stagehand.SessionObserveParamsXStreamResponseTrue,
+			XSentAt:         stagehandsdk.Time(time.Now()),
+			XStreamResponse: stagehandsdk.SessionObserveParamsXStreamResponseTrue,
 		},
 	)
 	if err != nil {
-		var apierr *stagehand.Error
+		var apierr *stagehandsdk.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -266,103 +266,103 @@ func TestSessionStartWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := stagehand.NewClient(
+	client := stagehandsdk.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithBrowserbaseAPIKey("My Browserbase API Key"),
 		option.WithBrowserbaseProjectID("My Browserbase Project ID"),
 		option.WithModelAPIKey("My Model API Key"),
 	)
-	_, err := client.Sessions.Start(context.TODO(), stagehand.SessionStartParams{
+	_, err := client.Sessions.Start(context.TODO(), stagehandsdk.SessionStartParams{
 		ModelName:    "openai/gpt-4o",
-		ActTimeoutMs: stagehand.Float(0),
-		Browser: stagehand.SessionStartParamsBrowser{
-			CdpURL: stagehand.String("ws://localhost:9222"),
-			LaunchOptions: stagehand.SessionStartParamsBrowserLaunchOptions{
-				AcceptDownloads:   stagehand.Bool(true),
+		ActTimeoutMs: stagehandsdk.Float(0),
+		Browser: stagehandsdk.SessionStartParamsBrowser{
+			CdpURL: stagehandsdk.String("ws://localhost:9222"),
+			LaunchOptions: stagehandsdk.SessionStartParamsBrowserLaunchOptions{
+				AcceptDownloads:   stagehandsdk.Bool(true),
 				Args:              []string{"string"},
-				CdpURL:            stagehand.String("cdpUrl"),
-				ChromiumSandbox:   stagehand.Bool(true),
-				ConnectTimeoutMs:  stagehand.Float(0),
-				DeviceScaleFactor: stagehand.Float(0),
-				Devtools:          stagehand.Bool(true),
-				DownloadsPath:     stagehand.String("downloadsPath"),
-				ExecutablePath:    stagehand.String("executablePath"),
-				HasTouch:          stagehand.Bool(true),
-				Headless:          stagehand.Bool(true),
-				IgnoreDefaultArgs: stagehand.SessionStartParamsBrowserLaunchOptionsIgnoreDefaultArgsUnion{
-					OfBool: stagehand.Bool(true),
+				CdpURL:            stagehandsdk.String("cdpUrl"),
+				ChromiumSandbox:   stagehandsdk.Bool(true),
+				ConnectTimeoutMs:  stagehandsdk.Float(0),
+				DeviceScaleFactor: stagehandsdk.Float(0),
+				Devtools:          stagehandsdk.Bool(true),
+				DownloadsPath:     stagehandsdk.String("downloadsPath"),
+				ExecutablePath:    stagehandsdk.String("executablePath"),
+				HasTouch:          stagehandsdk.Bool(true),
+				Headless:          stagehandsdk.Bool(true),
+				IgnoreDefaultArgs: stagehandsdk.SessionStartParamsBrowserLaunchOptionsIgnoreDefaultArgsUnion{
+					OfBool: stagehandsdk.Bool(true),
 				},
-				IgnoreHTTPSErrors:   stagehand.Bool(true),
-				Locale:              stagehand.String("locale"),
-				PreserveUserDataDir: stagehand.Bool(true),
-				Proxy: stagehand.SessionStartParamsBrowserLaunchOptionsProxy{
+				IgnoreHTTPSErrors:   stagehandsdk.Bool(true),
+				Locale:              stagehandsdk.String("locale"),
+				PreserveUserDataDir: stagehandsdk.Bool(true),
+				Proxy: stagehandsdk.SessionStartParamsBrowserLaunchOptionsProxy{
 					Server:   "server",
-					Bypass:   stagehand.String("bypass"),
-					Password: stagehand.String("password"),
-					Username: stagehand.String("username"),
+					Bypass:   stagehandsdk.String("bypass"),
+					Password: stagehandsdk.String("password"),
+					Username: stagehandsdk.String("username"),
 				},
-				UserDataDir: stagehand.String("userDataDir"),
-				Viewport: stagehand.SessionStartParamsBrowserLaunchOptionsViewport{
+				UserDataDir: stagehandsdk.String("userDataDir"),
+				Viewport: stagehandsdk.SessionStartParamsBrowserLaunchOptionsViewport{
 					Height: 0,
 					Width:  0,
 				},
 			},
 			Type: "local",
 		},
-		BrowserbaseSessionCreateParams: stagehand.SessionStartParamsBrowserbaseSessionCreateParams{
-			BrowserSettings: stagehand.SessionStartParamsBrowserbaseSessionCreateParamsBrowserSettings{
-				AdvancedStealth: stagehand.Bool(true),
-				BlockAds:        stagehand.Bool(true),
-				Context: stagehand.SessionStartParamsBrowserbaseSessionCreateParamsBrowserSettingsContext{
+		BrowserbaseSessionCreateParams: stagehandsdk.SessionStartParamsBrowserbaseSessionCreateParams{
+			BrowserSettings: stagehandsdk.SessionStartParamsBrowserbaseSessionCreateParamsBrowserSettings{
+				AdvancedStealth: stagehandsdk.Bool(true),
+				BlockAds:        stagehandsdk.Bool(true),
+				Context: stagehandsdk.SessionStartParamsBrowserbaseSessionCreateParamsBrowserSettingsContext{
 					ID:      "id",
-					Persist: stagehand.Bool(true),
+					Persist: stagehandsdk.Bool(true),
 				},
-				ExtensionID: stagehand.String("extensionId"),
-				Fingerprint: stagehand.SessionStartParamsBrowserbaseSessionCreateParamsBrowserSettingsFingerprint{
+				ExtensionID: stagehandsdk.String("extensionId"),
+				Fingerprint: stagehandsdk.SessionStartParamsBrowserbaseSessionCreateParamsBrowserSettingsFingerprint{
 					Browsers:         []string{"chrome"},
 					Devices:          []string{"desktop"},
 					HTTPVersion:      "1",
 					Locales:          []string{"string"},
 					OperatingSystems: []string{"android"},
-					Screen: stagehand.SessionStartParamsBrowserbaseSessionCreateParamsBrowserSettingsFingerprintScreen{
-						MaxHeight: stagehand.Float(0),
-						MaxWidth:  stagehand.Float(0),
-						MinHeight: stagehand.Float(0),
-						MinWidth:  stagehand.Float(0),
+					Screen: stagehandsdk.SessionStartParamsBrowserbaseSessionCreateParamsBrowserSettingsFingerprintScreen{
+						MaxHeight: stagehandsdk.Float(0),
+						MaxWidth:  stagehandsdk.Float(0),
+						MinHeight: stagehandsdk.Float(0),
+						MinWidth:  stagehandsdk.Float(0),
 					},
 				},
-				LogSession:    stagehand.Bool(true),
-				RecordSession: stagehand.Bool(true),
-				SolveCaptchas: stagehand.Bool(true),
-				Viewport: stagehand.SessionStartParamsBrowserbaseSessionCreateParamsBrowserSettingsViewport{
-					Height: stagehand.Float(0),
-					Width:  stagehand.Float(0),
+				LogSession:    stagehandsdk.Bool(true),
+				RecordSession: stagehandsdk.Bool(true),
+				SolveCaptchas: stagehandsdk.Bool(true),
+				Viewport: stagehandsdk.SessionStartParamsBrowserbaseSessionCreateParamsBrowserSettingsViewport{
+					Height: stagehandsdk.Float(0),
+					Width:  stagehandsdk.Float(0),
 				},
 			},
-			ExtensionID: stagehand.String("extensionId"),
-			KeepAlive:   stagehand.Bool(true),
-			ProjectID:   stagehand.String("projectId"),
-			Proxies: stagehand.SessionStartParamsBrowserbaseSessionCreateParamsProxiesUnion{
-				OfBool: stagehand.Bool(true),
+			ExtensionID: stagehandsdk.String("extensionId"),
+			KeepAlive:   stagehandsdk.Bool(true),
+			ProjectID:   stagehandsdk.String("projectId"),
+			Proxies: stagehandsdk.SessionStartParamsBrowserbaseSessionCreateParamsProxiesUnion{
+				OfBool: stagehandsdk.Bool(true),
 			},
 			Region:  "us-west-2",
-			Timeout: stagehand.Float(0),
+			Timeout: stagehandsdk.Float(0),
 			UserMetadata: map[string]any{
 				"foo": "bar",
 			},
 		},
-		BrowserbaseSessionID: stagehand.String("browserbaseSessionID"),
-		DomSettleTimeoutMs:   stagehand.Float(5000),
-		Experimental:         stagehand.Bool(true),
-		SelfHeal:             stagehand.Bool(true),
-		SystemPrompt:         stagehand.String("systemPrompt"),
+		BrowserbaseSessionID: stagehandsdk.String("browserbaseSessionID"),
+		DomSettleTimeoutMs:   stagehandsdk.Float(5000),
+		Experimental:         stagehandsdk.Bool(true),
+		SelfHeal:             stagehandsdk.Bool(true),
+		SystemPrompt:         stagehandsdk.String("systemPrompt"),
 		Verbose:              1,
-		WaitForCaptchaSolves: stagehand.Bool(true),
-		XSentAt:              stagehand.Time(time.Now()),
-		XStreamResponse:      stagehand.SessionStartParamsXStreamResponseTrue,
+		WaitForCaptchaSolves: stagehandsdk.Bool(true),
+		XSentAt:              stagehandsdk.Time(time.Now()),
+		XStreamResponse:      stagehandsdk.SessionStartParamsXStreamResponseTrue,
 	})
 	if err != nil {
-		var apierr *stagehand.Error
+		var apierr *stagehandsdk.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
