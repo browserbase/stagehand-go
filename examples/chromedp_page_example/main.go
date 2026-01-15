@@ -57,7 +57,10 @@ func main() {
 			if err != nil {
 				return err
 			}
-			frameID = string(tree.FrameTree.Frame.ID)
+			if tree.Frame == nil {
+				return fmt.Errorf("Page.getFrameTree returned nil root frame")
+			}
+			frameID = string(tree.Frame.ID)
 			if frameID == "" {
 				return fmt.Errorf("Page.getFrameTree returned empty frame id")
 			}
