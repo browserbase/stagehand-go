@@ -26,7 +26,7 @@ Use the Stagehand MCP Server to enable AI assistants to interact with this API, 
 
 ```go
 import (
-	"github.com/browserbase/stagehand-go" // imported as stagehand
+	"github.com/browserbase/stagehand-go" // imported as stagehandsdk
 )
 ```
 
@@ -62,7 +62,7 @@ import (
 )
 
 func main() {
-	client := stagehand.NewClient(
+	client := stagehandsdk.NewClient(
 		option.WithBrowserbaseAPIKey("My Browserbase API Key"),       // defaults to os.LookupEnv("BROWSERBASE_API_KEY")
 		option.WithBrowserbaseProjectID("My Browserbase Project ID"), // defaults to os.LookupEnv("BROWSERBASE_PROJECT_ID")
 		option.WithModelAPIKey("My Model API Key"),                   // defaults to os.LookupEnv("MODEL_API_KEY")
@@ -70,9 +70,9 @@ func main() {
 	response, err := client.Sessions.Act(
 		context.TODO(),
 		"00000000-your-session-id-000000000000",
-		stagehand.SessionActParams{
-			Input: stagehand.SessionActParamsInputUnion{
-				OfString: stagehand.String("click the first link on the page"),
+		stagehandsdk.SessionActParams{
+			Input: stagehandsdk.SessionActParamsInputUnion{
+				OfString: stagehandsdk.String("click the first link on the page"),
 			},
 		},
 	)
@@ -86,13 +86,13 @@ func main() {
 
 ### Request fields
 
-The stagehand library uses the [`omitzero`](https://tip.golang.org/doc/go1.24#encodingjsonpkgencodingjson)
+The stagehandsdk library uses the [`omitzero`](https://tip.golang.org/doc/go1.24#encodingjsonpkgencodingjson)
 semantics from the Go 1.24+ `encoding/json` release for request fields.
 
 Required primitive fields (`int64`, `string`, etc.) feature the tag <code>\`json:"...,required"\`</code>. These
 fields are always serialized, even their zero values.
 
-Optional primitive types are wrapped in a `param.Opt[T]`. These fields can be set with the provided constructors, `stagehand.String(string)`, `stagehand.Int(int64)`, etc.
+Optional primitive types are wrapped in a `param.Opt[T]`. These fields can be set with the provided constructors, `stagehandsdk.String(string)`, `stagehandsdk.Int(int64)`, etc.
 
 Any `param.Opt[T]`, map, slice, struct or string enum uses the
 tag <code>\`json:"...,omitzero"\`</code>. Its zero value is considered omitted.
@@ -100,17 +100,17 @@ tag <code>\`json:"...,omitzero"\`</code>. Its zero value is considered omitted.
 The `param.IsOmitted(any)` function can confirm the presence of any `omitzero` field.
 
 ```go
-p := stagehand.ExampleParams{
-	ID:   "id_xxx",                // required property
-	Name: stagehand.String("..."), // optional property
+p := stagehandsdk.ExampleParams{
+	ID:   "id_xxx",                   // required property
+	Name: stagehandsdk.String("..."), // optional property
 
-	Point: stagehand.Point{
-		X: 0,                // required field will serialize as 0
-		Y: stagehand.Int(1), // optional field will serialize as 1
+	Point: stagehandsdk.Point{
+		X: 0,                   // required field will serialize as 0
+		Y: stagehandsdk.Int(1), // optional field will serialize as 1
 		// ... omitted non-required fields will not be serialized
 	},
 
-	Origin: stagehand.Origin{}, // the zero value of [Origin] is considered omitted
+	Origin: stagehandsdk.Origin{}, // the zero value of [Origin] is considered omitted
 }
 ```
 
@@ -139,7 +139,7 @@ p.SetExtraFields(map[string]any{
 })
 
 // Send a number instead of an object
-custom := param.Override[stagehand.FooParams](12)
+custom := param.Override[stagehandsdk.FooParams](12)
 ```
 
 ### Request unions
@@ -280,7 +280,7 @@ This library uses the functional options pattern. Functions defined in the
 requests. For example:
 
 ```go
-client := stagehand.NewClient(
+client := stagehandsdk.NewClient(
 	// Adds a header to every request made by the client
 	option.WithHeader("X-Some-Header", "custom_header_info"),
 )
@@ -309,18 +309,18 @@ with additional helper methods like `.GetNextPage()`, e.g.:
 ### Errors
 
 When the API returns a non-success status code, we return an error with type
-`*stagehand.Error`. This contains the `StatusCode`, `*http.Request`, and
+`*stagehandsdk.Error`. This contains the `StatusCode`, `*http.Request`, and
 `*http.Response` values of the request, as well as the JSON of the error body
 (much like other response objects in the SDK).
 
 To handle errors, we recommend that you use the `errors.As` pattern:
 
 ```go
-_, err := client.Sessions.Start(context.TODO(), stagehand.SessionStartParams{
+_, err := client.Sessions.Start(context.TODO(), stagehandsdk.SessionStartParams{
 	ModelName: "openai/gpt-5-nano",
 })
 if err != nil {
-	var apierr *stagehand.Error
+	var apierr *stagehandsdk.Error
 	if errors.As(err, &apierr) {
 		println(string(apierr.DumpRequest(true)))  // Prints the serialized HTTP request
 		println(string(apierr.DumpResponse(true))) // Prints the serialized HTTP response
@@ -345,7 +345,7 @@ ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
 defer cancel()
 client.Sessions.Start(
 	ctx,
-	stagehand.SessionStartParams{
+	stagehandsdk.SessionStartParams{
 		ModelName: "openai/gpt-5-nano",
 	},
 	// This sets the per-retry timeout
@@ -363,7 +363,7 @@ The file name and content-type can be customized by implementing `Name() string`
 string` on the run-time type of `io.Reader`. Note that `os.File` implements `Name() string`, so a
 file returned by `os.Open` will be sent with the file name on disk.
 
-We also provide a helper `stagehand.File(reader io.Reader, filename string, contentType string)`
+We also provide a helper `stagehandsdk.File(reader io.Reader, filename string, contentType string)`
 which can be used to wrap any `io.Reader` with the appropriate file name and content type.
 
 ### Retries
@@ -376,14 +376,14 @@ You can use the `WithMaxRetries` option to configure or disable this:
 
 ```go
 // Configure the default for all requests:
-client := stagehand.NewClient(
+client := stagehandsdk.NewClient(
 	option.WithMaxRetries(0), // default is 2
 )
 
 // Override per-request:
 client.Sessions.Start(
 	context.TODO(),
-	stagehand.SessionStartParams{
+	stagehandsdk.SessionStartParams{
 		ModelName: "openai/gpt-5-nano",
 	},
 	option.WithMaxRetries(5),
@@ -400,7 +400,7 @@ you need to examine response headers, status codes, or other details.
 var response *http.Response
 response, err := client.Sessions.Start(
 	context.TODO(),
-	stagehand.SessionStartParams{
+	stagehandsdk.SessionStartParams{
 		ModelName: "openai/gpt-5-nano",
 	},
 	option.WithResponseInto(&response),
@@ -449,7 +449,7 @@ or the `option.WithJSONSet()` methods.
 params := FooNewParams{
     ID:   "id_xxxx",
     Data: FooNewParamsData{
-        FirstName: stagehand.String("John"),
+        FirstName: stagehandsdk.String("John"),
     },
 }
 client.Foo.New(context.Background(), params, option.WithJSONSet("data.last_name", "Doe"))
@@ -484,7 +484,7 @@ func Logger(req *http.Request, next option.MiddlewareNext) (res *http.Response, 
     return res, err
 }
 
-client := stagehand.NewClient(
+client := stagehandsdk.NewClient(
 	option.WithMiddleware(Logger),
 )
 ```

@@ -1,4 +1,4 @@
-package stagehand
+package stagehandsdk
 
 import (
 	"github.com/browserbase/stagehand-go/packages/param"
