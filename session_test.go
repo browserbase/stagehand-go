@@ -7,7 +7,6 @@ import (
 	"errors"
 	"os"
 	"testing"
-	"time"
 
 	"github.com/browserbase/stagehand-go"
 	"github.com/browserbase/stagehand-go/internal/testutil"
@@ -39,14 +38,13 @@ func TestSessionActWithOptionalParams(t *testing.T) {
 			FrameID: stagehandsdk.String("frameId"),
 			Options: stagehandsdk.SessionActParamsOptions{
 				Model: stagehandsdk.ModelConfigUnionParam{
-					OfString: stagehandsdk.String("openai/gpt-5-nano"),
+					OfString: stagehandsdk.String("openai/gpt-4o"),
 				},
 				Timeout: stagehandsdk.Float(30000),
 				Variables: map[string]string{
 					"username": "john_doe",
 				},
 			},
-			XSentAt:         stagehandsdk.Time(time.Now()),
 			XStreamResponse: stagehandsdk.SessionActParamsXStreamResponseTrue,
 		},
 	)
@@ -79,7 +77,6 @@ func TestSessionEndWithOptionalParams(t *testing.T) {
 		"c4dbf3a9-9a58-4b22-8a1c-9f20f9f9e123",
 		stagehandsdk.SessionEndParams{
 			ForceBody:       map[string]any{},
-			XSentAt:         stagehandsdk.Time(time.Now()),
 			XStreamResponse: stagehandsdk.SessionEndParamsXStreamResponseTrue,
 		},
 	)
@@ -114,7 +111,7 @@ func TestSessionExecuteWithOptionalParams(t *testing.T) {
 			AgentConfig: stagehandsdk.SessionExecuteParamsAgentConfig{
 				Cua: stagehandsdk.Bool(true),
 				Model: stagehandsdk.ModelConfigUnionParam{
-					OfString: stagehandsdk.String("openai/gpt-5-nano"),
+					OfString: stagehandsdk.String("openai/gpt-4o"),
 				},
 				Provider:     "openai",
 				SystemPrompt: stagehandsdk.String("systemPrompt"),
@@ -125,7 +122,6 @@ func TestSessionExecuteWithOptionalParams(t *testing.T) {
 				MaxSteps:        stagehandsdk.Float(20),
 			},
 			FrameID:         stagehandsdk.String("frameId"),
-			XSentAt:         stagehandsdk.Time(time.Now()),
 			XStreamResponse: stagehandsdk.SessionExecuteParamsXStreamResponseTrue,
 		},
 	)
@@ -161,7 +157,7 @@ func TestSessionExtractWithOptionalParams(t *testing.T) {
 			Instruction: stagehandsdk.String("Extract all product names and prices from the page"),
 			Options: stagehandsdk.SessionExtractParamsOptions{
 				Model: stagehandsdk.ModelConfigUnionParam{
-					OfString: stagehandsdk.String("openai/gpt-5-nano"),
+					OfString: stagehandsdk.String("openai/gpt-4o"),
 				},
 				Selector: stagehandsdk.String("#main-content"),
 				Timeout:  stagehandsdk.Float(30000),
@@ -169,7 +165,6 @@ func TestSessionExtractWithOptionalParams(t *testing.T) {
 			Schema: map[string]any{
 				"foo": "bar",
 			},
-			XSentAt:         stagehandsdk.Time(time.Now()),
 			XStreamResponse: stagehandsdk.SessionExtractParamsXStreamResponseTrue,
 		},
 	)
@@ -209,7 +204,6 @@ func TestSessionNavigateWithOptionalParams(t *testing.T) {
 				WaitUntil: "networkidle",
 			},
 			StreamResponse:  stagehandsdk.Bool(true),
-			XSentAt:         stagehandsdk.Time(time.Now()),
 			XStreamResponse: stagehandsdk.SessionNavigateParamsXStreamResponseTrue,
 		},
 	)
@@ -245,12 +239,11 @@ func TestSessionObserveWithOptionalParams(t *testing.T) {
 			Instruction: stagehandsdk.String("Find all clickable navigation links"),
 			Options: stagehandsdk.SessionObserveParamsOptions{
 				Model: stagehandsdk.ModelConfigUnionParam{
-					OfString: stagehandsdk.String("openai/gpt-5-nano"),
+					OfString: stagehandsdk.String("openai/gpt-4o"),
 				},
 				Selector: stagehandsdk.String("nav"),
 				Timeout:  stagehandsdk.Float(30000),
 			},
-			XSentAt:         stagehandsdk.Time(time.Now()),
 			XStreamResponse: stagehandsdk.SessionObserveParamsXStreamResponseTrue,
 		},
 	)
@@ -364,7 +357,6 @@ func TestSessionStartWithOptionalParams(t *testing.T) {
 		SystemPrompt:         stagehandsdk.String("systemPrompt"),
 		Verbose:              1,
 		WaitForCaptchaSolves: stagehandsdk.Bool(true),
-		XSentAt:              stagehandsdk.Time(time.Now()),
 		XStreamResponse:      stagehandsdk.SessionStartParamsXStreamResponseTrue,
 	})
 	if err != nil {
