@@ -1,4 +1,4 @@
-module github.com/browserbase/stagehand-go
+module github.com/browserbase/stagehand-go/v3
 
 go 1.22
 

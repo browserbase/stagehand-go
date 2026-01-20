@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/browserbase/stagehand-go/packages/param"
+	"github.com/browserbase/stagehand-go/v3/packages/param"
 )
 
 type Struct struct {

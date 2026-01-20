@@ -2,7 +2,7 @@ package param
 
 import (
 	"encoding/json"
-	"github.com/browserbase/stagehand-go/internal/encoding/json/sentinel"
+	"github.com/browserbase/stagehand-go/v3/internal/encoding/json/sentinel"
 	"reflect"
 )
 

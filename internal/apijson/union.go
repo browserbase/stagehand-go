@@ -2,7 +2,7 @@ package apijson
 
 import (
 	"errors"
-	"github.com/browserbase/stagehand-go/packages/param"
+	"github.com/browserbase/stagehand-go/v3/packages/param"
 	"reflect"
 
 	"github.com/tidwall/gjson"

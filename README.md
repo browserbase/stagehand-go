@@ -2,7 +2,7 @@
 
 <!-- x-release-please-start-version -->
 
-<a href="https://pkg.go.dev/github.com/browserbase/stagehand-go"><img src="https://pkg.go.dev/badge/github.com/browserbase/stagehand-go.svg" alt="Go Reference"></a>
+<a href="https://pkg.go.dev/github.com/browserbase/stagehand-go/v3"><img src="https://pkg.go.dev/badge/github.com/browserbase/stagehand-go/v3.svg" alt="Go Reference"></a>
 
 <!-- x-release-please-end -->
 
@@ -26,7 +26,7 @@ Use the Stagehand MCP Server to enable AI assistants to interact with this API, 
 
 ```go
 import (
-	"github.com/browserbase/stagehand-go" // imported as stagehand
+	"github.com/browserbase/stagehand-go/v3" // imported as stagehand
 )
 ```
 
@@ -37,7 +37,7 @@ Or to pin the version:
 <!-- x-release-please-start-version -->
 
 ```sh
-go get -u 'github.com/browserbase/stagehand-go@v0.18.0'
+go get -u 'github.com/browserbase/stagehand-go/v3@v3.0.1'
 ```
 
 <!-- x-release-please-end -->
@@ -57,8 +57,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/browserbase/stagehand-go"
-	"github.com/browserbase/stagehand-go/option"
+	"github.com/browserbase/stagehand-go/v3"
+	"github.com/browserbase/stagehand-go/v3/option"
 )
 
 func main() {
@@ -295,7 +295,7 @@ client.Sessions.Start(context.TODO(), ...,
 
 The request option `option.WithDebugLog(nil)` may be helpful while debugging.
 
-See the [full list of request options](https://pkg.go.dev/github.com/browserbase/stagehand-go/option).
+See the [full list of request options](https://pkg.go.dev/github.com/browserbase/stagehand-go/v3/option).
 
 ### Pagination
 

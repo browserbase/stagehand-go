@@ -3,7 +3,7 @@
 package constant
 
 import (
-	shimjson "github.com/browserbase/stagehand-go/internal/encoding/json"
+	shimjson "github.com/browserbase/stagehand-go/v3/internal/encoding/json"
 )
 
 type Constant[T any] interface {
