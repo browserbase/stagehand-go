@@ -1,3 +1,68 @@
+<div id="toc" align="center" style="margin-bottom: 0;">
+  <ul style="list-style: none; margin: 0; padding: 0;">
+    <a href="https://stagehand.dev">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/browserbase/stagehand/main/media/dark_logo.png" />
+        <img alt="Stagehand" src="https://raw.githubusercontent.com/browserbase/stagehand/main/media/light_logo.png" width="200" style="margin-right: 30px;" />
+      </picture>
+    </a>
+  </ul>
+</div>
+<p align="center">
+  <strong>The AI Browser Automation Framework</strong><br>
+  <a href="https://docs.stagehand.dev/v3/sdk/go">Read the Docs</a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/browserbase/stagehand/tree/main?tab=MIT-1-ov-file#MIT-1-ov-file">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/browserbase/stagehand/main/media/dark_license.svg" />
+      <img alt="MIT License" src="https://raw.githubusercontent.com/browserbase/stagehand/main/media/light_license.svg" />
+    </picture>
+  </a>
+  <a href="https://stagehand.dev/discord">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/browserbase/stagehand/main/media/dark_discord.svg" />
+      <img alt="Discord Community" src="https://raw.githubusercontent.com/browserbase/stagehand/main/media/light_discord.svg" />
+    </picture>
+  </a>
+</p>
+
+<p align="center">
+	<a href="https://trendshift.io/repositories/12122" target="_blank"><img src="https://trendshift.io/api/badge/repositories/12122" alt="browserbase%2Fstagehand | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
+</p>
+
+<p align="center">
+If you're looking for other languages, you can find them
+<a href="https://docs.stagehand.dev/v3/first-steps/introduction"> here</a>
+</p>
+
+<div align="center" style="display: flex; align-items: center; justify-content: center; gap: 4px; margin-bottom: 0;">
+  <b>Vibe code</b>
+  <span style="font-size: 1.05em;"> Stagehand with </span>
+  <a href="https://director.ai" style="display: flex; align-items: center;">
+    <span>Director</span>
+  </a>
+  <span> </span>
+  <picture>
+    <img alt="Director" src="https://raw.githubusercontent.com/browserbase/stagehand/main/media/director_icon.svg" width="25" />
+  </picture>
+</div>
+
+## What is Stagehand?
+
+Stagehand is a browser automation framework used to control web browsers with natural language and code. By combining the power of AI with the precision of code, Stagehand makes web automation flexible, maintainable, and actually reliable.
+
+## Why Stagehand?
+
+Most existing browser automation tools either require you to write low-level code in a framework like Selenium, Playwright, or Puppeteer, or use high-level agents that can be unpredictable in production. By letting developers choose what to write in code vs. natural language (and bridging the gap between the two) Stagehand is the natural choice for browser automations in production.
+
+1. **Choose when to write code vs. natural language**: use AI when you want to navigate unfamiliar pages, and use code when you know exactly what you want to do.
+
+2. **Go from AI-driven to repeatable workflows**: Stagehand lets you preview AI actions before running them, and also helps you easily cache repeatable actions to save time and tokens.
+
+3. **Write once, run forever**: Stagehand's auto-caching combined with self-healing remembers previous actions, runs without LLM inference, and knows when to involve AI whenever the website changes and your automation breaks.
+
 # Stagehand Go API Library
 
 <!-- x-release-please-start-version -->
@@ -5,20 +70,6 @@
 <a href="https://pkg.go.dev/github.com/browserbase/stagehand-go/v3"><img src="https://pkg.go.dev/badge/github.com/browserbase/stagehand-go.svg" alt="Go Reference"></a>
 
 <!-- x-release-please-end -->
-
-The Stagehand Go library provides convenient access to the [Stagehand REST API](https://docs.stagehand.dev)
-from applications written in Go.
-
-It is generated with [Stainless](https://www.stainless.com/).
-
-## MCP Server
-
-Use the Stagehand MCP Server to enable AI assistants to interact with this API, allowing them to explore endpoints, make test requests, and use documentation to help integrate this SDK into your application.
-
-[![Add to Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/en-US/install-mcp?name=stagehand-mcp&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsInN0YWdlaGFuZC1tY3AiXX0)
-[![Install in VS Code](https://img.shields.io/badge/_-Add_to_VS_Code-blue?style=for-the-badge&logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9Im5vbmUiIHZpZXdCb3g9IjAgMCA0MCA0MCI+PHBhdGggZmlsbD0iI0VFRSIgZmlsbC1ydWxlPSJldmVub2RkIiBkPSJNMzAuMjM1IDM5Ljg4NGEyLjQ5MSAyLjQ5MSAwIDAgMS0xLjc4MS0uNzNMMTIuNyAyNC43OGwtMy40NiAyLjYyNC0zLjQwNiAyLjU4MmExLjY2NSAxLjY2NSAwIDAgMS0xLjA4Mi4zMzggMS42NjQgMS42NjQgMCAwIDEtMS4wNDYtLjQzMWwtMi4yLTJhMS42NjYgMS42NjYgMCAwIDEgMC0yLjQ2M0w3LjQ1OCAyMCA0LjY3IDE3LjQ1MyAxLjUwNyAxNC41N2ExLjY2NSAxLjY2NSAwIDAgMSAwLTIuNDYzbDIuMi0yYTEuNjY1IDEuNjY1IDAgMCAxIDIuMTMtLjA5N2w2Ljg2MyA1LjIwOUwyOC40NTIuODQ0YTIuNDg4IDIuNDg4IDAgMCAxIDEuODQxLS43MjljLjM1MS4wMDkuNjk5LjA5MSAxLjAxOS4yNDVsOC4yMzYgMy45NjFhMi41IDIuNSAwIDAgMSAxLjQxNSAyLjI1M3YuMDk5LS4wNDVWMzMuMzd2LS4wNDUuMDk1YTIuNTAxIDIuNTAxIDAgMCAxLTEuNDE2IDIuMjU3bC04LjIzNSAzLjk2MWEyLjQ5MiAyLjQ5MiAwIDAgMS0xLjA3Ny4yNDZabS43MTYtMjguOTQ3LTExLjk0OCA5LjA2MiAxMS45NTIgOS4wNjUtLjAwNC0xOC4xMjdaIi8+PC9zdmc+)](https://vscode.stainless.com/mcp/%7B%22name%22%3A%22stagehand-mcp%22%2C%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22stagehand-mcp%22%5D%7D)
-
-> Note: You may need to set environment variables in your MCP client.
 
 ## Installation
 
@@ -50,6 +101,12 @@ This library requires Go 1.22+.
 
 The full API of this library can be found in [api.md](api.md).
 
+Stagehand can run in two modes:
+- **Cloud mode**: Uses [Browserbase](https://www.browserbase.com/) cloud browsers (recommended for production)
+- **Local mode**: Runs a local browser on your machine (great for development and testing)
+
+### Cloud Mode (Browserbase)
+
 ```go
 package main
 
@@ -67,22 +124,297 @@ func main() {
 		option.WithBrowserbaseProjectID("My Browserbase Project ID"), // defaults to os.LookupEnv("BROWSERBASE_PROJECT_ID")
 		option.WithModelAPIKey("My Model API Key"),                   // defaults to os.LookupEnv("MODEL_API_KEY")
 	)
-	response, err := client.Sessions.Act(
+
+	// Start a new browser session (uses Browserbase cloud by default)
+	startResponse, err := client.Sessions.Start(context.TODO(), stagehand.SessionStartParams{
+		ModelName: "openai/gpt-5-nano",
+	})
+	if err != nil {
+		panic(err.Error())
+	}
+	sessionID := startResponse.Data.SessionID
+
+	// Navigate, act, extract, etc.
+	client.Sessions.Navigate(context.TODO(), sessionID, stagehand.SessionNavigateParams{
+		URL: "https://example.com",
+	})
+
+	// End the session
+	client.Sessions.End(context.TODO(), sessionID, stagehand.SessionEndParams{})
+}
+```
+
+### Local Mode
+
+Local mode runs the browser on your machine. This is useful for development and testing without needing Browserbase credentials.
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/browserbase/stagehand-go/v3"
+	"github.com/browserbase/stagehand-go/v3/option"
+)
+
+func main() {
+	// Create a client in local mode
+	client := stagehand.NewClient(option.WithServer("local"))
+	defer client.Close()
+
+	ctx := context.Background()
+
+	// Start a session with local browser
+	startResp, err := client.Sessions.Start(ctx, stagehand.SessionStartParams{
+		ModelName: "openai/gpt-5-nano",
+		Browser: stagehand.SessionStartParamsBrowser{
+			Type: "local",
+			LaunchOptions: stagehand.SessionStartParamsBrowserLaunchOptions{
+				Headless: stagehand.Bool(true),
+			},
+		},
+	})
+	if err != nil {
+		panic(err.Error())
+	}
+	sessionID := startResp.Data.SessionID
+
+	// Navigate, act, extract - same API as cloud mode
+	client.Sessions.Navigate(ctx, sessionID, stagehand.SessionNavigateParams{
+		URL: "https://example.com",
+	})
+
+	extractResp, _ := client.Sessions.Extract(ctx, sessionID, stagehand.SessionExtractParams{
+		Instruction: stagehand.String("extract the main heading"),
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"title": map[string]any{"type": "string"},
+			},
+		},
+	})
+	fmt.Printf("Extracted: %+v\n", extractResp.Data.Result)
+
+	// End the session
+	client.Sessions.End(ctx, sessionID, stagehand.SessionEndParams{})
+}
+```
+
+### Full Example (Cloud Mode)
+
+This example demonstrates the complete workflow of using Stagehand. A runnable version is available at [`examples/basic/main.go`](examples/basic/main.go).
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+
+	"github.com/browserbase/stagehand-go/v3"
+)
+
+func main() {
+	// Create a new Stagehand client using environment variables
+	// Configures using BROWSERBASE_API_KEY, BROWSERBASE_PROJECT_ID, and MODEL_API_KEY
+	client := stagehand.NewClient()
+
+	// Start a new browser session
+	startResponse, err := client.Sessions.Start(context.TODO(), stagehand.SessionStartParams{
+		ModelName: "openai/gpt-5-nano",
+	})
+	if err != nil {
+		panic(err.Error())
+	}
+	fmt.Printf("Session started: %s\n", startResponse.Data.SessionID)
+
+	sessionID := startResponse.Data.SessionID
+
+	// Navigate to Hacker News
+	_, err = client.Sessions.Navigate(
 		context.TODO(),
-		"00000000-your-session-id-000000000000",
+		sessionID,
+		stagehand.SessionNavigateParams{
+			URL: "https://news.ycombinator.com",
+		},
+	)
+	if err != nil {
+		panic(err.Error())
+	}
+	fmt.Println("Navigated to Hacker News")
+
+	// Use Observe to find possible actions on the page
+	observeResponse, err := client.Sessions.Observe(
+		context.TODO(),
+		sessionID,
+		stagehand.SessionObserveParams{
+			Instruction: stagehand.String("find the link to view comments for the top post"),
+		},
+	)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	actions := observeResponse.Data.Result
+	fmt.Printf("Found %d possible actions\n", len(actions))
+
+	if len(actions) == 0 {
+		fmt.Println("No actions found")
+		return
+	}
+
+	// Take the first action returned by Observe
+	action := actions[0]
+	fmt.Printf("Acting on: %s\n", action.Description)
+
+	// Pass the structured action to Act
+	actResponse, err := client.Sessions.Act(
+		context.TODO(),
+		sessionID,
 		stagehand.SessionActParams{
 			Input: stagehand.SessionActParamsInputUnion{
-				OfString: stagehand.String("click the first link on the page"),
+				OfAction: &stagehand.ActionParam{
+					Description: action.Description,
+					Selector:    action.Selector,
+					Method:      stagehand.String(action.Method),
+					Arguments:   action.Arguments,
+				},
 			},
 		},
 	)
 	if err != nil {
 		panic(err.Error())
 	}
-	fmt.Printf("%+v\n", response.Data)
-}
+	fmt.Printf("Act completed: %s\n", actResponse.Data.Result.Message)
 
+	// Extract structured data from the page using a JSON schema
+	// We're now on the comments page, so extract the top comment text
+	extractResponse, err := client.Sessions.Extract(
+		context.TODO(),
+		sessionID,
+		stagehand.SessionExtractParams{
+			Instruction: stagehand.String("extract the text of the top comment on this page"),
+			Schema: map[string]any{
+				"type": "object",
+				"properties": map[string]any{
+					"commentText": map[string]any{
+						"type":        "string",
+						"description": "The text content of the top comment",
+					},
+					"author": map[string]any{
+						"type":        "string",
+						"description": "The username of the comment author",
+					},
+				},
+				"required": []string{"commentText"},
+			},
+		},
+	)
+	if err != nil {
+		panic(err.Error())
+	}
+	fmt.Printf("Extracted data: %+v\n", extractResponse.Data.Result)
+
+	// Get the author from the extracted data
+	extractedData := extractResponse.Data.Result.(map[string]any)
+	author := extractedData["author"].(string)
+	fmt.Printf("Looking up profile for author: %s\n", author)
+
+	// Use the Agent to find the author's profile
+	// Execute runs an autonomous agent that can navigate and interact with pages
+	executeResponse, err := client.Sessions.Execute(
+		context.TODO(),
+		sessionID,
+		stagehand.SessionExecuteParams{
+			ExecuteOptions: stagehand.SessionExecuteParamsExecuteOptions{
+				Instruction: fmt.Sprintf(
+					"Find any personal website, GitHub, LinkedIn, or other best profile URL for the Hacker News user '%s'. "+
+						"Click on their username to go to their profile page and look for any links they have shared. "+
+						"Use Google Search with their username or other details from their profile if you dont find any direct links.",
+					author,
+				),
+				MaxSteps: stagehand.Float(15),
+			},
+			AgentConfig: stagehand.SessionExecuteParamsAgentConfig{
+				Model: stagehand.ModelConfigUnionParam{
+					OfModelConfigModelConfigObject: &stagehand.ModelConfigModelConfigObjectParam{
+						ModelName: "openai/gpt-5-nano",
+						APIKey:    stagehand.String(os.Getenv("MODEL_API_KEY")),
+					},
+				},
+				Cua: stagehand.Bool(false),
+			},
+		},
+	)
+	if err != nil {
+		panic(err.Error())
+	}
+	fmt.Printf("Agent completed: %s\n", executeResponse.Data.Result.Message)
+	fmt.Printf("Agent success: %t\n", executeResponse.Data.Result.Success)
+	fmt.Printf("Agent actions taken: %d\n", len(executeResponse.Data.Result.Actions))
+
+	// End the session to clean up resources
+	_, err = client.Sessions.End(
+		context.TODO(),
+		sessionID,
+		stagehand.SessionEndParams{},
+	)
+	if err != nil {
+		panic(err.Error())
+	}
+	fmt.Println("Session ended")
+}
 ```
+
+### Running the Examples
+
+Several complete working examples are available:
+
+| Example | Description |
+|---------|-------------|
+| `examples/basic/` | Cloud mode using Browserbase |
+| `examples/local/` | Local mode using a local browser |
+| `examples/chromedp_browserbase_example/` | Combining chromedp with Browserbase |
+| `examples/chromedp_local_example/` | Combining chromedp with local browser |
+
+#### Cloud Examples (Browserbase)
+
+Set up environment variables:
+
+```bash
+export BROWSERBASE_API_KEY=your_browserbase_api_key
+export BROWSERBASE_PROJECT_ID=your_browserbase_project_id
+export MODEL_API_KEY=your_openai_api_key
+```
+
+You can get your Browserbase API key and project ID from the [Browserbase dashboard](https://www.browserbase.com/).
+
+Run the examples:
+
+```bash
+go run examples/basic/main.go
+go run examples/chromedp_browserbase_example/main.go
+```
+
+#### Local Examples
+
+Set up environment variables (only MODEL_API_KEY is required for local mode):
+
+```bash
+export MODEL_API_KEY=your_openai_api_key
+```
+
+Run the examples:
+
+```bash
+go run examples/local/main.go
+go run examples/chromedp_local_example/main.go
+```
+
+The chromedp examples demonstrate how to combine low-level browser control (via chromedp) with AI-powered actions (via Stagehand) on the same browser session.
 
 ### Request fields
 
