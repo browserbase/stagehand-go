@@ -129,7 +129,7 @@ func main() {
 	fmt.Println("Running Stagehand autonomous agent...")
 	executeResp, err := client.Sessions.Execute(ctx, sessionID, stagehand.SessionExecuteParams{
 		ExecuteOptions: stagehand.SessionExecuteParamsExecuteOptions{
-			Instruction: "Click on the 'More information...' link if available",
+			Instruction: "Click on the 'Learn more' link if available",
 			MaxSteps:    stagehand.Float(3),
 		},
 		AgentConfig: stagehand.SessionExecuteParamsAgentConfig{

@@ -46,6 +46,14 @@ func (o *localServerOption) Apply(cfg *requestconfig.RequestConfig) error {
 	if modelAPIKey != "" {
 		manager.SetModelAPIKey(modelAPIKey)
 	}
+	if cfg != nil {
+		if cfg.BrowserbaseAPIKey != "" {
+			manager.SetBrowserbaseAPIKey(cfg.BrowserbaseAPIKey)
+		}
+		if cfg.BrowserbaseProjectID != "" {
+			manager.SetBrowserbaseProjectID(cfg.BrowserbaseProjectID)
+		}
+	}
 
 	ctx := cfg.Context
 	if ctx == nil {

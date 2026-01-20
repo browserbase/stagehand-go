@@ -247,12 +247,14 @@ func downloadBinary(ctx context.Context, version, destPath string) error {
 
 // ServerManager manages the lifecycle of local mode.
 type ServerManager struct {
-	binaryPath  string
-	cmd         *exec.Cmd
-	baseURL     string
-	modelAPIKey string
-	mu          sync.Mutex
-	started     bool
+	binaryPath           string
+	cmd                  *exec.Cmd
+	baseURL              string
+	modelAPIKey          string
+	browserbaseAPIKey    string
+	browserbaseProjectID string
+	mu                   sync.Mutex
+	started              bool
 }
 
 const (
@@ -302,6 +304,26 @@ func (m *ServerManager) SetModelAPIKey(key string) {
 	m.modelAPIKey = key
 }
 
+// SetBrowserbaseAPIKey sets the Browserbase API key used by local mode.
+func (m *ServerManager) SetBrowserbaseAPIKey(key string) {
+	if key == "" {
+		return
+	}
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	m.browserbaseAPIKey = key
+}
+
+// SetBrowserbaseProjectID sets the Browserbase project ID used by local mode.
+func (m *ServerManager) SetBrowserbaseProjectID(projectID string) {
+	if projectID == "" {
+		return
+	}
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	m.browserbaseProjectID = projectID
+}
+
 // startLocked starts local mode. Must be called with m.mu held.
 func (m *ServerManager) startLocked(ctx context.Context) (string, error) {
 	// Pick a free port if not specified
@@ -321,6 +343,12 @@ func (m *ServerManager) startLocked(ctx context.Context) (string, error) {
 
 	if m.modelAPIKey != "" {
 		env = append(env, fmt.Sprintf("MODEL_API_KEY=%s", m.modelAPIKey))
+	}
+	if m.browserbaseAPIKey != "" {
+		env = append(env, fmt.Sprintf("BROWSERBASE_API_KEY=%s", m.browserbaseAPIKey))
+	}
+	if m.browserbaseProjectID != "" {
+		env = append(env, fmt.Sprintf("BROWSERBASE_PROJECT_ID=%s", m.browserbaseProjectID))
 	}
 
 	// Start the process
