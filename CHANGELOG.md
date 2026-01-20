@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.2.0 (2026-01-20)
+
+Full Changelog: [v3.1.1...v3.2.0](https://github.com/browserbase/stagehand-go/compare/v3.1.1...v3.2.0)
+
+### Features
+
+* End endpoint cleanup ([ce8862f](https://github.com/browserbase/stagehand-go/commit/ce8862f7ed7dbe81a9aa92c39ecba1af3f35c983))
+
 ## 3.1.1 (2026-01-20)
 
 Full Changelog: [v3.1.0...v3.1.1](https://github.com/browserbase/stagehand-go/compare/v3.1.0...v3.1.1)
