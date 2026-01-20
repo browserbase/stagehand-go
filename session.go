@@ -76,9 +76,9 @@ func (r *SessionService) ActStreaming(ctx context.Context, id string, params Ses
 }
 
 // Terminates the browser session and releases all associated resources.
-func (r *SessionService) End(ctx context.Context, id string, params SessionEndParams, opts ...option.RequestOption) (res *SessionEndResponse, err error) {
-	if !param.IsOmitted(params.XStreamResponse) {
-		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%s", params.XStreamResponse)))
+func (r *SessionService) End(ctx context.Context, id string, body SessionEndParams, opts ...option.RequestOption) (res *SessionEndResponse, err error) {
+	if !param.IsOmitted(body.XStreamResponse) {
+		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%s", body.XStreamResponse)))
 	}
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -86,7 +86,7 @@ func (r *SessionService) End(ctx context.Context, id string, params SessionEndPa
 		return
 	}
 	path := fmt.Sprintf("v1/sessions/%s/end", id)
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, nil, &res, opts...)
 	return
 }
 
@@ -892,20 +892,11 @@ const (
 )
 
 type SessionEndParams struct {
-	ForceBody any `json:"_forceBody,omitzero"`
 	// Whether to stream the response via SSE
 	//
 	// Any of "true", "false".
 	XStreamResponse SessionEndParamsXStreamResponse `header:"x-stream-response,omitzero" json:"-"`
 	paramObj
-}
-
-func (r SessionEndParams) MarshalJSON() (data []byte, err error) {
-	type shadow SessionEndParams
-	return param.MarshalObject(r, (*shadow)(&r))
-}
-func (r *SessionEndParams) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
 }
 
 // Whether to stream the response via SSE
@@ -1216,6 +1207,7 @@ type SessionStartParamsBrowserLaunchOptions struct {
 	Headless            param.Opt[bool]                                              `json:"headless,omitzero"`
 	IgnoreHTTPSErrors   param.Opt[bool]                                              `json:"ignoreHTTPSErrors,omitzero"`
 	Locale              param.Opt[string]                                            `json:"locale,omitzero"`
+	Port                param.Opt[float64]                                           `json:"port,omitzero"`
 	PreserveUserDataDir param.Opt[bool]                                              `json:"preserveUserDataDir,omitzero"`
 	UserDataDir         param.Opt[string]                                            `json:"userDataDir,omitzero"`
 	Args                []string                                                     `json:"args,omitzero"`

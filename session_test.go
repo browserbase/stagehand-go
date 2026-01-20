@@ -79,7 +79,6 @@ func TestSessionEndWithOptionalParams(t *testing.T) {
 		context.TODO(),
 		"c4dbf3a9-9a58-4b22-8a1c-9f20f9f9e123",
 		stagehand.SessionEndParams{
-			ForceBody:       map[string]any{},
 			XStreamResponse: stagehand.SessionEndParamsXStreamResponseTrue,
 		},
 	)
@@ -305,6 +304,7 @@ func TestSessionStartWithOptionalParams(t *testing.T) {
 				},
 				IgnoreHTTPSErrors:   stagehand.Bool(true),
 				Locale:              stagehand.String("locale"),
+				Port:                stagehand.Float(0),
 				PreserveUserDataDir: stagehand.Bool(true),
 				Proxy: stagehand.SessionStartParamsBrowserLaunchOptionsProxy{
 					Server:   "server",
