@@ -6,10 +6,12 @@ import (
 	"log"
 	"net/url"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/browserbase/stagehand-go/v3"
 	"github.com/chromedp/cdproto/page"
+	"github.com/chromedp/cdproto/target"
 	"github.com/chromedp/chromedp"
 	"github.com/joho/godotenv"
 )
@@ -45,22 +47,41 @@ func main() {
 	cdpURL = ensurePort(cdpURL)
 	fmt.Printf("CDP URL (patched): %s\n", cdpURL)
 
-	// 2) Connect chromedp to the same browser over CDP.
+	// 2) Navigate with Stagehand so we can attach chromedp to the existing tab.
+	_, err = client.Sessions.Navigate(
+		context.TODO(),
+		sessionID,
+		stagehand.SessionNavigateParams{
+			URL: "https://example.com",
+		},
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// 3) Connect chromedp to the same browser over CDP.
 	// Use NoModifyURL to skip the /json/version fetch that Browserbase doesn't support.
 	allocatorCtx, cancelAllocator := chromedp.NewRemoteAllocator(context.Background(), cdpURL, chromedp.NoModifyURL)
 	defer cancelAllocator()
 
 	// Suppress CDP protocol unmarshal errors (version mismatch warnings)
-	tabCtx, cancelTab := chromedp.NewContext(allocatorCtx,
+	browserCtx, cancelBrowser := chromedp.NewContext(allocatorCtx,
 		chromedp.WithErrorf(func(format string, args ...interface{}) {}),
 	)
+	defer cancelBrowser()
+
+	targetID, err := waitForTarget(browserCtx, "example.com", 10*time.Second)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	tabCtx, cancelTab := chromedp.NewContext(browserCtx, chromedp.WithTargetID(targetID))
 	defer cancelTab()
 
-	// 3) Use chromedp to navigate, then directly call CDP Page.getFrameTree to get the frame ID.
+	// 4) Use chromedp to call CDP Page.getFrameTree to get the frame ID.
 	var frameID string
 	err = chromedp.Run(
 		tabCtx,
-		chromedp.Navigate("https://example.com"),
 		chromedp.WaitReady("body", chromedp.ByQuery),
 		chromedp.ActionFunc(func(ctx context.Context) error {
 			tree, err := page.GetFrameTree().Do(ctx)
@@ -82,7 +103,7 @@ func main() {
 	}
 	fmt.Printf("Resolved frameId via chromedp Page.getFrameTree: %s\n", frameID)
 
-	// 4) Pass that frameId into Stagehand methods.
+	// 5) Pass that frameId into Stagehand methods.
 	observeResponse, err := client.Sessions.Observe(
 		context.TODO(),
 		sessionID,
@@ -96,7 +117,7 @@ func main() {
 	}
 	fmt.Printf("Observed %d possible actions\n", len(observeResponse.Data.Result))
 
-	// 5) Demonstrate using Stagehand to click something in the same tab/frame.
+	// 6) Demonstrate using Stagehand to click something in the same tab/frame.
 	_, err = client.Sessions.Act(
 		context.TODO(),
 		sessionID,
@@ -114,7 +135,7 @@ func main() {
 	// Give navigation a moment to settle.
 	time.Sleep(2 * time.Second)
 
-	// 6) Extract from the same frame.
+	// 7) Extract from the same frame.
 	schema := map[string]any{
 		"type": "object",
 		"properties": map[string]any{
@@ -136,7 +157,7 @@ func main() {
 	}
 	fmt.Printf("Extracted: %+v\n", extractResponse.Data.Result)
 
-	// 7) Run an autonomous agent using Stagehand Execute.
+	// 8) Run an autonomous agent using Stagehand Execute.
 	fmt.Println("Running autonomous agent...")
 	executeResponse, err := client.Sessions.Execute(
 		context.TODO(),
@@ -165,7 +186,7 @@ func main() {
 	fmt.Printf("Agent success: %t\n", executeResponse.Data.Result.Success)
 	fmt.Printf("Agent actions taken: %d\n", len(executeResponse.Data.Result.Actions))
 
-	// 8) Use chromedp to take a screenshot after the agent finishes.
+	// 9) Use chromedp to take a screenshot after the agent finishes.
 	fmt.Println("Taking screenshot with chromedp...")
 	var screenshotBuf []byte
 	err = chromedp.Run(
@@ -184,7 +205,7 @@ func main() {
 	}
 	fmt.Printf("Screenshot saved to: %s\n", screenshotPath)
 
-	// 9) End session.
+	// 10) End session.
 	_, err = client.Sessions.End(context.TODO(), sessionID, stagehand.SessionEndParams{})
 	if err != nil {
 		log.Fatal(err)
@@ -208,4 +229,23 @@ func ensurePort(wsURL string) string {
 		}
 	}
 	return u.String()
+}
+
+func waitForTarget(ctx context.Context, urlSubstring string, timeout time.Duration) (target.ID, error) {
+	deadline := time.Now().Add(timeout)
+	for {
+		targets, err := chromedp.Targets(ctx)
+		if err != nil {
+			return "", err
+		}
+		for _, t := range targets {
+			if t.Type == "page" && strings.Contains(t.URL, urlSubstring) {
+				return t.TargetID, nil
+			}
+		}
+		if time.Now().After(deadline) {
+			return "", fmt.Errorf("no page target with URL containing %q", urlSubstring)
+		}
+		time.Sleep(200 * time.Millisecond)
+	}
 }
