@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package stagehandsdk
+package stagehand
 
 import (
 	"context"
@@ -9,15 +9,14 @@ import (
 	"fmt"
 	"net/http"
 	"slices"
-	"time"
 
-	"github.com/browserbase/stagehand-go/internal/apijson"
-	"github.com/browserbase/stagehand-go/internal/requestconfig"
-	"github.com/browserbase/stagehand-go/option"
-	"github.com/browserbase/stagehand-go/packages/param"
-	"github.com/browserbase/stagehand-go/packages/respjson"
-	"github.com/browserbase/stagehand-go/packages/ssestream"
-	"github.com/browserbase/stagehand-go/shared/constant"
+	"github.com/browserbase/stagehand-go/v3/internal/apijson"
+	"github.com/browserbase/stagehand-go/v3/internal/requestconfig"
+	"github.com/browserbase/stagehand-go/v3/option"
+	"github.com/browserbase/stagehand-go/v3/packages/param"
+	"github.com/browserbase/stagehand-go/v3/packages/respjson"
+	"github.com/browserbase/stagehand-go/v3/packages/ssestream"
+	"github.com/browserbase/stagehand-go/v3/shared/constant"
 )
 
 // SessionService contains methods and other services that help with interacting
@@ -42,9 +41,6 @@ func NewSessionService(opts ...option.RequestOption) (r SessionService) {
 // Executes a browser action using natural language instructions or a predefined
 // Action object.
 func (r *SessionService) Act(ctx context.Context, id string, params SessionActParams, opts ...option.RequestOption) (res *SessionActResponse, err error) {
-	if !param.IsOmitted(params.XSentAt) {
-		opts = append(opts, option.WithHeader("x-sent-at", fmt.Sprintf("%s", params.XSentAt.Value)))
-	}
 	if !param.IsOmitted(params.XStreamResponse) {
 		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%s", params.XStreamResponse)))
 	}
@@ -65,9 +61,6 @@ func (r *SessionService) ActStreaming(ctx context.Context, id string, params Ses
 		raw *http.Response
 		err error
 	)
-	if !param.IsOmitted(params.XSentAt) {
-		opts = append(opts, option.WithHeader("x-sent-at", fmt.Sprintf("%s", params.XSentAt.Value)))
-	}
 	if !param.IsOmitted(params.XStreamResponse) {
 		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%s", params.XStreamResponse)))
 	}
@@ -84,9 +77,6 @@ func (r *SessionService) ActStreaming(ctx context.Context, id string, params Ses
 
 // Terminates the browser session and releases all associated resources.
 func (r *SessionService) End(ctx context.Context, id string, params SessionEndParams, opts ...option.RequestOption) (res *SessionEndResponse, err error) {
-	if !param.IsOmitted(params.XSentAt) {
-		opts = append(opts, option.WithHeader("x-sent-at", fmt.Sprintf("%s", params.XSentAt.Value)))
-	}
 	if !param.IsOmitted(params.XStreamResponse) {
 		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%s", params.XStreamResponse)))
 	}
@@ -102,9 +92,6 @@ func (r *SessionService) End(ctx context.Context, id string, params SessionEndPa
 
 // Runs an autonomous AI agent that can perform complex multi-step browser tasks.
 func (r *SessionService) Execute(ctx context.Context, id string, params SessionExecuteParams, opts ...option.RequestOption) (res *SessionExecuteResponse, err error) {
-	if !param.IsOmitted(params.XSentAt) {
-		opts = append(opts, option.WithHeader("x-sent-at", fmt.Sprintf("%s", params.XSentAt.Value)))
-	}
 	if !param.IsOmitted(params.XStreamResponse) {
 		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%s", params.XStreamResponse)))
 	}
@@ -124,9 +111,6 @@ func (r *SessionService) ExecuteStreaming(ctx context.Context, id string, params
 		raw *http.Response
 		err error
 	)
-	if !param.IsOmitted(params.XSentAt) {
-		opts = append(opts, option.WithHeader("x-sent-at", fmt.Sprintf("%s", params.XSentAt.Value)))
-	}
 	if !param.IsOmitted(params.XStreamResponse) {
 		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%s", params.XStreamResponse)))
 	}
@@ -143,9 +127,6 @@ func (r *SessionService) ExecuteStreaming(ctx context.Context, id string, params
 
 // Extracts structured data from the current page using AI-powered analysis.
 func (r *SessionService) Extract(ctx context.Context, id string, params SessionExtractParams, opts ...option.RequestOption) (res *SessionExtractResponse, err error) {
-	if !param.IsOmitted(params.XSentAt) {
-		opts = append(opts, option.WithHeader("x-sent-at", fmt.Sprintf("%s", params.XSentAt.Value)))
-	}
 	if !param.IsOmitted(params.XStreamResponse) {
 		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%s", params.XStreamResponse)))
 	}
@@ -165,9 +146,6 @@ func (r *SessionService) ExtractStreaming(ctx context.Context, id string, params
 		raw *http.Response
 		err error
 	)
-	if !param.IsOmitted(params.XSentAt) {
-		opts = append(opts, option.WithHeader("x-sent-at", fmt.Sprintf("%s", params.XSentAt.Value)))
-	}
 	if !param.IsOmitted(params.XStreamResponse) {
 		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%s", params.XStreamResponse)))
 	}
@@ -184,9 +162,6 @@ func (r *SessionService) ExtractStreaming(ctx context.Context, id string, params
 
 // Navigates the browser to the specified URL.
 func (r *SessionService) Navigate(ctx context.Context, id string, params SessionNavigateParams, opts ...option.RequestOption) (res *SessionNavigateResponse, err error) {
-	if !param.IsOmitted(params.XSentAt) {
-		opts = append(opts, option.WithHeader("x-sent-at", fmt.Sprintf("%s", params.XSentAt.Value)))
-	}
 	if !param.IsOmitted(params.XStreamResponse) {
 		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%s", params.XStreamResponse)))
 	}
@@ -203,9 +178,6 @@ func (r *SessionService) Navigate(ctx context.Context, id string, params Session
 // Identifies and returns available actions on the current page that match the
 // given instruction.
 func (r *SessionService) Observe(ctx context.Context, id string, params SessionObserveParams, opts ...option.RequestOption) (res *SessionObserveResponse, err error) {
-	if !param.IsOmitted(params.XSentAt) {
-		opts = append(opts, option.WithHeader("x-sent-at", fmt.Sprintf("%s", params.XSentAt.Value)))
-	}
 	if !param.IsOmitted(params.XStreamResponse) {
 		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%s", params.XStreamResponse)))
 	}
@@ -226,9 +198,6 @@ func (r *SessionService) ObserveStreaming(ctx context.Context, id string, params
 		raw *http.Response
 		err error
 	)
-	if !param.IsOmitted(params.XSentAt) {
-		opts = append(opts, option.WithHeader("x-sent-at", fmt.Sprintf("%s", params.XSentAt.Value)))
-	}
 	if !param.IsOmitted(params.XStreamResponse) {
 		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%s", params.XStreamResponse)))
 	}
@@ -246,9 +215,6 @@ func (r *SessionService) ObserveStreaming(ctx context.Context, id string, params
 // Creates a new browser session with the specified configuration. Returns a
 // session ID used for all subsequent operations.
 func (r *SessionService) Start(ctx context.Context, params SessionStartParams, opts ...option.RequestOption) (res *SessionStartResponse, err error) {
-	if !param.IsOmitted(params.XSentAt) {
-		opts = append(opts, option.WithHeader("x-sent-at", fmt.Sprintf("%s", params.XSentAt.Value)))
-	}
 	if !param.IsOmitted(params.XStreamResponse) {
 		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%s", params.XStreamResponse)))
 	}
@@ -316,7 +282,9 @@ func (u *ModelConfigUnionParam) asAny() any {
 
 // The property ModelName is required.
 type ModelConfigModelConfigObjectParam struct {
-	// Model name string (e.g., 'openai/gpt-5-nano', 'anthropic/claude-4.5-opus')
+	// Model name string with provider prefix. Always use the format
+	// 'provider/model-name' (e.g., 'openai/gpt-4o',
+	// 'anthropic/claude-sonnet-4-5-20250929', 'google/gemini-2.0-flash')
 	ModelName string `json:"modelName,required"`
 	// API key for the model provider
 	APIKey param.Opt[string] `json:"apiKey,omitzero"`
@@ -885,9 +853,7 @@ type SessionActParams struct {
 	// Natural language instruction or Action object
 	Input SessionActParamsInputUnion `json:"input,omitzero,required"`
 	// Target frame ID for the action
-	FrameID param.Opt[string] `json:"frameId,omitzero"`
-	// ISO timestamp when request was sent
-	XSentAt param.Opt[time.Time]    `header:"x-sent-at,omitzero" format:"date-time" json:"-"`
+	FrameID param.Opt[string]       `json:"frameId,omitzero"`
 	Options SessionActParamsOptions `json:"options,omitzero"`
 	// Whether to stream the response via SSE
 	//
@@ -932,8 +898,9 @@ func (u *SessionActParamsInputUnion) asAny() any {
 type SessionActParamsOptions struct {
 	// Timeout in ms for the action
 	Timeout param.Opt[float64] `json:"timeout,omitzero"`
-	// Model name string with provider prefix (e.g., 'openai/gpt-5-nano',
-	// 'anthropic/claude-4.5-opus')
+	// Model name string with provider prefix. Always use the format
+	// 'provider/model-name' (e.g., 'openai/gpt-4o',
+	// 'anthropic/claude-sonnet-4-5-20250929', 'google/gemini-2.0-flash')
 	Model ModelConfigUnionParam `json:"model,omitzero"`
 	// Variables to substitute in the action instruction
 	Variables map[string]string `json:"variables,omitzero"`
@@ -957,9 +924,7 @@ const (
 )
 
 type SessionEndParams struct {
-	// ISO timestamp when request was sent
-	XSentAt   param.Opt[time.Time] `header:"x-sent-at,omitzero" format:"date-time" json:"-"`
-	ForceBody any                  `json:"_forceBody,omitzero"`
+	ForceBody any `json:"_forceBody,omitzero"`
 	// Whether to stream the response via SSE
 	//
 	// Any of "true", "false".
@@ -988,8 +953,6 @@ type SessionExecuteParams struct {
 	ExecuteOptions SessionExecuteParamsExecuteOptions `json:"executeOptions,omitzero,required"`
 	// Target frame ID for the agent
 	FrameID param.Opt[string] `json:"frameId,omitzero"`
-	// ISO timestamp when request was sent
-	XSentAt param.Opt[time.Time] `header:"x-sent-at,omitzero" format:"date-time" json:"-"`
 	// Whether to stream the response via SSE
 	//
 	// Any of "true", "false".
@@ -1010,8 +973,9 @@ type SessionExecuteParamsAgentConfig struct {
 	Cua param.Opt[bool] `json:"cua,omitzero"`
 	// Custom system prompt for the agent
 	SystemPrompt param.Opt[string] `json:"systemPrompt,omitzero"`
-	// Model name string with provider prefix (e.g., 'openai/gpt-5-nano',
-	// 'anthropic/claude-4.5-opus')
+	// Model name string with provider prefix. Always use the format
+	// 'provider/model-name' (e.g., 'openai/gpt-4o',
+	// 'anthropic/claude-sonnet-4-5-20250929', 'google/gemini-2.0-flash')
 	Model ModelConfigUnionParam `json:"model,omitzero"`
 	// AI provider for the agent (legacy, use model: openai/gpt-5-nano instead)
 	//
@@ -1065,10 +1029,8 @@ type SessionExtractParams struct {
 	// Target frame ID for the extraction
 	FrameID param.Opt[string] `json:"frameId,omitzero"`
 	// Natural language instruction for what to extract
-	Instruction param.Opt[string] `json:"instruction,omitzero"`
-	// ISO timestamp when request was sent
-	XSentAt param.Opt[time.Time]        `header:"x-sent-at,omitzero" format:"date-time" json:"-"`
-	Options SessionExtractParamsOptions `json:"options,omitzero"`
+	Instruction param.Opt[string]           `json:"instruction,omitzero"`
+	Options     SessionExtractParamsOptions `json:"options,omitzero"`
 	// JSON Schema defining the structure of data to extract
 	Schema map[string]any `json:"schema,omitzero"`
 	// Whether to stream the response via SSE
@@ -1091,8 +1053,9 @@ type SessionExtractParamsOptions struct {
 	Selector param.Opt[string] `json:"selector,omitzero"`
 	// Timeout in ms for the extraction
 	Timeout param.Opt[float64] `json:"timeout,omitzero"`
-	// Model name string with provider prefix (e.g., 'openai/gpt-5-nano',
-	// 'anthropic/claude-4.5-opus')
+	// Model name string with provider prefix. Always use the format
+	// 'provider/model-name' (e.g., 'openai/gpt-4o',
+	// 'anthropic/claude-sonnet-4-5-20250929', 'google/gemini-2.0-flash')
 	Model ModelConfigUnionParam `json:"model,omitzero"`
 	paramObj
 }
@@ -1119,10 +1082,8 @@ type SessionNavigateParams struct {
 	// Target frame ID for the navigation
 	FrameID param.Opt[string] `json:"frameId,omitzero"`
 	// Whether to stream the response via SSE
-	StreamResponse param.Opt[bool] `json:"streamResponse,omitzero"`
-	// ISO timestamp when request was sent
-	XSentAt param.Opt[time.Time]         `header:"x-sent-at,omitzero" format:"date-time" json:"-"`
-	Options SessionNavigateParamsOptions `json:"options,omitzero"`
+	StreamResponse param.Opt[bool]              `json:"streamResponse,omitzero"`
+	Options        SessionNavigateParamsOptions `json:"options,omitzero"`
 	// Whether to stream the response via SSE
 	//
 	// Any of "true", "false".
@@ -1176,10 +1137,8 @@ type SessionObserveParams struct {
 	// Target frame ID for the observation
 	FrameID param.Opt[string] `json:"frameId,omitzero"`
 	// Natural language instruction for what actions to find
-	Instruction param.Opt[string] `json:"instruction,omitzero"`
-	// ISO timestamp when request was sent
-	XSentAt param.Opt[time.Time]        `header:"x-sent-at,omitzero" format:"date-time" json:"-"`
-	Options SessionObserveParamsOptions `json:"options,omitzero"`
+	Instruction param.Opt[string]           `json:"instruction,omitzero"`
+	Options     SessionObserveParamsOptions `json:"options,omitzero"`
 	// Whether to stream the response via SSE
 	//
 	// Any of "true", "false".
@@ -1200,8 +1159,9 @@ type SessionObserveParamsOptions struct {
 	Selector param.Opt[string] `json:"selector,omitzero"`
 	// Timeout in ms for the observation
 	Timeout param.Opt[float64] `json:"timeout,omitzero"`
-	// Model name string with provider prefix (e.g., 'openai/gpt-5-nano',
-	// 'anthropic/claude-4.5-opus')
+	// Model name string with provider prefix. Always use the format
+	// 'provider/model-name' (e.g., 'openai/gpt-4o',
+	// 'anthropic/claude-sonnet-4-5-20250929', 'google/gemini-2.0-flash')
 	Model ModelConfigUnionParam `json:"model,omitzero"`
 	paramObj
 }
@@ -1223,7 +1183,9 @@ const (
 )
 
 type SessionStartParams struct {
-	// Model name to use for AI operations
+	// Model name to use for AI operations. Always use the format 'provider/model-name'
+	// (e.g., 'openai/gpt-4o', 'anthropic/claude-sonnet-4-5-20250929',
+	// 'google/gemini-2.0-flash')
 	ModelName string `json:"modelName,required"`
 	// Timeout in ms for act operations (deprecated, v2 only)
 	ActTimeoutMs param.Opt[float64] `json:"actTimeoutMs,omitzero"`
@@ -1237,9 +1199,7 @@ type SessionStartParams struct {
 	// Custom system prompt for AI operations
 	SystemPrompt param.Opt[string] `json:"systemPrompt,omitzero"`
 	// Wait for captcha solves (deprecated, v2 only)
-	WaitForCaptchaSolves param.Opt[bool] `json:"waitForCaptchaSolves,omitzero"`
-	// ISO timestamp when request was sent
-	XSentAt                        param.Opt[time.Time]                             `header:"x-sent-at,omitzero" format:"date-time" json:"-"`
+	WaitForCaptchaSolves           param.Opt[bool]                                  `json:"waitForCaptchaSolves,omitzero"`
 	Browser                        SessionStartParamsBrowser                        `json:"browser,omitzero"`
 	BrowserbaseSessionCreateParams SessionStartParamsBrowserbaseSessionCreateParams `json:"browserbaseSessionCreateParams,omitzero"`
 	// Logging verbosity level (0=quiet, 1=normal, 2=debug)

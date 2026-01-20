@@ -3,8 +3,8 @@ package apijson_test
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/browserbase/stagehand-go/internal/apijson"
-	"github.com/browserbase/stagehand-go/packages/param"
+	"github.com/browserbase/stagehand-go/v3/internal/apijson"
+	"github.com/browserbase/stagehand-go/v3/packages/param"
 	"reflect"
 	"testing"
 )

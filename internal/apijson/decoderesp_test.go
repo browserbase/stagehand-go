@@ -2,8 +2,8 @@ package apijson_test
 
 import (
 	"encoding/json"
-	"github.com/browserbase/stagehand-go/internal/apijson"
-	"github.com/browserbase/stagehand-go/packages/respjson"
+	"github.com/browserbase/stagehand-go/v3/internal/apijson"
+	"github.com/browserbase/stagehand-go/v3/packages/respjson"
 	"testing"
 )
 

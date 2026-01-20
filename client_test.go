@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package stagehandsdk_test
+package stagehand_test
 
 import (
 	"context"
@@ -11,9 +11,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/browserbase/stagehand-go"
-	"github.com/browserbase/stagehand-go/internal"
-	"github.com/browserbase/stagehand-go/option"
+	"github.com/browserbase/stagehand-go/v3"
+	"github.com/browserbase/stagehand-go/v3/internal"
+	"github.com/browserbase/stagehand-go/v3/option"
 )
 
 type closureTransport struct {
@@ -26,7 +26,7 @@ func (t *closureTransport) RoundTrip(req *http.Request) (*http.Response, error) 
 
 func TestUserAgentHeader(t *testing.T) {
 	var userAgent string
-	client := stagehandsdk.NewClient(
+	client := stagehand.NewClient(
 		option.WithBrowserbaseAPIKey("My Browserbase API Key"),
 		option.WithBrowserbaseProjectID("My Browserbase Project ID"),
 		option.WithModelAPIKey("My Model API Key"),
@@ -41,7 +41,7 @@ func TestUserAgentHeader(t *testing.T) {
 			},
 		}),
 	)
-	client.Sessions.Start(context.Background(), stagehandsdk.SessionStartParams{
+	client.Sessions.Start(context.Background(), stagehand.SessionStartParams{
 		ModelName: "openai/gpt-5-nano",
 	})
 	if userAgent != fmt.Sprintf("Stagehand/Go %s", internal.PackageVersion) {
@@ -51,7 +51,7 @@ func TestUserAgentHeader(t *testing.T) {
 
 func TestRetryAfter(t *testing.T) {
 	retryCountHeaders := make([]string, 0)
-	client := stagehandsdk.NewClient(
+	client := stagehand.NewClient(
 		option.WithBrowserbaseAPIKey("My Browserbase API Key"),
 		option.WithBrowserbaseProjectID("My Browserbase Project ID"),
 		option.WithModelAPIKey("My Model API Key"),
@@ -69,7 +69,7 @@ func TestRetryAfter(t *testing.T) {
 			},
 		}),
 	)
-	_, err := client.Sessions.Start(context.Background(), stagehandsdk.SessionStartParams{
+	_, err := client.Sessions.Start(context.Background(), stagehand.SessionStartParams{
 		ModelName: "openai/gpt-5-nano",
 	})
 	if err == nil {
@@ -89,7 +89,7 @@ func TestRetryAfter(t *testing.T) {
 
 func TestDeleteRetryCountHeader(t *testing.T) {
 	retryCountHeaders := make([]string, 0)
-	client := stagehandsdk.NewClient(
+	client := stagehand.NewClient(
 		option.WithBrowserbaseAPIKey("My Browserbase API Key"),
 		option.WithBrowserbaseProjectID("My Browserbase Project ID"),
 		option.WithModelAPIKey("My Model API Key"),
@@ -108,7 +108,7 @@ func TestDeleteRetryCountHeader(t *testing.T) {
 		}),
 		option.WithHeaderDel("X-Stainless-Retry-Count"),
 	)
-	_, err := client.Sessions.Start(context.Background(), stagehandsdk.SessionStartParams{
+	_, err := client.Sessions.Start(context.Background(), stagehand.SessionStartParams{
 		ModelName: "openai/gpt-5-nano",
 	})
 	if err == nil {
@@ -123,7 +123,7 @@ func TestDeleteRetryCountHeader(t *testing.T) {
 
 func TestOverwriteRetryCountHeader(t *testing.T) {
 	retryCountHeaders := make([]string, 0)
-	client := stagehandsdk.NewClient(
+	client := stagehand.NewClient(
 		option.WithBrowserbaseAPIKey("My Browserbase API Key"),
 		option.WithBrowserbaseProjectID("My Browserbase Project ID"),
 		option.WithModelAPIKey("My Model API Key"),
@@ -142,7 +142,7 @@ func TestOverwriteRetryCountHeader(t *testing.T) {
 		}),
 		option.WithHeader("X-Stainless-Retry-Count", "42"),
 	)
-	_, err := client.Sessions.Start(context.Background(), stagehandsdk.SessionStartParams{
+	_, err := client.Sessions.Start(context.Background(), stagehand.SessionStartParams{
 		ModelName: "openai/gpt-5-nano",
 	})
 	if err == nil {
@@ -157,7 +157,7 @@ func TestOverwriteRetryCountHeader(t *testing.T) {
 
 func TestRetryAfterMs(t *testing.T) {
 	attempts := 0
-	client := stagehandsdk.NewClient(
+	client := stagehand.NewClient(
 		option.WithBrowserbaseAPIKey("My Browserbase API Key"),
 		option.WithBrowserbaseProjectID("My Browserbase Project ID"),
 		option.WithModelAPIKey("My Model API Key"),
@@ -175,7 +175,7 @@ func TestRetryAfterMs(t *testing.T) {
 			},
 		}),
 	)
-	_, err := client.Sessions.Start(context.Background(), stagehandsdk.SessionStartParams{
+	_, err := client.Sessions.Start(context.Background(), stagehand.SessionStartParams{
 		ModelName: "openai/gpt-5-nano",
 	})
 	if err == nil {
@@ -187,7 +187,7 @@ func TestRetryAfterMs(t *testing.T) {
 }
 
 func TestContextCancel(t *testing.T) {
-	client := stagehandsdk.NewClient(
+	client := stagehand.NewClient(
 		option.WithBrowserbaseAPIKey("My Browserbase API Key"),
 		option.WithBrowserbaseProjectID("My Browserbase Project ID"),
 		option.WithModelAPIKey("My Model API Key"),
@@ -202,7 +202,7 @@ func TestContextCancel(t *testing.T) {
 	)
 	cancelCtx, cancel := context.WithCancel(context.Background())
 	cancel()
-	_, err := client.Sessions.Start(cancelCtx, stagehandsdk.SessionStartParams{
+	_, err := client.Sessions.Start(cancelCtx, stagehand.SessionStartParams{
 		ModelName: "openai/gpt-5-nano",
 	})
 	if err == nil {
@@ -211,7 +211,7 @@ func TestContextCancel(t *testing.T) {
 }
 
 func TestContextCancelDelay(t *testing.T) {
-	client := stagehandsdk.NewClient(
+	client := stagehand.NewClient(
 		option.WithBrowserbaseAPIKey("My Browserbase API Key"),
 		option.WithBrowserbaseProjectID("My Browserbase Project ID"),
 		option.WithModelAPIKey("My Model API Key"),
@@ -226,7 +226,7 @@ func TestContextCancelDelay(t *testing.T) {
 	)
 	cancelCtx, cancel := context.WithTimeout(context.Background(), 2*time.Millisecond)
 	defer cancel()
-	_, err := client.Sessions.Start(cancelCtx, stagehandsdk.SessionStartParams{
+	_, err := client.Sessions.Start(cancelCtx, stagehand.SessionStartParams{
 		ModelName: "openai/gpt-5-nano",
 	})
 	if err == nil {
@@ -243,7 +243,7 @@ func TestContextDeadline(t *testing.T) {
 	defer cancel()
 
 	go func() {
-		client := stagehandsdk.NewClient(
+		client := stagehand.NewClient(
 			option.WithBrowserbaseAPIKey("My Browserbase API Key"),
 			option.WithBrowserbaseProjectID("My Browserbase Project ID"),
 			option.WithModelAPIKey("My Model API Key"),
@@ -256,7 +256,7 @@ func TestContextDeadline(t *testing.T) {
 				},
 			}),
 		)
-		_, err := client.Sessions.Start(deadlineCtx, stagehandsdk.SessionStartParams{
+		_, err := client.Sessions.Start(deadlineCtx, stagehand.SessionStartParams{
 			ModelName: "openai/gpt-5-nano",
 		})
 		if err == nil {
@@ -284,7 +284,7 @@ func TestContextDeadlineStreaming(t *testing.T) {
 	defer cancel()
 
 	go func() {
-		client := stagehandsdk.NewClient(
+		client := stagehand.NewClient(
 			option.WithBrowserbaseAPIKey("My Browserbase API Key"),
 			option.WithBrowserbaseProjectID("My Browserbase Project ID"),
 			option.WithModelAPIKey("My Model API Key"),
@@ -308,9 +308,9 @@ func TestContextDeadlineStreaming(t *testing.T) {
 		stream := client.Sessions.ActStreaming(
 			deadlineCtx,
 			"c4dbf3a9-9a58-4b22-8a1c-9f20f9f9e123",
-			stagehandsdk.SessionActParams{
-				Input: stagehandsdk.SessionActParamsInputUnion{
-					OfString: stagehandsdk.String("Click the login button"),
+			stagehand.SessionActParams{
+				Input: stagehand.SessionActParamsInputUnion{
+					OfString: stagehand.String("Click the login button"),
 				},
 			},
 		)
@@ -339,7 +339,7 @@ func TestContextDeadlineStreamingWithRequestTimeout(t *testing.T) {
 	deadline := time.Now().Add(100 * time.Millisecond)
 
 	go func() {
-		client := stagehandsdk.NewClient(
+		client := stagehand.NewClient(
 			option.WithBrowserbaseAPIKey("My Browserbase API Key"),
 			option.WithBrowserbaseProjectID("My Browserbase Project ID"),
 			option.WithModelAPIKey("My Model API Key"),
@@ -363,9 +363,9 @@ func TestContextDeadlineStreamingWithRequestTimeout(t *testing.T) {
 		stream := client.Sessions.ActStreaming(
 			context.Background(),
 			"c4dbf3a9-9a58-4b22-8a1c-9f20f9f9e123",
-			stagehandsdk.SessionActParams{
-				Input: stagehandsdk.SessionActParamsInputUnion{
-					OfString: stagehandsdk.String("Click the login button"),
+			stagehand.SessionActParams{
+				Input: stagehand.SessionActParamsInputUnion{
+					OfString: stagehand.String("Click the login button"),
 				},
 			},
 			option.WithRequestTimeout((100 * time.Millisecond)),

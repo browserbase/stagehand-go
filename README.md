@@ -1,68 +1,24 @@
-<div id="toc" align="center" style="margin-bottom: 0;">
-  <ul style="list-style: none; margin: 0; padding: 0;">
-    <a href="https://stagehand.dev">
-      <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/browserbase/stagehand/main/media/dark_logo.png" />
-        <img alt="Stagehand" src="https://raw.githubusercontent.com/browserbase/stagehand/main/media/light_logo.png" width="200" style="margin-right: 30px;" />
-      </picture>
-    </a>
-  </ul>
-</div>
-<p align="center">
-  <strong>The AI Browser Automation Framework</strong><br>
-  <a href="https://docs.stagehand.dev/v3/sdk/go">Read the Docs</a>
-</p>
+# Stagehand Go API Library
 
-<p align="center">
-  <a href="https://github.com/browserbase/stagehand/tree/main?tab=MIT-1-ov-file#MIT-1-ov-file">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/browserbase/stagehand/main/media/dark_license.svg" />
-      <img alt="MIT License" src="https://raw.githubusercontent.com/browserbase/stagehand/main/media/light_license.svg" />
-    </picture>
-  </a>
-  <a href="https://stagehand.dev/discord">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/browserbase/stagehand/main/media/dark_discord.svg" />
-      <img alt="Discord Community" src="https://raw.githubusercontent.com/browserbase/stagehand/main/media/light_discord.svg" />
-    </picture>
-  </a>
-</p>
+<!-- x-release-please-start-version -->
 
-<p align="center">
-	<a href="https://trendshift.io/repositories/12122" target="_blank"><img src="https://trendshift.io/api/badge/repositories/12122" alt="browserbase%2Fstagehand | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
-</p>
+<a href="https://pkg.go.dev/github.com/browserbase/stagehand-go/v3"><img src="https://pkg.go.dev/badge/github.com/browserbase/stagehand-go.svg" alt="Go Reference"></a>
 
-<p align="center">
-If you're looking for other languages, you can find them
-<a href="https://docs.stagehand.dev/v3/first-steps/introduction"> here</a>
-</p>
+<!-- x-release-please-end -->
 
-<div align="center" style="display: flex; align-items: center; justify-content: center; gap: 4px; margin-bottom: 0;">
-  <b>Vibe code</b>
-  <span style="font-size: 1.05em;"> Stagehand with </span>
-  <a href="https://director.ai" style="display: flex; align-items: center;">
-    <span>Director</span>
-  </a>
-  <span> </span>
-  <picture>
-    <img alt="Director" src="https://raw.githubusercontent.com/browserbase/stagehand/main/media/director_icon.svg" width="25" />
-  </picture>
-</div>
+The Stagehand Go library provides convenient access to the [Stagehand REST API](https://docs.stagehand.dev)
+from applications written in Go.
 
-## What is Stagehand?
+It is generated with [Stainless](https://www.stainless.com/).
 
-Stagehand is a browser automation framework used to control web browsers with natural language and code. By combining the power of AI with the precision of code, Stagehand makes web automation flexible, maintainable, and actually reliable.
+## MCP Server
 
-## Why Stagehand?
+Use the Stagehand MCP Server to enable AI assistants to interact with this API, allowing them to explore endpoints, make test requests, and use documentation to help integrate this SDK into your application.
 
-Most existing browser automation tools either require you to write low-level code in a framework like Selenium, Playwright, or Puppeteer, or use high-level agents that can be unpredictable in production. By letting developers choose what to write in code vs. natural language (and bridging the gap between the two) Stagehand is the natural choice for browser automations in production.
+[![Add to Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/en-US/install-mcp?name=stagehand-mcp&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsInN0YWdlaGFuZC1tY3AiXX0)
+[![Install in VS Code](https://img.shields.io/badge/_-Add_to_VS_Code-blue?style=for-the-badge&logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9Im5vbmUiIHZpZXdCb3g9IjAgMCA0MCA0MCI+PHBhdGggZmlsbD0iI0VFRSIgZmlsbC1ydWxlPSJldmVub2RkIiBkPSJNMzAuMjM1IDM5Ljg4NGEyLjQ5MSAyLjQ5MSAwIDAgMS0xLjc4MS0uNzNMMTIuNyAyNC43OGwtMy40NiAyLjYyNC0zLjQwNiAyLjU4MmExLjY2NSAxLjY2NSAwIDAgMS0xLjA4Mi4zMzggMS42NjQgMS42NjQgMCAwIDEtMS4wNDYtLjQzMWwtMi4yLTJhMS42NjYgMS42NjYgMCAwIDEgMC0yLjQ2M0w3LjQ1OCAyMCA0LjY3IDE3LjQ1MyAxLjUwNyAxNC41N2ExLjY2NSAxLjY2NSAwIDAgMSAwLTIuNDYzbDIuMi0yYTEuNjY1IDEuNjY1IDAgMCAxIDIuMTMtLjA5N2w2Ljg2MyA1LjIwOUwyOC40NTIuODQ0YTIuNDg4IDIuNDg4IDAgMCAxIDEuODQxLS43MjljLjM1MS4wMDkuNjk5LjA5MSAxLjAxOS4yNDVsOC4yMzYgMy45NjFhMi41IDIuNSAwIDAgMSAxLjQxNSAyLjI1M3YuMDk5LS4wNDVWMzMuMzd2LS4wNDUuMDk1YTIuNTAxIDIuNTAxIDAgMCAxLTEuNDE2IDIuMjU3bC04LjIzNSAzLjk2MWEyLjQ5MiAyLjQ5MiAwIDAgMS0xLjA3Ny4yNDZabS43MTYtMjguOTQ3LTExLjk0OCA5LjA2MiAxMS45NTIgOS4wNjUtLjAwNC0xOC4xMjdaIi8+PC9zdmc+)](https://vscode.stainless.com/mcp/%7B%22name%22%3A%22stagehand-mcp%22%2C%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22stagehand-mcp%22%5D%7D)
 
-1. **Choose when to write code vs. natural language**: use AI when you want to navigate unfamiliar pages, and use code when you know exactly what you want to do.
-
-2. **Go from AI-driven to repeatable workflows**: Stagehand lets you preview AI actions before running them, and also helps you easily cache repeatable actions to save time and tokens.
-
-3. **Write once, run forever**: Stagehand's auto-caching combined with self-healing remembers previous actions, runs without LLM inference, and knows when to involve AI whenever the website changes and your automation breaks.
-
+> Note: You may need to set environment variables in your MCP client.
 
 ## Installation
 
@@ -70,7 +26,7 @@ Most existing browser automation tools either require you to write low-level cod
 
 ```go
 import (
-	"github.com/browserbase/stagehand-go" // imported as stagehandsdk
+	"github.com/browserbase/stagehand-go/v3" // imported as stagehand
 )
 ```
 
@@ -81,7 +37,7 @@ Or to pin the version:
 <!-- x-release-please-start-version -->
 
 ```sh
-go get -u 'github.com/browserbase/stagehand-go@v0.18.0'
+go get -u 'github.com/browserbase/stagehand-go@v3.0.1'
 ```
 
 <!-- x-release-please-end -->
@@ -101,190 +57,42 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/browserbase/stagehand-go"
-	"github.com/browserbase/stagehand-go/option"
+	"github.com/browserbase/stagehand-go/v3"
+	"github.com/browserbase/stagehand-go/v3/option"
 )
 
 func main() {
-	// Create a new Stagehand client with your credentials
 	client := stagehand.NewClient(
 		option.WithBrowserbaseAPIKey("My Browserbase API Key"),       // defaults to os.LookupEnv("BROWSERBASE_API_KEY")
 		option.WithBrowserbaseProjectID("My Browserbase Project ID"), // defaults to os.LookupEnv("BROWSERBASE_PROJECT_ID")
 		option.WithModelAPIKey("My Model API Key"),                   // defaults to os.LookupEnv("MODEL_API_KEY")
 	)
-
-	// Start a new browser session
-	startResponse, err := client.Sessions.Start(context.TODO(), stagehand.SessionStartParams{
-		ModelName: "gpt-5-nano",
-	})
-	if err != nil {
-		panic(err.Error())
-	}
-	fmt.Printf("Session started: %s\n", startResponse.Data.SessionID)
-
-	sessionID := startResponse.Data.SessionID
-
-	// Navigate to a webpage
-	_, err = client.Sessions.Navigate(
+	response, err := client.Sessions.Act(
 		context.TODO(),
-		sessionID,
-		stagehand.SessionNavigateParams{
-			URL: "https://news.ycombinator.com",
-		},
-	)
-	if err != nil {
-		panic(err.Error())
-	}
-	fmt.Println("Navigated to Hacker News")
-
-	// Use Observe to find possible actions on the page
-	observeResponse, err := client.Sessions.Observe(
-		context.TODO(),
-		sessionID,
-		stagehand.SessionObserveParams{
-			Instruction: stagehand.String("find the link to view comments for the top post"),
-		},
-	)
-	if err != nil {
-		panic(err.Error())
-	}
-
-	actions := observeResponse.Data.Result
-	fmt.Printf("Found %d possible actions\n", len(actions))
-
-	if len(actions) == 0 {
-		fmt.Println("No actions found")
-		return
-	}
-
-	// Take the first action returned by Observe
-	action := actions[0]
-	fmt.Printf("Acting on: %s\n", action.Description)
-
-	// Pass the structured action to Act
-	// The action contains selector, description, method, and arguments
-	actResponse, err := client.Sessions.Act(
-		context.TODO(),
-		sessionID,
+		"00000000-your-session-id-000000000000",
 		stagehand.SessionActParams{
 			Input: stagehand.SessionActParamsInputUnion{
-				OfAction: &stagehand.ActionParam{
-					Description: action.Description,
-					Selector:    action.Selector,
-					Method:      stagehand.String(action.Method),
-					Arguments:   action.Arguments,
-				},
+				OfString: stagehand.String("click the first link on the page"),
 			},
 		},
 	)
 	if err != nil {
 		panic(err.Error())
 	}
-	fmt.Printf("Act completed: %s\n", actResponse.Data.Result.Message)
-
-	// Extract structured data from the page using a JSON schema
-	extractResponse, err := client.Sessions.Extract(
-		context.TODO(),
-		sessionID,
-		stagehand.SessionExtractParams{
-			Instruction: stagehand.String("extract the text of the top comment"),
-			Schema: map[string]any{
-				"type": "object",
-				"properties": map[string]any{
-					"commentText": map[string]any{
-						"type":        "string",
-						"description": "The text content of the top comment",
-					},
-					"author": map[string]any{
-						"type":        "string",
-						"description": "The username of the comment author",
-					},
-				},
-			},
-		},
-	)
-	if err != nil {
-		panic(err.Error())
-	}
-	fmt.Printf("Extracted: %+v\n", extractResponse.Data.Result)
-
-	// Run an autonomous agent to accomplish a goal
-	// The agent can navigate, click, type, and interact with pages
-	executeResponse, err := client.Sessions.Execute(
-		context.TODO(),
-		sessionID,
-		stagehand.SessionExecuteParams{
-			ExecuteOptions: stagehand.SessionExecuteParamsExecuteOptions{
-				Instruction: "Find the profile page for the top commenter",
-				MaxSteps:    stagehand.Float(10),
-			},
-			AgentConfig: stagehand.SessionExecuteParamsAgentConfig{
-				// Model config with provider/model format and API key
-				Model: stagehand.ModelConfigUnionParam{
-					OfModelConfigModelConfigObject: &stagehand.ModelConfigModelConfigObjectParam{
-						ModelName: "openai/gpt-4.1-mini",
-						APIKey:    stagehand.String("sk-your-api-key"),
-					},
-				},
-				Cua: stagehand.Bool(false),
-			},
-		},
-	)
-	if err != nil {
-		panic(err.Error())
-	}
-	fmt.Printf("Agent result: %s\n", executeResponse.Data.Result.Message)
-
-	// End the session to clean up resources
-	_, err = client.Sessions.End(
-		context.TODO(),
-		sessionID,
-		stagehand.SessionEndParams{},
-	)
-	if err != nil {
-		panic(err.Error())
-	}
-	fmt.Println("Session ended")
+	fmt.Printf("%+v\n", response.Data)
 }
+
 ```
-
-### Running the example
-
-A complete working example is available in `examples/basic.go`. To run it:
-
-1. **Set up environment variables** by creating a `.env` file in the repository root:
-
-```bash
-BROWSERBASE_API_KEY=your_browserbase_api_key
-BROWSERBASE_PROJECT_ID=your_browserbase_project_id
-MODEL_API_KEY=your_openai_api_key
-```
-
-You can get your Browserbase API key and project ID from the [Browserbase dashboard](https://www.browserbase.com/).
-
-2. **Install dependencies**:
-
-```bash
-go mod tidy
-```
-
-3. **Run the example**:
-
-```bash
-go run examples/basic.go
-```
-
-The example demonstrates the full Stagehand workflow: starting a session, navigating to a page, observing actions, clicking elements, extracting data, and running an autonomous agent.
 
 ### Request fields
 
-The stagehandsdk library uses the [`omitzero`](https://tip.golang.org/doc/go1.24#encodingjsonpkgencodingjson)
+The stagehand library uses the [`omitzero`](https://tip.golang.org/doc/go1.24#encodingjsonpkgencodingjson)
 semantics from the Go 1.24+ `encoding/json` release for request fields.
 
 Required primitive fields (`int64`, `string`, etc.) feature the tag <code>\`json:"...,required"\`</code>. These
 fields are always serialized, even their zero values.
 
-Optional primitive types are wrapped in a `param.Opt[T]`. These fields can be set with the provided constructors, `stagehandsdk.String(string)`, `stagehandsdk.Int(int64)`, etc.
+Optional primitive types are wrapped in a `param.Opt[T]`. These fields can be set with the provided constructors, `stagehand.String(string)`, `stagehand.Int(int64)`, etc.
 
 Any `param.Opt[T]`, map, slice, struct or string enum uses the
 tag <code>\`json:"...,omitzero"\`</code>. Its zero value is considered omitted.
@@ -292,17 +100,17 @@ tag <code>\`json:"...,omitzero"\`</code>. Its zero value is considered omitted.
 The `param.IsOmitted(any)` function can confirm the presence of any `omitzero` field.
 
 ```go
-p := stagehandsdk.ExampleParams{
-	ID:   "id_xxx",                   // required property
-	Name: stagehandsdk.String("..."), // optional property
+p := stagehand.ExampleParams{
+	ID:   "id_xxx",                // required property
+	Name: stagehand.String("..."), // optional property
 
-	Point: stagehandsdk.Point{
-		X: 0,                   // required field will serialize as 0
-		Y: stagehandsdk.Int(1), // optional field will serialize as 1
+	Point: stagehand.Point{
+		X: 0,                // required field will serialize as 0
+		Y: stagehand.Int(1), // optional field will serialize as 1
 		// ... omitted non-required fields will not be serialized
 	},
 
-	Origin: stagehandsdk.Origin{}, // the zero value of [Origin] is considered omitted
+	Origin: stagehand.Origin{}, // the zero value of [Origin] is considered omitted
 }
 ```
 
@@ -331,7 +139,7 @@ p.SetExtraFields(map[string]any{
 })
 
 // Send a number instead of an object
-custom := param.Override[stagehandsdk.FooParams](12)
+custom := param.Override[stagehand.FooParams](12)
 ```
 
 ### Request unions
@@ -472,7 +280,7 @@ This library uses the functional options pattern. Functions defined in the
 requests. For example:
 
 ```go
-client := stagehandsdk.NewClient(
+client := stagehand.NewClient(
 	// Adds a header to every request made by the client
 	option.WithHeader("X-Some-Header", "custom_header_info"),
 )
@@ -489,21 +297,30 @@ The request option `option.WithDebugLog(nil)` may be helpful while debugging.
 
 See the [full list of request options](https://pkg.go.dev/github.com/browserbase/stagehand-go/option).
 
+### Pagination
+
+This library provides some conveniences for working with paginated list endpoints.
+
+You can use `.ListAutoPaging()` methods to iterate through items across all pages:
+
+Or you can use simple `.List()` methods to fetch a single page and receive a standard response object
+with additional helper methods like `.GetNextPage()`, e.g.:
+
 ### Errors
 
 When the API returns a non-success status code, we return an error with type
-`*stagehandsdk.Error`. This contains the `StatusCode`, `*http.Request`, and
+`*stagehand.Error`. This contains the `StatusCode`, `*http.Request`, and
 `*http.Response` values of the request, as well as the JSON of the error body
 (much like other response objects in the SDK).
 
 To handle errors, we recommend that you use the `errors.As` pattern:
 
 ```go
-_, err := client.Sessions.Start(context.TODO(), stagehandsdk.SessionStartParams{
+_, err := client.Sessions.Start(context.TODO(), stagehand.SessionStartParams{
 	ModelName: "openai/gpt-5-nano",
 })
 if err != nil {
-	var apierr *stagehandsdk.Error
+	var apierr *stagehand.Error
 	if errors.As(err, &apierr) {
 		println(string(apierr.DumpRequest(true)))  // Prints the serialized HTTP request
 		println(string(apierr.DumpResponse(true))) // Prints the serialized HTTP response
@@ -528,7 +345,7 @@ ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
 defer cancel()
 client.Sessions.Start(
 	ctx,
-	stagehandsdk.SessionStartParams{
+	stagehand.SessionStartParams{
 		ModelName: "openai/gpt-5-nano",
 	},
 	// This sets the per-retry timeout
@@ -546,7 +363,7 @@ The file name and content-type can be customized by implementing `Name() string`
 string` on the run-time type of `io.Reader`. Note that `os.File` implements `Name() string`, so a
 file returned by `os.Open` will be sent with the file name on disk.
 
-We also provide a helper `stagehandsdk.File(reader io.Reader, filename string, contentType string)`
+We also provide a helper `stagehand.File(reader io.Reader, filename string, contentType string)`
 which can be used to wrap any `io.Reader` with the appropriate file name and content type.
 
 ### Retries
@@ -559,14 +376,14 @@ You can use the `WithMaxRetries` option to configure or disable this:
 
 ```go
 // Configure the default for all requests:
-client := stagehandsdk.NewClient(
+client := stagehand.NewClient(
 	option.WithMaxRetries(0), // default is 2
 )
 
 // Override per-request:
 client.Sessions.Start(
 	context.TODO(),
-	stagehandsdk.SessionStartParams{
+	stagehand.SessionStartParams{
 		ModelName: "openai/gpt-5-nano",
 	},
 	option.WithMaxRetries(5),
@@ -583,7 +400,7 @@ you need to examine response headers, status codes, or other details.
 var response *http.Response
 response, err := client.Sessions.Start(
 	context.TODO(),
-	stagehandsdk.SessionStartParams{
+	stagehand.SessionStartParams{
 		ModelName: "openai/gpt-5-nano",
 	},
 	option.WithResponseInto(&response),
@@ -632,7 +449,7 @@ or the `option.WithJSONSet()` methods.
 params := FooNewParams{
     ID:   "id_xxxx",
     Data: FooNewParamsData{
-        FirstName: stagehandsdk.String("John"),
+        FirstName: stagehand.String("John"),
     },
 }
 client.Foo.New(context.Background(), params, option.WithJSONSet("data.last_name", "Doe"))
@@ -667,7 +484,7 @@ func Logger(req *http.Request, next option.MiddlewareNext) (res *http.Response, 
     return res, err
 }
 
-client := stagehandsdk.NewClient(
+client := stagehand.NewClient(
 	option.WithMiddleware(Logger),
 )
 ```

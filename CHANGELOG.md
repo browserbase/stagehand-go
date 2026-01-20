@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.0.1 (2026-01-20)
+
+Full Changelog: [v0.18.0...v3.0.1](https://github.com/browserbase/stagehand-go/compare/v0.18.0...v3.0.1)
+
+### Chores
+
+* remove custom code ([0c000fc](https://github.com/browserbase/stagehand-go/commit/0c000fc35f8237631f8cb1f9e4a7d0e6ee144fac))
+
 ## 0.18.0 (2026-01-20)
 
 Full Changelog: [v0.17.2...v0.18.0](https://github.com/browserbase/stagehand-go/compare/v0.17.2...v0.18.0)

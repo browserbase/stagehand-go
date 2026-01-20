@@ -1,7 +1,7 @@
 package apijson
 
 import (
-	"github.com/browserbase/stagehand-go/packages/respjson"
+	"github.com/browserbase/stagehand-go/v3/packages/respjson"
 	"reflect"
 )
 

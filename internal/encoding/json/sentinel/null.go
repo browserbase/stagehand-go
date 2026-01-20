@@ -1,7 +1,7 @@
 package sentinel
 
 import (
-	"github.com/browserbase/stagehand-go/internal/encoding/json/shims"
+	"github.com/browserbase/stagehand-go/v3/internal/encoding/json/shims"
 	"reflect"
 	"sync"
 )

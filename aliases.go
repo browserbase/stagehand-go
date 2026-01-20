@@ -1,10 +1,10 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package stagehandsdk
+package stagehand
 
 import (
-	"github.com/browserbase/stagehand-go/internal/apierror"
-	"github.com/browserbase/stagehand-go/packages/param"
+	"github.com/browserbase/stagehand-go/v3/internal/apierror"
+	"github.com/browserbase/stagehand-go/v3/packages/param"
 )
 
 // aliased to make [param.APIUnion] private when embedding

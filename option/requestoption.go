@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/browserbase/stagehand-go/internal/requestconfig"
+	"github.com/browserbase/stagehand-go/v3/internal/requestconfig"
 	"github.com/tidwall/sjson"
 )
 
@@ -263,7 +263,7 @@ func WithRequestTimeout(dur time.Duration) RequestOption {
 // environment to be the "production" environment. An environment specifies which base URL
 // to use by default.
 func WithEnvironmentProduction() RequestOption {
-	return requestconfig.WithDefaultBaseURL("https://api.stagehand.browserbase.com")
+	return requestconfig.WithDefaultBaseURL("https://api.stagehand.browserbase.com/")
 }
 
 // WithBrowserbaseAPIKey returns a RequestOption that sets the client setting "BROWSERBASE_API_KEY".
