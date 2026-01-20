@@ -249,42 +249,9 @@ func (r *ActionParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-func ModelConfigParamOfModelConfigModelConfigObject(modelName string) ModelConfigUnionParam {
-	var variant ModelConfigModelConfigObjectParam
-	variant.ModelName = modelName
-	return ModelConfigUnionParam{OfModelConfigModelConfigObject: &variant}
-}
-
-// Only one field can be non-zero.
-//
-// Use [param.IsOmitted] to confirm if a field is set.
-type ModelConfigUnionParam struct {
-	OfString                       param.Opt[string]                  `json:",omitzero,inline"`
-	OfModelConfigModelConfigObject *ModelConfigModelConfigObjectParam `json:",omitzero,inline"`
-	paramUnion
-}
-
-func (u ModelConfigUnionParam) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion(u, u.OfString, u.OfModelConfigModelConfigObject)
-}
-func (u *ModelConfigUnionParam) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, u)
-}
-
-func (u *ModelConfigUnionParam) asAny() any {
-	if !param.IsOmitted(u.OfString) {
-		return &u.OfString.Value
-	} else if !param.IsOmitted(u.OfModelConfigModelConfigObject) {
-		return u.OfModelConfigModelConfigObject
-	}
-	return nil
-}
-
 // The property ModelName is required.
-type ModelConfigModelConfigObjectParam struct {
-	// Model name string with provider prefix. Always use the format
-	// 'provider/model-name' (e.g., 'openai/gpt-4o',
-	// 'anthropic/claude-sonnet-4-5-20250929', 'google/gemini-2.0-flash')
+type ModelConfigParam struct {
+	// Model name string with provider prefix (e.g., 'openai/gpt-5-nano')
 	ModelName string `json:"modelName,required"`
 	// API key for the model provider
 	APIKey param.Opt[string] `json:"apiKey,omitzero"`
@@ -293,23 +260,27 @@ type ModelConfigModelConfigObjectParam struct {
 	// AI provider for the model (or provide a baseURL endpoint instead)
 	//
 	// Any of "openai", "anthropic", "google", "microsoft".
-	Provider string `json:"provider,omitzero"`
+	Provider ModelConfigProvider `json:"provider,omitzero"`
 	paramObj
 }
 
-func (r ModelConfigModelConfigObjectParam) MarshalJSON() (data []byte, err error) {
-	type shadow ModelConfigModelConfigObjectParam
+func (r ModelConfigParam) MarshalJSON() (data []byte, err error) {
+	type shadow ModelConfigParam
 	return param.MarshalObject(r, (*shadow)(&r))
 }
-func (r *ModelConfigModelConfigObjectParam) UnmarshalJSON(data []byte) error {
+func (r *ModelConfigParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-func init() {
-	apijson.RegisterFieldValidator[ModelConfigModelConfigObjectParam](
-		"provider", "openai", "anthropic", "google", "microsoft",
-	)
-}
+// AI provider for the model (or provide a baseURL endpoint instead)
+type ModelConfigProvider string
+
+const (
+	ModelConfigProviderOpenAI    ModelConfigProvider = "openai"
+	ModelConfigProviderAnthropic ModelConfigProvider = "anthropic"
+	ModelConfigProviderGoogle    ModelConfigProvider = "google"
+	ModelConfigProviderMicrosoft ModelConfigProvider = "microsoft"
+)
 
 // Server-Sent Event emitted during streaming responses. Events are sent as
 // `data: <JSON>\n\n`. Key order: data (with status first), type, id.
@@ -898,10 +869,7 @@ func (u *SessionActParamsInputUnion) asAny() any {
 type SessionActParamsOptions struct {
 	// Timeout in ms for the action
 	Timeout param.Opt[float64] `json:"timeout,omitzero"`
-	// Model name string with provider prefix. Always use the format
-	// 'provider/model-name' (e.g., 'openai/gpt-4o',
-	// 'anthropic/claude-sonnet-4-5-20250929', 'google/gemini-2.0-flash')
-	Model ModelConfigUnionParam `json:"model,omitzero"`
+	Model   ModelConfigParam   `json:"model,omitzero"`
 	// Variables to substitute in the action instruction
 	Variables map[string]string `json:"variables,omitzero"`
 	paramObj
@@ -973,10 +941,7 @@ type SessionExecuteParamsAgentConfig struct {
 	Cua param.Opt[bool] `json:"cua,omitzero"`
 	// Custom system prompt for the agent
 	SystemPrompt param.Opt[string] `json:"systemPrompt,omitzero"`
-	// Model name string with provider prefix. Always use the format
-	// 'provider/model-name' (e.g., 'openai/gpt-4o',
-	// 'anthropic/claude-sonnet-4-5-20250929', 'google/gemini-2.0-flash')
-	Model ModelConfigUnionParam `json:"model,omitzero"`
+	Model        ModelConfigParam  `json:"model,omitzero"`
 	// AI provider for the agent (legacy, use model: openai/gpt-5-nano instead)
 	//
 	// Any of "openai", "anthropic", "google", "microsoft".
@@ -1053,10 +1018,7 @@ type SessionExtractParamsOptions struct {
 	Selector param.Opt[string] `json:"selector,omitzero"`
 	// Timeout in ms for the extraction
 	Timeout param.Opt[float64] `json:"timeout,omitzero"`
-	// Model name string with provider prefix. Always use the format
-	// 'provider/model-name' (e.g., 'openai/gpt-4o',
-	// 'anthropic/claude-sonnet-4-5-20250929', 'google/gemini-2.0-flash')
-	Model ModelConfigUnionParam `json:"model,omitzero"`
+	Model   ModelConfigParam   `json:"model,omitzero"`
 	paramObj
 }
 
@@ -1159,10 +1121,7 @@ type SessionObserveParamsOptions struct {
 	Selector param.Opt[string] `json:"selector,omitzero"`
 	// Timeout in ms for the observation
 	Timeout param.Opt[float64] `json:"timeout,omitzero"`
-	// Model name string with provider prefix. Always use the format
-	// 'provider/model-name' (e.g., 'openai/gpt-4o',
-	// 'anthropic/claude-sonnet-4-5-20250929', 'google/gemini-2.0-flash')
-	Model ModelConfigUnionParam `json:"model,omitzero"`
+	Model   ModelConfigParam   `json:"model,omitzero"`
 	paramObj
 }
 
@@ -1183,9 +1142,7 @@ const (
 )
 
 type SessionStartParams struct {
-	// Model name to use for AI operations. Always use the format 'provider/model-name'
-	// (e.g., 'openai/gpt-4o', 'anthropic/claude-sonnet-4-5-20250929',
-	// 'google/gemini-2.0-flash')
+	// Model name to use for AI operations
 	ModelName string `json:"modelName,required"`
 	// Timeout in ms for act operations (deprecated, v2 only)
 	ActTimeoutMs param.Opt[float64] `json:"actTimeoutMs,omitzero"`

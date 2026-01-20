@@ -3,7 +3,7 @@
 Params Types:
 
 - <a href="https://pkg.go.dev/github.com/browserbase/stagehand-go/v3">stagehand</a>.<a href="https://pkg.go.dev/github.com/browserbase/stagehand-go/v3#ActionParam">ActionParam</a>
-- <a href="https://pkg.go.dev/github.com/browserbase/stagehand-go/v3">stagehand</a>.<a href="https://pkg.go.dev/github.com/browserbase/stagehand-go/v3#ModelConfigUnionParam">ModelConfigUnionParam</a>
+- <a href="https://pkg.go.dev/github.com/browserbase/stagehand-go/v3">stagehand</a>.<a href="https://pkg.go.dev/github.com/browserbase/stagehand-go/v3#ModelConfigParam">ModelConfigParam</a>
 
 Response Types:
 
