@@ -130,11 +130,11 @@ func ResolveBinaryPath() (string, error) {
 
 	tag, err := resolveVersion(ctx, version)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("failed to resolve stagehand driver binary version: %w (possibly blocked by firewall or sandbox settings). %s", err, manualDownloadHint(filename, cachePath))
 	}
 
 	if err := downloadBinary(ctx, tag, cachePath); err != nil {
-		return "", err
+		return "", fmt.Errorf("failed to download latest stagehand driver binary to: %w (possibly blocked by firewall or sandbox settings). %s", err, manualDownloadHint(filename, cachePath))
 	}
 
 	return cachePath, nil
@@ -142,6 +142,15 @@ func ResolveBinaryPath() (string, error) {
 
 type releaseInfo struct {
 	TagName string `json:"tag_name"`
+}
+
+func manualDownloadHint(filename, destPath string) string {
+	return fmt.Sprintf(
+		"To continue, download the %s driver binary from the latest release on https://github.com/%s/releases and save it to: %s",
+		filename,
+		stagehandRepo,
+		destPath,
+	)
 }
 
 func resolveVersion(ctx context.Context, version string) (string, error) {
@@ -155,7 +164,7 @@ func resolveVersion(ctx context.Context, version string) (string, error) {
 }
 
 func fetchLatestTag(ctx context.Context) (string, error) {
-	url := fmt.Sprintf("https://api.github.com/repos/%s/releases?per_page=100", stagehandRepo)
+	url := fmt.Sprintf("https://api.github.com/repos/%s/releases?per_page=15", stagehandRepo)
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return "", err
