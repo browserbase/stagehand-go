@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.18.0 (2026-01-20)
+
+Full Changelog: [v0.17.2...v0.18.0](https://github.com/browserbase/stagehand-go/compare/v0.17.2...v0.18.0)
+
+### Features
+
+* **api:** manual updates ([b07cfc5](https://github.com/browserbase/stagehand-go/commit/b07cfc52a45816117a2f10d72855261aa7d14583))
+* **api:** manual updates ([8de10c1](https://github.com/browserbase/stagehand-go/commit/8de10c1a656df41c7bd1dd69263312b12eda2bc1))
+
+
+### Chores
+
+* **internal:** codegen related update ([d650cf7](https://github.com/browserbase/stagehand-go/commit/d650cf7e53d936f33002fab496aef9508caf0157))
+
 ## 0.17.2 (2026-01-13)
 
 Full Changelog: [v0.17.1...v0.17.2](https://github.com/browserbase/stagehand-go/compare/v0.17.1...v0.17.2)
