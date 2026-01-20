@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package stagehandsdk_test
+package stagehand_test
 
 import (
 	"context"
@@ -20,7 +20,7 @@ func TestUsage(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := stagehandsdk.NewClient(
+	client := stagehand.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithBrowserbaseAPIKey("My Browserbase API Key"),
 		option.WithBrowserbaseProjectID("My Browserbase Project ID"),
@@ -30,9 +30,9 @@ func TestUsage(t *testing.T) {
 	response, err := client.Sessions.Act(
 		context.TODO(),
 		"00000000-your-session-id-000000000000",
-		stagehandsdk.SessionActParams{
-			Input: stagehandsdk.SessionActParamsInputUnion{
-				OfString: stagehandsdk.String("click the first link on the page"),
+		stagehand.SessionActParams{
+			Input: stagehand.SessionActParamsInputUnion{
+				OfString: stagehand.String("click the first link on the page"),
 			},
 		},
 	)
