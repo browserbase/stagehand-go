@@ -373,11 +373,19 @@ func main() {
 
 Several complete working examples are available:
 
+Cloud examples (Browserbase):
+
 | Example | Description |
 |---------|-------------|
 | `examples/basic/` | Cloud mode using Browserbase |
-| `examples/local/` | Local mode using a local browser |
 | `examples/chromedp_browserbase_example/` | Combining chromedp with Browserbase |
+| `examples/chromedp_multiregion_example/` | Running with a Browserbase browser in a specific region |
+
+Local examples:
+
+| Example | Description |
+|---------|-------------|
+| `examples/local/` | Local mode using a local browser |
 | `examples/chromedp_local_example/` | Combining chromedp with local browser |
 
 #### Cloud Examples (Browserbase)
@@ -397,6 +405,7 @@ Run the examples:
 ```bash
 go run examples/basic/main.go
 go run examples/chromedp_browserbase_example/main.go
+go run examples/chromedp_multiregion_example/main.go
 ```
 
 #### Local Examples

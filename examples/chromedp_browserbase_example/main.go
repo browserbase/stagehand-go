@@ -102,7 +102,7 @@ func main() {
 		sessionID,
 		stagehand.SessionActParams{
 			Input: stagehand.SessionActParamsInputUnion{
-				OfString: stagehand.String("Click on the 'More information...' link"),
+				OfString: stagehand.String("Click on the 'Learn more' link"),
 			},
 			FrameID: stagehand.String(frameID),
 		},
