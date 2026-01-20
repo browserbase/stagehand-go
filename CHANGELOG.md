@@ -1,5 +1,14 @@
 # Changelog
 
+## 3.1.0 (2026-01-20)
+
+Full Changelog: [v3.0.1...v3.1.0](https://github.com/browserbase/stagehand-go/compare/v3.0.1...v3.1.0)
+
+### Features
+
+* add local browser support ([#31](https://github.com/browserbase/stagehand-go/issues/31)) ([8622cdb](https://github.com/browserbase/stagehand-go/commit/8622cdb3187e19f3219696297dc49da70e2ff453))
+* move Stainless compatibility transforms from gen-openapi.ts into stainless.yml ([2225729](https://github.com/browserbase/stagehand-go/commit/22257296c5b713cd03de84eca4dc23967186ce5a))
+
 ## 3.0.1 (2026-01-20)
 
 Full Changelog: [v0.18.0...v3.0.1](https://github.com/browserbase/stagehand-go/compare/v0.18.0...v3.0.1)
