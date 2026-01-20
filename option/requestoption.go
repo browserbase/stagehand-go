@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/browserbase/stagehand-go/internal/requestconfig"
+	"github.com/browserbase/stagehand-go/v3/internal/requestconfig"
 	"github.com/tidwall/sjson"
 )
 

@@ -10,13 +10,13 @@ import (
 	"net/http"
 	"slices"
 
-	"github.com/browserbase/stagehand-go/internal/apijson"
-	"github.com/browserbase/stagehand-go/internal/requestconfig"
-	"github.com/browserbase/stagehand-go/option"
-	"github.com/browserbase/stagehand-go/packages/param"
-	"github.com/browserbase/stagehand-go/packages/respjson"
-	"github.com/browserbase/stagehand-go/packages/ssestream"
-	"github.com/browserbase/stagehand-go/shared/constant"
+	"github.com/browserbase/stagehand-go/v3/internal/apijson"
+	"github.com/browserbase/stagehand-go/v3/internal/requestconfig"
+	"github.com/browserbase/stagehand-go/v3/option"
+	"github.com/browserbase/stagehand-go/v3/packages/param"
+	"github.com/browserbase/stagehand-go/v3/packages/respjson"
+	"github.com/browserbase/stagehand-go/v3/packages/ssestream"
+	"github.com/browserbase/stagehand-go/v3/shared/constant"
 )
 
 // SessionService contains methods and other services that help with interacting

@@ -11,9 +11,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/browserbase/stagehand-go"
-	"github.com/browserbase/stagehand-go/internal"
-	"github.com/browserbase/stagehand-go/option"
+	"github.com/browserbase/stagehand-go/v3"
+	"github.com/browserbase/stagehand-go/v3/internal"
+	"github.com/browserbase/stagehand-go/v3/option"
 )
 
 type closureTransport struct {
