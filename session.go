@@ -891,7 +891,8 @@ func (u *SessionActParamsInputUnion) asAny() any {
 type SessionActParamsOptions struct {
 	// Timeout in ms for the action
 	Timeout param.Opt[float64] `json:"timeout,omitzero"`
-	Model   ModelConfigParam   `json:"model,omitzero"`
+	// Model configuration object or model name string (e.g., 'openai/gpt-5-nano')
+	Model SessionActParamsOptionsModelUnion `json:"model,omitzero"`
 	// Variables to substitute in the action instruction
 	Variables map[string]string `json:"variables,omitzero"`
 	paramObj
@@ -903,6 +904,31 @@ func (r SessionActParamsOptions) MarshalJSON() (data []byte, err error) {
 }
 func (r *SessionActParamsOptions) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
+}
+
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
+type SessionActParamsOptionsModelUnion struct {
+	OfModelConfig *ModelConfigParam `json:",omitzero,inline"`
+	OfString      param.Opt[string] `json:",omitzero,inline"`
+	paramUnion
+}
+
+func (u SessionActParamsOptionsModelUnion) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion(u, u.OfModelConfig, u.OfString)
+}
+func (u *SessionActParamsOptionsModelUnion) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *SessionActParamsOptionsModelUnion) asAny() any {
+	if !param.IsOmitted(u.OfModelConfig) {
+		return u.OfModelConfig
+	} else if !param.IsOmitted(u.OfString) {
+		return &u.OfString.Value
+	}
+	return nil
 }
 
 // Whether to stream the response via SSE
@@ -956,7 +982,8 @@ type SessionExecuteParamsAgentConfig struct {
 	Cua param.Opt[bool] `json:"cua,omitzero"`
 	// Custom system prompt for the agent
 	SystemPrompt param.Opt[string] `json:"systemPrompt,omitzero"`
-	Model        ModelConfigParam  `json:"model,omitzero"`
+	// Model configuration object or model name string (e.g., 'openai/gpt-5-nano')
+	Model SessionExecuteParamsAgentConfigModelUnion `json:"model,omitzero"`
 	// AI provider for the agent (legacy, use model: openai/gpt-5-nano instead)
 	//
 	// Any of "openai", "anthropic", "google", "microsoft".
@@ -976,6 +1003,31 @@ func init() {
 	apijson.RegisterFieldValidator[SessionExecuteParamsAgentConfig](
 		"provider", "openai", "anthropic", "google", "microsoft",
 	)
+}
+
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
+type SessionExecuteParamsAgentConfigModelUnion struct {
+	OfModelConfig *ModelConfigParam `json:",omitzero,inline"`
+	OfString      param.Opt[string] `json:",omitzero,inline"`
+	paramUnion
+}
+
+func (u SessionExecuteParamsAgentConfigModelUnion) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion(u, u.OfModelConfig, u.OfString)
+}
+func (u *SessionExecuteParamsAgentConfigModelUnion) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *SessionExecuteParamsAgentConfigModelUnion) asAny() any {
+	if !param.IsOmitted(u.OfModelConfig) {
+		return u.OfModelConfig
+	} else if !param.IsOmitted(u.OfString) {
+		return &u.OfString.Value
+	}
+	return nil
 }
 
 // The property Instruction is required.
@@ -1033,7 +1085,8 @@ type SessionExtractParamsOptions struct {
 	Selector param.Opt[string] `json:"selector,omitzero"`
 	// Timeout in ms for the extraction
 	Timeout param.Opt[float64] `json:"timeout,omitzero"`
-	Model   ModelConfigParam   `json:"model,omitzero"`
+	// Model configuration object or model name string (e.g., 'openai/gpt-5-nano')
+	Model SessionExtractParamsOptionsModelUnion `json:"model,omitzero"`
 	paramObj
 }
 
@@ -1043,6 +1096,31 @@ func (r SessionExtractParamsOptions) MarshalJSON() (data []byte, err error) {
 }
 func (r *SessionExtractParamsOptions) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
+}
+
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
+type SessionExtractParamsOptionsModelUnion struct {
+	OfModelConfig *ModelConfigParam `json:",omitzero,inline"`
+	OfString      param.Opt[string] `json:",omitzero,inline"`
+	paramUnion
+}
+
+func (u SessionExtractParamsOptionsModelUnion) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion(u, u.OfModelConfig, u.OfString)
+}
+func (u *SessionExtractParamsOptionsModelUnion) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *SessionExtractParamsOptionsModelUnion) asAny() any {
+	if !param.IsOmitted(u.OfModelConfig) {
+		return u.OfModelConfig
+	} else if !param.IsOmitted(u.OfString) {
+		return &u.OfString.Value
+	}
+	return nil
 }
 
 // Whether to stream the response via SSE
@@ -1136,7 +1214,8 @@ type SessionObserveParamsOptions struct {
 	Selector param.Opt[string] `json:"selector,omitzero"`
 	// Timeout in ms for the observation
 	Timeout param.Opt[float64] `json:"timeout,omitzero"`
-	Model   ModelConfigParam   `json:"model,omitzero"`
+	// Model configuration object or model name string (e.g., 'openai/gpt-5-nano')
+	Model SessionObserveParamsOptionsModelUnion `json:"model,omitzero"`
 	paramObj
 }
 
@@ -1146,6 +1225,31 @@ func (r SessionObserveParamsOptions) MarshalJSON() (data []byte, err error) {
 }
 func (r *SessionObserveParamsOptions) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
+}
+
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
+type SessionObserveParamsOptionsModelUnion struct {
+	OfModelConfig *ModelConfigParam `json:",omitzero,inline"`
+	OfString      param.Opt[string] `json:",omitzero,inline"`
+	paramUnion
+}
+
+func (u SessionObserveParamsOptionsModelUnion) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion(u, u.OfModelConfig, u.OfString)
+}
+func (u *SessionObserveParamsOptionsModelUnion) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *SessionObserveParamsOptionsModelUnion) asAny() any {
+	if !param.IsOmitted(u.OfModelConfig) {
+		return u.OfModelConfig
+	} else if !param.IsOmitted(u.OfString) {
+		return &u.OfString.Value
+	}
+	return nil
 }
 
 // Whether to stream the response via SSE
