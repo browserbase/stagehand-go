@@ -37,11 +37,13 @@ func TestSessionActWithOptionalParams(t *testing.T) {
 			},
 			FrameID: stagehand.String("frameId"),
 			Options: stagehand.SessionActParamsOptions{
-				Model: stagehand.ModelConfigParam{
-					ModelName: "openai/gpt-5-nano",
-					APIKey:    stagehand.String("sk-some-openai-api-key"),
-					BaseURL:   stagehand.String("https://api.openai.com/v1"),
-					Provider:  stagehand.ModelConfigProviderOpenAI,
+				Model: stagehand.SessionActParamsOptionsModelUnion{
+					OfModelConfig: &stagehand.ModelConfigParam{
+						ModelName: "openai/gpt-5-nano",
+						APIKey:    stagehand.String("sk-some-openai-api-key"),
+						BaseURL:   stagehand.String("https://api.openai.com/v1"),
+						Provider:  stagehand.ModelConfigProviderOpenAI,
+					},
 				},
 				Timeout: stagehand.Float(30000),
 				Variables: map[string]string{
@@ -112,11 +114,13 @@ func TestSessionExecuteWithOptionalParams(t *testing.T) {
 		stagehand.SessionExecuteParams{
 			AgentConfig: stagehand.SessionExecuteParamsAgentConfig{
 				Cua: stagehand.Bool(true),
-				Model: stagehand.ModelConfigParam{
-					ModelName: "openai/gpt-5-nano",
-					APIKey:    stagehand.String("sk-some-openai-api-key"),
-					BaseURL:   stagehand.String("https://api.openai.com/v1"),
-					Provider:  stagehand.ModelConfigProviderOpenAI,
+				Model: stagehand.SessionExecuteParamsAgentConfigModelUnion{
+					OfModelConfig: &stagehand.ModelConfigParam{
+						ModelName: "openai/gpt-5-nano",
+						APIKey:    stagehand.String("sk-some-openai-api-key"),
+						BaseURL:   stagehand.String("https://api.openai.com/v1"),
+						Provider:  stagehand.ModelConfigProviderOpenAI,
+					},
 				},
 				Provider:     "openai",
 				SystemPrompt: stagehand.String("systemPrompt"),
@@ -162,11 +166,13 @@ func TestSessionExtractWithOptionalParams(t *testing.T) {
 			FrameID:     stagehand.String("frameId"),
 			Instruction: stagehand.String("Extract all product names and prices from the page"),
 			Options: stagehand.SessionExtractParamsOptions{
-				Model: stagehand.ModelConfigParam{
-					ModelName: "openai/gpt-5-nano",
-					APIKey:    stagehand.String("sk-some-openai-api-key"),
-					BaseURL:   stagehand.String("https://api.openai.com/v1"),
-					Provider:  stagehand.ModelConfigProviderOpenAI,
+				Model: stagehand.SessionExtractParamsOptionsModelUnion{
+					OfModelConfig: &stagehand.ModelConfigParam{
+						ModelName: "openai/gpt-5-nano",
+						APIKey:    stagehand.String("sk-some-openai-api-key"),
+						BaseURL:   stagehand.String("https://api.openai.com/v1"),
+						Provider:  stagehand.ModelConfigProviderOpenAI,
+					},
 				},
 				Selector: stagehand.String("#main-content"),
 				Timeout:  stagehand.Float(30000),
@@ -247,11 +253,13 @@ func TestSessionObserveWithOptionalParams(t *testing.T) {
 			FrameID:     stagehand.String("frameId"),
 			Instruction: stagehand.String("Find all clickable navigation links"),
 			Options: stagehand.SessionObserveParamsOptions{
-				Model: stagehand.ModelConfigParam{
-					ModelName: "openai/gpt-5-nano",
-					APIKey:    stagehand.String("sk-some-openai-api-key"),
-					BaseURL:   stagehand.String("https://api.openai.com/v1"),
-					Provider:  stagehand.ModelConfigProviderOpenAI,
+				Model: stagehand.SessionObserveParamsOptionsModelUnion{
+					OfModelConfig: &stagehand.ModelConfigParam{
+						ModelName: "openai/gpt-5-nano",
+						APIKey:    stagehand.String("sk-some-openai-api-key"),
+						BaseURL:   stagehand.String("https://api.openai.com/v1"),
+						Provider:  stagehand.ModelConfigProviderOpenAI,
+					},
 				},
 				Selector: stagehand.String("nav"),
 				Timeout:  stagehand.Float(30000),
