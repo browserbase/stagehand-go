@@ -127,6 +127,7 @@ func TestSessionExecuteWithOptionalParams(t *testing.T) {
 				MaxSteps:        stagehand.Float(20),
 			},
 			FrameID:         stagehand.String("frameId"),
+			ShouldCache:     stagehand.Bool(true),
 			XStreamResponse: stagehand.SessionExecuteParamsXStreamResponseTrue,
 		},
 	)
