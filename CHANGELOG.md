@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.4.0 (2026-01-21)
+
+Full Changelog: [v3.3.0...v3.4.0](https://github.com/browserbase/stagehand-go/compare/v3.3.0...v3.4.0)
+
+### Features
+
+* add v3 integration tests matching cloud exactly ([411ff33](https://github.com/browserbase/stagehand-go/commit/411ff336a3b9a558be736b5e84edffe5acc6af3d))
+
 ## 3.3.0 (2026-01-21)
 
 Full Changelog: [v3.2.0...v3.3.0](https://github.com/browserbase/stagehand-go/compare/v3.2.0...v3.3.0)
