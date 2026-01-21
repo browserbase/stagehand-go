@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.3.0 (2026-01-21)
+
+Full Changelog: [v3.2.0...v3.3.0](https://github.com/browserbase/stagehand-go/compare/v3.2.0...v3.3.0)
+
+### Features
+
+* [feat]: add support for local caching of agent when using api (2) ([636a1ec](https://github.com/browserbase/stagehand-go/commit/636a1ec3c7793f6a634fba0dcc9f16274b33c525))
+
 ## 3.2.0 (2026-01-20)
 
 Full Changelog: [v3.1.1...v3.2.0](https://github.com/browserbase/stagehand-go/compare/v3.1.1...v3.2.0)
