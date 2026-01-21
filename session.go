@@ -530,10 +530,12 @@ func (r *SessionExecuteResponse) UnmarshalJSON(data []byte) error {
 }
 
 type SessionExecuteResponseData struct {
-	Result SessionExecuteResponseDataResult `json:"result,required"`
+	Result     SessionExecuteResponseDataResult     `json:"result,required"`
+	CacheEntry SessionExecuteResponseDataCacheEntry `json:"cacheEntry"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Result      respjson.Field
+		CacheEntry  respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -629,6 +631,26 @@ type SessionExecuteResponseDataResultUsage struct {
 // Returns the unmodified JSON received from the API
 func (r SessionExecuteResponseDataResultUsage) RawJSON() string { return r.JSON.raw }
 func (r *SessionExecuteResponseDataResultUsage) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type SessionExecuteResponseDataCacheEntry struct {
+	// Opaque cache identifier computed from instruction, URL, options, and config
+	CacheKey string `json:"cacheKey,required"`
+	// Serialized cache entry that can be written to disk
+	Entry any `json:"entry,required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		CacheKey    respjson.Field
+		Entry       respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r SessionExecuteResponseDataCacheEntry) RawJSON() string { return r.JSON.raw }
+func (r *SessionExecuteResponseDataCacheEntry) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -912,6 +934,8 @@ type SessionExecuteParams struct {
 	ExecuteOptions SessionExecuteParamsExecuteOptions `json:"executeOptions,omitzero,required"`
 	// Target frame ID for the agent
 	FrameID param.Opt[string] `json:"frameId,omitzero"`
+	// If true, the server captures a cache entry and returns it to the client
+	ShouldCache param.Opt[bool] `json:"shouldCache,omitzero"`
 	// Whether to stream the response via SSE
 	//
 	// Any of "true", "false".
