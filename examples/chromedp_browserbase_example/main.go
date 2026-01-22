@@ -169,8 +169,8 @@ func main() {
 				MaxSteps: stagehand.Float(5),
 			},
 			AgentConfig: stagehand.SessionExecuteParamsAgentConfig{
-				Model: stagehand.ModelConfigUnionParam{
-					OfModelConfigModelConfigObject: &stagehand.ModelConfigModelConfigObjectParam{
+				Model: stagehand.SessionExecuteParamsAgentConfigModelUnion{
+					OfModelConfig: &stagehand.ModelConfigParam{
 						ModelName: "openai/gpt-5-nano",
 						APIKey:    stagehand.String(os.Getenv("MODEL_API_KEY")),
 					},
@@ -205,7 +205,18 @@ func main() {
 	}
 	fmt.Printf("Screenshot saved to: %s\n", screenshotPath)
 
-	// 10) End session.
+	// 10) Print session metrics including log of all actions taken and LLM tokens used for each.
+	replayResponse, err := client.Sessions.Replay(
+		context.TODO(),
+		sessionID,
+		stagehand.SessionReplayParams{},
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("%+v\n", replayResponse.Data)
+
+	// 11) End session.
 	_, err = client.Sessions.End(context.TODO(), sessionID, stagehand.SessionEndParams{})
 	if err != nil {
 		log.Fatal(err)
