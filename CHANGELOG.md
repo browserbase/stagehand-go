@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.5.0 (2026-01-22)
+
+Full Changelog: [v3.4.0...v3.5.0](https://github.com/browserbase/stagehand-go/compare/v3.4.0...v3.5.0)
+
+### Features
+
+* Include replay endpoint in stainless spec so SDK clients can get run metrics ([bc6787c](https://github.com/browserbase/stagehand-go/commit/bc6787c70256b8abf7ed23be693678f8eac71776))
+
 ## 3.4.0 (2026-01-21)
 
 Full Changelog: [v3.3.0...v3.4.0](https://github.com/browserbase/stagehand-go/compare/v3.3.0...v3.4.0)
