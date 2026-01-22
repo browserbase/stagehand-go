@@ -103,8 +103,8 @@ func main() {
 			MaxSteps:    stagehand.Float(3),
 		},
 		AgentConfig: stagehand.SessionExecuteParamsAgentConfig{
-			Model: stagehand.ModelConfigUnionParam{
-				OfModelConfigModelConfigObject: &stagehand.ModelConfigModelConfigObjectParam{
+			Model: stagehand.SessionExecuteParamsAgentConfigModelUnion{
+				OfModelConfig: &stagehand.ModelConfigParam{
 					ModelName: "openai/gpt-5-nano",
 					APIKey:    stagehand.String(os.Getenv("MODEL_API_KEY")),
 				},
