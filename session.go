@@ -212,6 +212,21 @@ func (r *SessionService) ObserveStreaming(ctx context.Context, id string, params
 	return ssestream.NewStream[StreamEvent](ssestream.NewDecoder(raw), err)
 }
 
+// Retrieves replay metrics for a session.
+func (r *SessionService) Replay(ctx context.Context, id string, query SessionReplayParams, opts ...option.RequestOption) (res *SessionReplayResponse, err error) {
+	if !param.IsOmitted(query.XStreamResponse) {
+		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%s", query.XStreamResponse)))
+	}
+	opts = slices.Concat(r.Options, opts)
+	if id == "" {
+		err = errors.New("missing required id parameter")
+		return
+	}
+	path := fmt.Sprintf("v1/sessions/%s/replay", id)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
+	return
+}
+
 // Creates a new browser session with the specified configuration. Returns a
 // session ID used for all subsequent operations.
 func (r *SessionService) Start(ctx context.Context, params SessionStartParams, opts ...option.RequestOption) (res *SessionStartResponse, err error) {
@@ -800,6 +815,99 @@ func (r *SessionObserveResponseDataResult) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+type SessionReplayResponse struct {
+	Data SessionReplayResponseData `json:"data,required"`
+	// Indicates whether the request was successful
+	Success bool `json:"success,required"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Data        respjson.Field
+		Success     respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r SessionReplayResponse) RawJSON() string { return r.JSON.raw }
+func (r *SessionReplayResponse) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type SessionReplayResponseData struct {
+	Pages []SessionReplayResponseDataPage `json:"pages"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Pages       respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r SessionReplayResponseData) RawJSON() string { return r.JSON.raw }
+func (r *SessionReplayResponseData) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type SessionReplayResponseDataPage struct {
+	Actions []SessionReplayResponseDataPageAction `json:"actions"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Actions     respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r SessionReplayResponseDataPage) RawJSON() string { return r.JSON.raw }
+func (r *SessionReplayResponseDataPage) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type SessionReplayResponseDataPageAction struct {
+	Method     string                                        `json:"method"`
+	TokenUsage SessionReplayResponseDataPageActionTokenUsage `json:"tokenUsage"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		Method      respjson.Field
+		TokenUsage  respjson.Field
+		ExtraFields map[string]respjson.Field
+		raw         string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r SessionReplayResponseDataPageAction) RawJSON() string { return r.JSON.raw }
+func (r *SessionReplayResponseDataPageAction) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type SessionReplayResponseDataPageActionTokenUsage struct {
+	CachedInputTokens float64 `json:"cachedInputTokens"`
+	InputTokens       float64 `json:"inputTokens"`
+	OutputTokens      float64 `json:"outputTokens"`
+	ReasoningTokens   float64 `json:"reasoningTokens"`
+	TimeMs            float64 `json:"timeMs"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		CachedInputTokens respjson.Field
+		InputTokens       respjson.Field
+		OutputTokens      respjson.Field
+		ReasoningTokens   respjson.Field
+		TimeMs            respjson.Field
+		ExtraFields       map[string]respjson.Field
+		raw               string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r SessionReplayResponseDataPageActionTokenUsage) RawJSON() string { return r.JSON.raw }
+func (r *SessionReplayResponseDataPageActionTokenUsage) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 type SessionStartResponse struct {
 	Data SessionStartResponseData `json:"data,required"`
 	// Indicates whether the request was successful
@@ -1258,6 +1366,22 @@ type SessionObserveParamsXStreamResponse string
 const (
 	SessionObserveParamsXStreamResponseTrue  SessionObserveParamsXStreamResponse = "true"
 	SessionObserveParamsXStreamResponseFalse SessionObserveParamsXStreamResponse = "false"
+)
+
+type SessionReplayParams struct {
+	// Whether to stream the response via SSE
+	//
+	// Any of "true", "false".
+	XStreamResponse SessionReplayParamsXStreamResponse `header:"x-stream-response,omitzero" json:"-"`
+	paramObj
+}
+
+// Whether to stream the response via SSE
+type SessionReplayParamsXStreamResponse string
+
+const (
+	SessionReplayParamsXStreamResponseTrue  SessionReplayParamsXStreamResponse = "true"
+	SessionReplayParamsXStreamResponseFalse SessionReplayParamsXStreamResponse = "false"
 )
 
 type SessionStartParams struct {

@@ -276,6 +276,37 @@ func TestSessionObserveWithOptionalParams(t *testing.T) {
 	}
 }
 
+func TestSessionReplayWithOptionalParams(t *testing.T) {
+	t.Skip("Prism tests are disabled")
+	baseURL := "http://localhost:4010"
+	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
+		baseURL = envURL
+	}
+	if !testutil.CheckTestServer(t, baseURL) {
+		return
+	}
+	client := stagehand.NewClient(
+		option.WithBaseURL(baseURL),
+		option.WithBrowserbaseAPIKey("My Browserbase API Key"),
+		option.WithBrowserbaseProjectID("My Browserbase Project ID"),
+		option.WithModelAPIKey("My Model API Key"),
+	)
+	_, err := client.Sessions.Replay(
+		context.TODO(),
+		"c4dbf3a9-9a58-4b22-8a1c-9f20f9f9e123",
+		stagehand.SessionReplayParams{
+			XStreamResponse: stagehand.SessionReplayParamsXStreamResponseTrue,
+		},
+	)
+	if err != nil {
+		var apierr *stagehand.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+}
+
 func TestSessionStartWithOptionalParams(t *testing.T) {
 	t.Skip("Prism tests are disabled")
 	baseURL := "http://localhost:4010"
