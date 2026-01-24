@@ -4,7 +4,6 @@ go 1.22
 
 require (
 	github.com/browserbase/stagehand-go/v3 v3.0.0
-	github.com/joho/godotenv v1.5.1
 )
 
 require (

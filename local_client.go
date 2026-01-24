@@ -3,6 +3,7 @@ package stagehand
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"sync"
 
@@ -22,19 +23,16 @@ func newLocalServerOption() *localServerOption {
 }
 
 func (o *localServerOption) Apply(cfg *requestconfig.RequestConfig) error {
-	manager, err := o.ensureManager()
-	if err != nil {
-		return err
-	}
-
 	var modelAPIKey string
+	var browserbaseAPIKey string
+	var browserbaseProjectID string
 	if cfg != nil {
 		modelAPIKey = cfg.ModelAPIKey
+		browserbaseAPIKey = cfg.BrowserbaseAPIKey
+		browserbaseProjectID = cfg.BrowserbaseProjectID
 	}
 	if modelAPIKey == "" {
 		if key := os.Getenv("MODEL_API_KEY"); key != "" {
-			modelAPIKey = key
-		} else if key := os.Getenv("OPENAI_API_KEY"); key != "" {
 			modelAPIKey = key
 		}
 		if modelAPIKey != "" && cfg != nil {
@@ -43,16 +41,42 @@ func (o *localServerOption) Apply(cfg *requestconfig.RequestConfig) error {
 			}
 		}
 	}
+	if browserbaseAPIKey == "" {
+		if key := os.Getenv("BROWSERBASE_API_KEY"); key != "" {
+			browserbaseAPIKey = key
+			if cfg != nil {
+				if err := option.WithBrowserbaseAPIKey(browserbaseAPIKey).Apply(cfg); err != nil {
+					return err
+				}
+			}
+		}
+	}
+	if browserbaseProjectID == "" {
+		if key := os.Getenv("BROWSERBASE_PROJECT_ID"); key != "" {
+			browserbaseProjectID = key
+			if cfg != nil {
+				if err := option.WithBrowserbaseProjectID(browserbaseProjectID).Apply(cfg); err != nil {
+					return err
+				}
+			}
+		}
+	}
+	if modelAPIKey == "" {
+		return fmt.Errorf("MODEL_API_KEY is required for local mode")
+	}
+
+	manager, err := o.ensureManager()
+	if err != nil {
+		return err
+	}
 	if modelAPIKey != "" {
 		manager.SetModelAPIKey(modelAPIKey)
 	}
-	if cfg != nil {
-		if cfg.BrowserbaseAPIKey != "" {
-			manager.SetBrowserbaseAPIKey(cfg.BrowserbaseAPIKey)
-		}
-		if cfg.BrowserbaseProjectID != "" {
-			manager.SetBrowserbaseProjectID(cfg.BrowserbaseProjectID)
-		}
+	if browserbaseAPIKey != "" {
+		manager.SetBrowserbaseAPIKey(browserbaseAPIKey)
+	}
+	if browserbaseProjectID != "" {
+		manager.SetBrowserbaseProjectID(browserbaseProjectID)
 	}
 
 	ctx := cfg.Context

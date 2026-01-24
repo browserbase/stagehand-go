@@ -6,7 +6,6 @@ require (
 	github.com/browserbase/stagehand-go/v3 v3.0.0
 	github.com/chromedp/cdproto v0.0.0-20250222051814-50c6cb17f10a
 	github.com/chromedp/chromedp v0.13.1
-	github.com/joho/godotenv v1.5.1
 )
 
 require (

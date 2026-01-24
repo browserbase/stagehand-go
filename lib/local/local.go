@@ -16,6 +16,8 @@ import (
 	"sync"
 	"syscall"
 	"time"
+
+	"github.com/browserbase/stagehand-go/v3/internal"
 )
 
 const (
@@ -67,6 +69,7 @@ func binaryFilename() string {
 
 // cacheDir returns the default cache directory for local binaries.
 // Uses XDG_CACHE_HOME on Linux, ~/Library/Caches on macOS, and %LOCALAPPDATA% on Windows.
+// The directory is versioned by the stagehand-go package version.
 func cacheDir() string {
 	var cacheBase string
 
@@ -100,7 +103,7 @@ func cacheDir() string {
 		}
 	}
 
-	return filepath.Join(cacheBase, "stagehand", "local")
+	return filepath.Join(cacheBase, "stagehand", "local", internal.PackageVersion)
 }
 
 // ResolveBinaryPath ensures the local mode binary exists and returns its path.
@@ -326,6 +329,10 @@ func (m *ServerManager) SetBrowserbaseProjectID(projectID string) {
 
 // startLocked starts local mode. Must be called with m.mu held.
 func (m *ServerManager) startLocked(ctx context.Context) (string, error) {
+	if m.modelAPIKey == "" {
+		return "", fmt.Errorf("MODEL_API_KEY is required for local mode")
+	}
+
 	// Pick a free port if not specified
 	port, err := findFreePort()
 	if err != nil {
