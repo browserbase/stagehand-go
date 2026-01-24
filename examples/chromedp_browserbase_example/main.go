@@ -1,3 +1,14 @@
+// Example: chromedp + Browserbase (cloud mode).
+//
+// Prerequisites:
+//   - Set BROWSERBASE_API_KEY
+//   - Set BROWSERBASE_PROJECT_ID
+//   - Set MODEL_API_KEY
+//
+// Run:
+//   cd examples/chromedp_browserbase_example
+//   go mod download
+//   go run main.go
 package main
 
 import (
@@ -13,12 +24,9 @@ import (
 	"github.com/chromedp/cdproto/page"
 	"github.com/chromedp/cdproto/target"
 	"github.com/chromedp/chromedp"
-	"github.com/joho/godotenv"
 )
 
 func main() {
-	_ = godotenv.Load() // Load .env from current directory (run from repo root)
-
 	// Environment variables required (same as other examples):
 	// - BROWSERBASE_API_KEY
 	// - BROWSERBASE_PROJECT_ID

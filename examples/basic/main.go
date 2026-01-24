@@ -1,3 +1,14 @@
+// Example: Cloud mode with Browserbase.
+//
+// Prerequisites:
+//   - Set BROWSERBASE_API_KEY
+//   - Set BROWSERBASE_PROJECT_ID
+//   - Set MODEL_API_KEY
+//
+// Run:
+//   cd examples/basic
+//   go mod download
+//   go run main.go
 package main
 
 import (
@@ -6,12 +17,9 @@ import (
 	"os"
 
 	"github.com/browserbase/stagehand-go/v3"
-	"github.com/joho/godotenv"
 )
 
 func main() {
-	_ = godotenv.Load() // Load .env from current directory (run from repo root)
-
 	client := stagehand.NewClient() // Uses env vars: BROWSERBASE_API_KEY, BROWSERBASE_PROJECT_ID, MODEL_API_KEY
 
 	startResponse, err := client.Sessions.Start(context.TODO(), stagehand.SessionStartParams{

@@ -395,17 +395,27 @@ Set up environment variables:
 ```bash
 export BROWSERBASE_API_KEY=your_browserbase_api_key
 export BROWSERBASE_PROJECT_ID=your_browserbase_project_id
-export MODEL_API_KEY=your_openai_api_key
+export MODEL_API_KEY=your_llm_provider_api_key
 ```
 
 You can get your Browserbase API key and project ID from the [Browserbase dashboard](https://www.browserbase.com/).
 
-Run the examples:
+Install the dependencies needed for the example you want to run and then run it:
 
 ```bash
-go run examples/basic/main.go
-go run examples/chromedp_browserbase_example/main.go
-go run examples/chromedp_multiregion_example/main.go
+cd examples/basic
+go mod download
+go run main.go
+
+# OR
+cd examples/chromedp_browserbase_example
+go mod download
+go run main.go
+
+# OR
+cd examples/chromedp_multiregion_example
+go mod download
+go run main.go
 ```
 
 #### Local Examples
@@ -413,14 +423,20 @@ go run examples/chromedp_multiregion_example/main.go
 Set up environment variables (only MODEL_API_KEY is required for local mode):
 
 ```bash
-export MODEL_API_KEY=your_openai_api_key
+export MODEL_API_KEY=your_llm_provider_api_key
 ```
 
-Run the examples:
+Install the dependencies needed for the example you want to run and then run it:
 
 ```bash
-go run examples/local/main.go
-go run examples/chromedp_local_example/main.go
+cd examples/local
+go mod download
+go run main.go
+
+# OR
+cd examples/chromedp_local_example
+go mod download
+go run main.go
 ```
 
 The chromedp examples demonstrate how to combine low-level browser control (via chromedp) with AI-powered actions (via Stagehand) on the same browser session.

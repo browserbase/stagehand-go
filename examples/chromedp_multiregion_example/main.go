@@ -1,7 +1,14 @@
 // Example: Local mode + Browserbase region + chromedp.
 //
-// Prerequisites: BROWSERBASE_API_KEY, BROWSERBASE_PROJECT_ID, MODEL_API_KEY
-// Run: go run examples/chromedp_multiregion_example/main.go
+// Prerequisites:
+//   - Set BROWSERBASE_API_KEY
+//   - Set BROWSERBASE_PROJECT_ID
+//   - Set MODEL_API_KEY
+//
+// Run:
+//   cd examples/chromedp_multiregion_example
+//   go mod download
+//   go run main.go
 package main
 
 import (

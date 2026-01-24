@@ -4,9 +4,12 @@
 // instead of connecting to the Browserbase cloud.
 //
 // Prerequisites:
-//   - Set MODEL_API_KEY or OPENAI_API_KEY environment variable
+//   - Set MODEL_API_KEY environment variable
 //
-// Run: go run examples/local/main.go
+// Run:
+//   cd examples/local
+//   go mod download
+//   go run main.go
 package main
 
 import (

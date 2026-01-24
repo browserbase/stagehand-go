@@ -9,10 +9,13 @@
 //   - Both can interact with the same page
 //
 // Prerequisites:
-//   - Set MODEL_API_KEY or OPENAI_API_KEY environment variable
+//   - Set MODEL_API_KEY environment variable
 //   - Chrome/Chromium installed locally
 //
-// Run: go run examples/chromedp_local_example/main.go
+// Run:
+//   cd examples/chromedp_local_example
+//   go mod download
+//   go run main.go
 package main
 
 import (
