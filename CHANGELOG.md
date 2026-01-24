@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.6.0 (2026-01-24)
+
+Full Changelog: [v3.5.1...v3.6.0](https://github.com/browserbase/stagehand-go/compare/v3.5.1...v3.6.0)
+
+### Features
+
+* **client:** add a convenient param.SetJSON helper ([09cf694](https://github.com/browserbase/stagehand-go/commit/09cf694890ddd0ac3f631b815c4dfd58818ac9e3))
+
 ## 3.5.1 (2026-01-22)
 
 Full Changelog: [v3.5.0...v3.5.1](https://github.com/browserbase/stagehand-go/compare/v3.5.0...v3.5.1)
