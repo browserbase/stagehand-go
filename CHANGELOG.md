@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.7.0 (2026-01-27)
+
+Full Changelog: [v3.6.1...v3.7.0](https://github.com/browserbase/stagehand-go/compare/v3.6.1...v3.7.0)
+
+### Features
+
+* **api:** manual updates ([b2c9447](https://github.com/browserbase/stagehand-go/commit/b2c94470c2fba7956bb5d0da95e21ee2aacb7a30))
+
 ## 3.6.1 (2026-01-27)
 
 Full Changelog: [v3.6.0...v3.6.1](https://github.com/browserbase/stagehand-go/compare/v3.6.0...v3.6.1)
