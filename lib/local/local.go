@@ -23,6 +23,7 @@ import (
 const (
 	stagehandRepo    = "browserbase/stagehand"
 	defaultUserAgent = "stagehand-go/local"
+	sdkLang          = "go"
 	apiTimeout       = 15 * time.Second
 	downloadTimeout  = 10 * time.Minute
 )
@@ -67,10 +68,10 @@ func binaryFilename() string {
 	return name
 }
 
-// cacheDir returns the default cache directory for local binaries.
+// cacheDir returns the default cache directory for SEA binaries.
 // Uses XDG_CACHE_HOME on Linux, ~/Library/Caches on macOS, and %LOCALAPPDATA% on Windows.
 // The directory is versioned by the stagehand-go package version.
-func cacheDir() string {
+func cacheDir() (string, error) {
 	var cacheBase string
 
 	switch runtime.GOOS {
@@ -103,7 +104,13 @@ func cacheDir() string {
 		}
 	}
 
-	return filepath.Join(cacheBase, "stagehand", "local", internal.PackageVersion)
+	version := strings.TrimSpace(internal.PackageVersion)
+	if version == "" {
+		return "", fmt.Errorf("stagehand package version is required for SEA cache path")
+	}
+
+	versionDir := fmt.Sprintf("%s_%s", sdkLang, version)
+	return filepath.Join(cacheBase, "stagehand", "lib", versionDir), nil
 }
 
 // ResolveBinaryPath ensures the local mode binary exists and returns its path.
@@ -111,7 +118,11 @@ func ResolveBinaryPath() (string, error) {
 	filename := binaryFilename()
 
 	// Check cache directory first.
-	cachePath := filepath.Join(cacheDir(), filename)
+	cacheRoot, err := cacheDir()
+	if err != nil {
+		return "", err
+	}
+	cachePath := filepath.Join(cacheRoot, filename)
 	if _, err := os.Stat(cachePath); err == nil {
 		return cachePath, nil
 	}
