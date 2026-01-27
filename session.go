@@ -1086,10 +1086,15 @@ func (r *SessionExecuteParams) UnmarshalJSON(data []byte) error {
 }
 
 type SessionExecuteParamsAgentConfig struct {
-	// Enable Computer Use Agent mode
+	// Deprecated. Use mode: 'cua' instead. If both are provided, mode takes
+	// precedence.
 	Cua param.Opt[bool] `json:"cua,omitzero"`
 	// Custom system prompt for the agent
 	SystemPrompt param.Opt[string] `json:"systemPrompt,omitzero"`
+	// Tool mode for the agent (dom, hybrid, cua). If set, overrides cua.
+	//
+	// Any of "dom", "hybrid", "cua".
+	Mode string `json:"mode,omitzero"`
 	// Model configuration object or model name string (e.g., 'openai/gpt-5-nano')
 	Model SessionExecuteParamsAgentConfigModelUnion `json:"model,omitzero"`
 	// AI provider for the agent (legacy, use model: openai/gpt-5-nano instead)
@@ -1108,6 +1113,9 @@ func (r *SessionExecuteParamsAgentConfig) UnmarshalJSON(data []byte) error {
 }
 
 func init() {
+	apijson.RegisterFieldValidator[SessionExecuteParamsAgentConfig](
+		"mode", "dom", "hybrid", "cua",
+	)
 	apijson.RegisterFieldValidator[SessionExecuteParamsAgentConfig](
 		"provider", "openai", "anthropic", "google", "microsoft",
 	)
