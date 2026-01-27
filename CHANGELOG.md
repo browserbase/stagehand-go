@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.8.0 (2026-01-27)
+
+Full Changelog: [v3.7.0...v3.8.0](https://github.com/browserbase/stagehand-go/compare/v3.7.0...v3.8.0)
+
+### Features
+
+* add auto-bedrock support based on bedrock/provider.model-name ([1bd5e50](https://github.com/browserbase/stagehand-go/commit/1bd5e501ba590c75662b3abd0065151ad707b108))
+
 ## 3.7.0 (2026-01-27)
 
 Full Changelog: [v3.6.1...v3.7.0](https://github.com/browserbase/stagehand-go/compare/v3.6.1...v3.7.0)
