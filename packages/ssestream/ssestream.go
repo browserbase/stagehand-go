@@ -155,7 +155,7 @@ func (s *Stream[T]) Next() bool {
 			continue
 		}
 
-		if bytes.HasPrefix(s.decoder.Event().Data, []byte("finished")) {
+		if bytes.HasPrefix(s.decoder.Event().Data, []byte(`{"data":{"status":"finished"`)) {
 			// In this case we don't break because we still want to iterate through the full stream.
 			s.done = true
 			continue
