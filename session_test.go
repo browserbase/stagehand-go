@@ -113,7 +113,15 @@ func TestSessionExecuteWithOptionalParams(t *testing.T) {
 		"c4dbf3a9-9a58-4b22-8a1c-9f20f9f9e123",
 		stagehand.SessionExecuteParams{
 			AgentConfig: stagehand.SessionExecuteParamsAgentConfig{
-				Cua:  stagehand.Bool(true),
+				Cua: stagehand.Bool(true),
+				ExecutionModel: stagehand.SessionExecuteParamsAgentConfigExecutionModelUnion{
+					OfModelConfig: &stagehand.ModelConfigParam{
+						ModelName: "openai/gpt-5-nano",
+						APIKey:    stagehand.String("sk-some-openai-api-key"),
+						BaseURL:   stagehand.String("https://api.openai.com/v1"),
+						Provider:  stagehand.ModelConfigProviderOpenAI,
+					},
+				},
 				Mode: "cua",
 				Model: stagehand.SessionExecuteParamsAgentConfigModelUnion{
 					OfModelConfig: &stagehand.ModelConfigParam{
