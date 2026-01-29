@@ -1091,6 +1091,10 @@ type SessionExecuteParamsAgentConfig struct {
 	Cua param.Opt[bool] `json:"cua,omitzero"`
 	// Custom system prompt for the agent
 	SystemPrompt param.Opt[string] `json:"systemPrompt,omitzero"`
+	// Model configuration object or model name string (e.g., 'openai/gpt-5-nano') for
+	// tool execution (observe/act calls within agent tools). If not specified,
+	// inherits from the main model configuration.
+	ExecutionModel SessionExecuteParamsAgentConfigExecutionModelUnion `json:"executionModel,omitzero"`
 	// Tool mode for the agent (dom, hybrid, cua). If set, overrides cua.
 	//
 	// Any of "dom", "hybrid", "cua".
@@ -1119,6 +1123,31 @@ func init() {
 	apijson.RegisterFieldValidator[SessionExecuteParamsAgentConfig](
 		"provider", "openai", "anthropic", "google", "microsoft",
 	)
+}
+
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
+type SessionExecuteParamsAgentConfigExecutionModelUnion struct {
+	OfModelConfig *ModelConfigParam `json:",omitzero,inline"`
+	OfString      param.Opt[string] `json:",omitzero,inline"`
+	paramUnion
+}
+
+func (u SessionExecuteParamsAgentConfigExecutionModelUnion) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion(u, u.OfModelConfig, u.OfString)
+}
+func (u *SessionExecuteParamsAgentConfigExecutionModelUnion) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *SessionExecuteParamsAgentConfigExecutionModelUnion) asAny() any {
+	if !param.IsOmitted(u.OfModelConfig) {
+		return u.OfModelConfig
+	} else if !param.IsOmitted(u.OfString) {
+		return &u.OfString.Value
+	}
+	return nil
 }
 
 // Only one field can be non-zero.
