@@ -88,7 +88,7 @@ Or to pin the version:
 <!-- x-release-please-start-version -->
 
 ```sh
-go get -u 'github.com/browserbase/stagehand-go@v3.8.0'
+go get -u 'github.com/browserbase/stagehand-go@v3.9.0'
 ```
 
 <!-- x-release-please-end -->
