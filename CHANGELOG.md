@@ -1,5 +1,20 @@
 # Changelog
 
+## 3.9.0 (2026-02-02)
+
+Full Changelog: [v3.8.0...v3.9.0](https://github.com/browserbase/stagehand-go/compare/v3.8.0...v3.9.0)
+
+### Features
+
+* Add executionModel serialization to api client ([bacdbb3](https://github.com/browserbase/stagehand-go/commit/bacdbb3f0dbf1500954f98e2f716eeabae00be30))
+* Removed MCP from readme for now ([f510522](https://github.com/browserbase/stagehand-go/commit/f510522414da41cd5a9bb9523c8964619fdf98b3))
+* Update stainless.yml for project and publish settings ([762a017](https://github.com/browserbase/stagehand-go/commit/762a01737de72554d90347dad4853db87b03d79c))
+
+
+### Bug Fixes
+
+* **docs:** fix mcp installation instructions for remote servers ([9e5fdb8](https://github.com/browserbase/stagehand-go/commit/9e5fdb8cdf4ad2bb7fae7d0fa6c248aff3f79e7d))
+
 ## 3.8.0 (2026-01-27)
 
 Full Changelog: [v3.7.0...v3.8.0](https://github.com/browserbase/stagehand-go/compare/v3.7.0...v3.8.0)
