@@ -21,7 +21,6 @@ import (
 	"time"
 
 	"github.com/browserbase/stagehand-go/v3"
-	"github.com/chromedp/cdproto/page"
 	"github.com/chromedp/cdproto/target"
 	"github.com/chromedp/chromedp"
 )
@@ -86,38 +85,23 @@ func main() {
 	tabCtx, cancelTab := chromedp.NewContext(browserCtx, chromedp.WithTargetID(targetID))
 	defer cancelTab()
 
-	// 4) Use chromedp to call CDP Page.getFrameTree to get the frame ID.
-	var frameID string
+	// 4) Use chromedp to click a link in the same tab.
 	err = chromedp.Run(
 		tabCtx,
 		chromedp.WaitReady("body", chromedp.ByQuery),
-		chromedp.ActionFunc(func(ctx context.Context) error {
-			tree, err := page.GetFrameTree().Do(ctx)
-			if err != nil {
-				return err
-			}
-			if tree.Frame == nil {
-				return fmt.Errorf("Page.getFrameTree returned nil root frame")
-			}
-			frameID = string(tree.Frame.ID)
-			if frameID == "" {
-				return fmt.Errorf("Page.getFrameTree returned empty frame id")
-			}
-			return nil
-		}),
+		chromedp.Click("a", chromedp.NodeVisible),
 	)
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("Resolved frameId via chromedp Page.getFrameTree: %s\n", frameID)
+	fmt.Println("Chromedp click completed")
 
-	// 5) Pass that frameId into Stagehand methods.
+	// 5) Use Stagehand methods without a frameId (defaults to active tab).
 	observeResponse, err := client.Sessions.Observe(
 		context.TODO(),
 		sessionID,
 		stagehand.SessionObserveParams{
 			Instruction: stagehand.String("Find the most relevant click target on this page"),
-			FrameID:     stagehand.String(frameID),
 		},
 	)
 	if err != nil {
@@ -133,7 +117,6 @@ func main() {
 			Input: stagehand.SessionActParamsInputUnion{
 				OfString: stagehand.String("Click on the 'Learn more' link"),
 			},
-			FrameID: stagehand.String(frameID),
 		},
 	)
 	if err != nil {
@@ -157,7 +140,6 @@ func main() {
 		stagehand.SessionExtractParams{
 			Instruction: stagehand.String("Extract the page title and current URL"),
 			Schema:      schema,
-			FrameID:     stagehand.String(frameID),
 		},
 	)
 	if err != nil {
