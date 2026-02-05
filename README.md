@@ -378,7 +378,7 @@ Cloud examples (Browserbase):
 | Example | Description |
 |---------|-------------|
 | `examples/basic/` | Cloud mode using Browserbase |
-| `examples/chromedp_browserbase_example/` | Combining chromedp with Browserbase |
+| `examples/remote_browser_chromedp_example/` | Combining chromedp with a remote Browserbase browser |
 | `examples/chromedp_multiregion_example/` | Running with a Browserbase browser in a specific region |
 
 Local examples:
@@ -408,7 +408,7 @@ go mod download
 go run main.go
 
 # OR
-cd examples/chromedp_browserbase_example
+cd examples/remote_browser_chromedp_example
 go mod download
 go run main.go
 
