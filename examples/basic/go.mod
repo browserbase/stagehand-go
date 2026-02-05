@@ -3,7 +3,7 @@ module github.com/browserbase/stagehand-go/v3/examples/basic
 go 1.22
 
 require (
-	github.com/browserbase/stagehand-go/v3 v3.0.0
+	github.com/browserbase/stagehand-go/v3 v3.9.0
 )
 
 require (
