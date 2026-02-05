@@ -3,7 +3,7 @@ module github.com/browserbase/stagehand-go/v3/examples/chromedp_multiregion_exam
 go 1.23
 
 require (
-	github.com/browserbase/stagehand-go/v3 v3.0.0
+	github.com/browserbase/stagehand-go/v3 v3.9.0
 	github.com/chromedp/chromedp v0.13.1
 )
 
