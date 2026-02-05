@@ -96,7 +96,7 @@ func main() {
 	}
 	fmt.Println("Chromedp click completed")
 
-	// 5) Use Stagehand methods without a frameId (defaults to active tab).
+	// 5) Use Stagehand methods on the same active tab.
 	observeResponse, err := client.Sessions.Observe(
 		context.TODO(),
 		sessionID,
