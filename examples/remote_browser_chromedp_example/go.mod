@@ -1,4 +1,4 @@
-module github.com/browserbase/stagehand-go/v3/examples/chromedp_browserbase_example
+module github.com/browserbase/stagehand-go/v3/examples/remote_browser_chromedp_example
 
 go 1.23
 
