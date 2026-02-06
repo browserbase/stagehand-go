@@ -387,6 +387,7 @@ Local examples:
 |---------|-------------|
 | `examples/local/` | Local mode using a local browser |
 | `examples/chromedp_local_example/` | Combining chromedp with local browser |
+| `examples/local_browser_chromedp_example/` | Combining chromedp with a local browser (SSE streaming) |
 
 #### Cloud Examples (Browserbase)
 
@@ -435,6 +436,11 @@ go run main.go
 
 # OR
 cd examples/chromedp_local_example
+go mod download
+go run main.go
+
+# OR
+cd examples/local_browser_chromedp_example
 go mod download
 go run main.go
 ```
