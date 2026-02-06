@@ -1,4 +1,4 @@
-// Example: chromedp + Browserbase (cloud mode).
+// Example: chromedp + Browserbase (remote browser).
 //
 // Prerequisites:
 //   - Set BROWSERBASE_API_KEY
@@ -6,13 +6,14 @@
 //   - Set MODEL_API_KEY
 //
 // Run:
-//   cd examples/chromedp_browserbase_example
+//   cd examples/remote_browser_chromedp_example
 //   go mod download
 //   go run main.go
 package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/url"
@@ -21,6 +22,7 @@ import (
 	"time"
 
 	"github.com/browserbase/stagehand-go/v3"
+	"github.com/browserbase/stagehand-go/v3/packages/ssestream"
 	"github.com/chromedp/cdproto/target"
 	"github.com/chromedp/chromedp"
 )
@@ -96,21 +98,28 @@ func main() {
 	}
 	fmt.Println("Chromedp click completed")
 
-	// 5) Use Stagehand methods on the same active tab.
-	observeResponse, err := client.Sessions.Observe(
+	// 5) Use Stagehand methods on the same active tab with SSE streaming.
+	fmt.Println("Observing with SSE...")
+	observeStream := client.Sessions.ObserveStreaming(
 		context.TODO(),
 		sessionID,
 		stagehand.SessionObserveParams{
 			Instruction: stagehand.String("Find the most relevant click target on this page"),
 		},
 	)
+	observeResult, err := consumeStream("observe", observeStream)
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("Observed %d possible actions\n", len(observeResponse.Data.Result))
+	observeCount, err := countSlice(observeResult)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("Observed %d possible actions\n", observeCount)
 
 	// 6) Demonstrate using Stagehand to click something in the same tab/frame.
-	_, err = client.Sessions.Act(
+	fmt.Println("Acting with SSE...")
+	actStream := client.Sessions.ActStreaming(
 		context.TODO(),
 		sessionID,
 		stagehand.SessionActParams{
@@ -119,6 +128,7 @@ func main() {
 			},
 		},
 	)
+	_, err = consumeStream("act", actStream)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -134,7 +144,8 @@ func main() {
 			"url":   map[string]any{"type": "string"},
 		},
 	}
-	extractResponse, err := client.Sessions.Extract(
+	fmt.Println("Extracting with SSE...")
+	extractStream := client.Sessions.ExtractStreaming(
 		context.TODO(),
 		sessionID,
 		stagehand.SessionExtractParams{
@@ -142,14 +153,15 @@ func main() {
 			Schema:      schema,
 		},
 	)
+	extractResult, err := consumeStream("extract", extractStream)
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("Extracted: %+v\n", extractResponse.Data.Result)
+	fmt.Printf("Extracted: %+v\n", extractResult)
 
 	// 8) Run an autonomous agent using Stagehand Execute.
-	fmt.Println("Running autonomous agent...")
-	executeResponse, err := client.Sessions.Execute(
+	fmt.Println("Running autonomous agent with SSE...")
+	executeStream := client.Sessions.ExecuteStreaming(
 		context.TODO(),
 		sessionID,
 		stagehand.SessionExecuteParams{
@@ -169,12 +181,17 @@ func main() {
 			},
 		},
 	)
+	executeResult, err := consumeStream("execute", executeStream)
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("Agent completed: %s\n", executeResponse.Data.Result.Message)
-	fmt.Printf("Agent success: %t\n", executeResponse.Data.Result.Success)
-	fmt.Printf("Agent actions taken: %d\n", len(executeResponse.Data.Result.Actions))
+	executeSummary, err := parseExecuteResult(executeResult)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("Agent completed: %s\n", executeSummary.Message)
+	fmt.Printf("Agent success: %t\n", executeSummary.Success)
+	fmt.Printf("Agent actions taken: %d\n", executeSummary.Actions)
 
 	// 9) Use chromedp to take a screenshot after the agent finishes.
 	fmt.Println("Taking screenshot with chromedp...")
@@ -212,6 +229,71 @@ func main() {
 		log.Fatal(err)
 	}
 	fmt.Println("Session ended")
+}
+
+type executeSummary struct {
+	Message string
+	Success bool
+	Actions int
+}
+
+func consumeStream(label string, stream *ssestream.Stream[stagehand.StreamEvent]) (any, error) {
+	var result any
+	for stream.Next() {
+		event := stream.Current()
+		fmt.Printf("[%s][%s] %s\n", label, event.Type, event.Data.RawJSON())
+		if event.Type == stagehand.StreamEventTypeSystem {
+			system := event.Data.AsStreamEventDataStreamEventSystemDataOutput()
+			if system.JSON.Result.Valid() {
+				result = system.Result
+			}
+			if system.Status == "error" {
+				if system.Error != "" {
+					return result, fmt.Errorf("stream error: %s", system.Error)
+				}
+				return result, fmt.Errorf("stream error: unknown error")
+			}
+		}
+	}
+	if err := stream.Err(); err != nil {
+		return result, err
+	}
+	if result == nil {
+		return result, fmt.Errorf("stream finished without result")
+	}
+	return result, nil
+}
+
+func parseExecuteResult(result any) (executeSummary, error) {
+	var summary executeSummary
+	raw, err := json.Marshal(result)
+	if err != nil {
+		return summary, err
+	}
+	var payload struct {
+		Message string `json:"message"`
+		Success bool   `json:"success"`
+		Actions []any  `json:"actions"`
+	}
+	if err := json.Unmarshal(raw, &payload); err != nil {
+		return summary, err
+	}
+	summary.Message = payload.Message
+	summary.Success = payload.Success
+	summary.Actions = len(payload.Actions)
+	return summary, nil
+}
+
+func countSlice(result any) (int, error) {
+	raw, err := json.Marshal(result)
+	if err != nil {
+		return 0, err
+	}
+	var items []any
+	if err := json.Unmarshal(raw, &items); err != nil {
+		return 0, err
+	}
+	return len(items), nil
 }
 
 // ensurePort adds the default port to a WebSocket URL if missing.
