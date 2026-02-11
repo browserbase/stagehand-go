@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.9.1 (2026-02-11)
+
+Full Changelog: [v3.9.0...v3.9.1](https://github.com/browserbase/stagehand-go/compare/v3.9.0...v3.9.1)
+
+### Bug Fixes
+
+* **encoder:** correctly serialize NullStruct ([bec2a55](https://github.com/browserbase/stagehand-go/commit/bec2a557c1ed586d627261e6b91f242671608cdf))
+
 ## 3.9.0 (2026-02-02)
 
 Full Changelog: [v3.8.0...v3.9.0](https://github.com/browserbase/stagehand-go/compare/v3.8.0...v3.9.0)
