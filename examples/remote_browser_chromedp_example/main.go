@@ -6,9 +6,10 @@
 //   - Set MODEL_API_KEY
 //
 // Run:
-//   cd examples/remote_browser_chromedp_example
-//   go mod download
-//   go run main.go
+//
+//	cd examples/remote_browser_chromedp_example
+//	go mod download
+//	go run main.go
 package main
 
 import (
@@ -28,6 +29,7 @@ import (
 )
 
 func main() {
+	loadExampleEnv()
 	// Environment variables required (same as other examples):
 	// - BROWSERBASE_API_KEY
 	// - BROWSERBASE_PROJECT_ID
@@ -237,11 +239,72 @@ type executeSummary struct {
 	Actions int
 }
 
+func parseLogResult(raw string) (any, bool) {
+	var payload struct {
+		Message struct {
+			Auxiliary struct {
+				Result struct {
+					Value string `json:"value"`
+				} `json:"result"`
+			} `json:"auxiliary"`
+		} `json:"message"`
+	}
+	if err := json.Unmarshal([]byte(raw), &payload); err != nil {
+		return nil, false
+	}
+	if payload.Message.Auxiliary.Result.Value == "" {
+		return nil, false
+	}
+	var result any
+	if err := json.Unmarshal([]byte(payload.Message.Auxiliary.Result.Value), &result); err != nil {
+		return payload.Message.Auxiliary.Result.Value, true
+	}
+	return result, true
+}
+
+func parseObservationElements(raw string) (any, bool) {
+	var payload struct {
+		Message struct {
+			Category  string `json:"category"`
+			Message   string `json:"message"`
+			Auxiliary struct {
+				Elements struct {
+					Value string `json:"value"`
+				} `json:"elements"`
+			} `json:"auxiliary"`
+		} `json:"message"`
+	}
+	if err := json.Unmarshal([]byte(raw), &payload); err != nil {
+		return nil, false
+	}
+	if payload.Message.Category != "observation" || payload.Message.Message != "found elements" {
+		return nil, false
+	}
+	if payload.Message.Auxiliary.Elements.Value == "" {
+		return nil, false
+	}
+	var elements any
+	if err := json.Unmarshal([]byte(payload.Message.Auxiliary.Elements.Value), &elements); err != nil {
+		return nil, false
+	}
+	return elements, true
+}
+
 func consumeStream(label string, stream *ssestream.Stream[stagehand.StreamEvent]) (any, error) {
 	var result any
 	for stream.Next() {
 		event := stream.Current()
 		fmt.Printf("[%s][%s] %s\n", label, event.Type, event.Data.RawJSON())
+		if event.Type == stagehand.StreamEventTypeLog && result == nil {
+			if elements, ok := parseObservationElements(event.Data.RawJSON()); ok {
+				result = elements
+			}
+		}
+		if result == nil {
+			if parsed, ok := parseLogResult(event.Data.RawJSON()); ok {
+				result = parsed
+			}
+		}
 		if event.Type == stagehand.StreamEventTypeSystem {
 			system := event.Data.AsStreamEventDataStreamEventSystemDataOutput()
 			if system.JSON.Result.Valid() {
@@ -259,6 +322,9 @@ func consumeStream(label string, stream *ssestream.Stream[stagehand.StreamEvent]
 		return result, err
 	}
 	if result == nil {
+		if label == "act" {
+			return result, nil
+		}
 		return result, fmt.Errorf("stream finished without result")
 	}
 	return result, nil

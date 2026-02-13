@@ -391,13 +391,14 @@ Local examples:
 
 #### Cloud Examples (Browserbase)
 
-Set up environment variables:
+Set up the example environment file:
 
 ```bash
-export BROWSERBASE_API_KEY=your_browserbase_api_key
-export BROWSERBASE_PROJECT_ID=your_browserbase_project_id
-export MODEL_API_KEY=your_llm_provider_api_key
+cp examples/.env.example examples/.env
+# Edit examples/.env with your credentials.
 ```
+
+The examples load `examples/.env` automatically.
 
 You can get your Browserbase API key and project ID from the [Browserbase dashboard](https://www.browserbase.com/).
 
@@ -421,11 +422,14 @@ go run main.go
 
 #### Local Examples
 
-Set up environment variables (only MODEL_API_KEY is required for local mode):
+Set up the example environment file (only `MODEL_API_KEY` is required for local mode):
 
 ```bash
-export MODEL_API_KEY=your_llm_provider_api_key
+cp examples/.env.example examples/.env
+# Edit examples/.env with your credentials.
 ```
+
+The examples load `examples/.env` automatically.
 
 Install the dependencies needed for the example you want to run and then run it:
 
