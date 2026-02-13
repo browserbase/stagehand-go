@@ -6,9 +6,10 @@
 //   - Set MODEL_API_KEY
 //
 // Run:
-//   cd examples/chromedp_multiregion_example
-//   go mod download
-//   go run main.go
+//
+//	cd examples/chromedp_multiregion_example
+//	go mod download
+//	go run main.go
 package main
 
 import (
@@ -17,16 +18,17 @@ import (
 	"log"
 	"net/url"
 	"os"
-	"strings"
 	"time"
 
 	"github.com/browserbase/stagehand-go/v3"
 	"github.com/browserbase/stagehand-go/v3/option"
+	"github.com/browserbase/stagehand-go/v3/packages/ssestream"
 	"github.com/chromedp/cdproto/target"
 	"github.com/chromedp/chromedp"
 )
 
 func main() {
+	loadExampleEnv()
 	requireEnv("BROWSERBASE_API_KEY", "BROWSERBASE_PROJECT_ID", "MODEL_API_KEY")
 
 	// Run the Stagehand driver locally (required for Browserbase regions other than us-west-2)
@@ -81,15 +83,20 @@ func main() {
 		log.Fatalf("Failed to take start screenshot: %v", err)
 	}
 
-	observeResp, err := client.Sessions.Observe(ctx, sessionID, stagehand.SessionObserveParams{
+	observeStream := client.Sessions.ObserveStreaming(ctx, sessionID, stagehand.SessionObserveParams{
 		Instruction: stagehand.String("Find all clickable links on this page"),
 	})
+	observeResult, err := consumeStream("observe", observeStream)
 	if err != nil {
 		log.Fatalf("Failed to observe: %v", err)
 	}
-	fmt.Printf("Observed %d possible actions\n", len(observeResp.Data.Result))
+	observeCount, err := countSlice(observeResult)
+	if err != nil {
+		log.Fatalf("Failed to parse observe result: %v", err)
+	}
+	fmt.Printf("Observed %d possible actions\n", observeCount)
 
-	extractResp, err := client.Sessions.Extract(ctx, sessionID, stagehand.SessionExtractParams{
+	extractStream := client.Sessions.ExtractStreaming(ctx, sessionID, stagehand.SessionExtractParams{
 		Instruction: stagehand.String("Extract the page title and current URL"),
 		Schema: map[string]any{
 			"type": "object",
@@ -99,12 +106,13 @@ func main() {
 			},
 		},
 	})
+	extractResult, err := consumeStream("extract", extractStream)
 	if err != nil {
 		log.Fatalf("Failed to extract: %v", err)
 	}
-	fmt.Printf("Extracted: %+v\n", extractResp.Data.Result)
+	fmt.Printf("Extracted: %+v\n", extractResult)
 
-	executeResp, err := client.Sessions.Execute(ctx, sessionID, stagehand.SessionExecuteParams{
+	executeStream := client.Sessions.ExecuteStreaming(ctx, sessionID, stagehand.SessionExecuteParams{
 		ExecuteOptions: stagehand.SessionExecuteParamsExecuteOptions{
 			Instruction: "Make sure the page is loaded, then find the first link on the page, labeled Learn more, click it and wait for navigation, then scroll down partway",
 			MaxSteps:    stagehand.Float(3),
@@ -119,10 +127,17 @@ func main() {
 			Cua: stagehand.Bool(false),
 		},
 	})
+	executeResult, err := consumeStream("execute", executeStream)
 	if err != nil {
 		log.Fatalf("Failed to execute: %v", err)
 	}
-	fmt.Printf("Agent completed: %s\n", executeResp.Data.Result.Message)
+	executeSummary, err := parseExecuteResult(executeResult)
+	if err != nil {
+		log.Fatalf("Failed to parse execute result: %v", err)
+	}
+	fmt.Printf("Agent completed: %s\n", executeSummary.Message)
+	fmt.Printf("Agent success: %t\n", executeSummary.Success)
+	fmt.Printf("Agent actions taken: %d\n", executeSummary.Actions)
 
 	if err := takeScreenshot(tabCtx, "screenshot_multiregion_end.png"); err != nil {
 		log.Fatalf("Failed to take end screenshot: %v", err)
@@ -133,6 +148,135 @@ func main() {
 		log.Fatalf("Failed to end session: %v", err)
 	}
 	fmt.Println("Session ended")
+}
+
+type executeSummary struct {
+	Message string
+	Success bool
+	Actions int
+}
+
+func parseLogResult(raw string) (any, bool) {
+	var payload struct {
+		Message struct {
+			Auxiliary struct {
+				Result struct {
+					Value string `json:"value"`
+				} `json:"result"`
+			} `json:"auxiliary"`
+		} `json:"message"`
+	}
+	if err := json.Unmarshal([]byte(raw), &payload); err != nil {
+		return nil, false
+	}
+	if payload.Message.Auxiliary.Result.Value == "" {
+		return nil, false
+	}
+	var result any
+	if err := json.Unmarshal([]byte(payload.Message.Auxiliary.Result.Value), &result); err != nil {
+		return payload.Message.Auxiliary.Result.Value, true
+	}
+	return result, true
+}
+
+func parseObservationElements(raw string) (any, bool) {
+	var payload struct {
+		Message struct {
+			Category  string `json:"category"`
+			Message   string `json:"message"`
+			Auxiliary struct {
+				Elements struct {
+					Value string `json:"value"`
+				} `json:"elements"`
+			} `json:"auxiliary"`
+		} `json:"message"`
+	}
+	if err := json.Unmarshal([]byte(raw), &payload); err != nil {
+		return nil, false
+	}
+	if payload.Message.Category != "observation" || payload.Message.Message != "found elements" {
+		return nil, false
+	}
+	if payload.Message.Auxiliary.Elements.Value == "" {
+		return nil, false
+	}
+	var elements any
+	if err := json.Unmarshal([]byte(payload.Message.Auxiliary.Elements.Value), &elements); err != nil {
+		return nil, false
+	}
+	return elements, true
+}
+
+func consumeStream(label string, stream *ssestream.Stream[stagehand.StreamEvent]) (any, error) {
+	var result any
+	for stream.Next() {
+		event := stream.Current()
+		fmt.Printf("[%s][%s] %s\n", label, event.Type, event.Data.RawJSON())
+		if event.Type == stagehand.StreamEventTypeLog && result == nil {
+			if elements, ok := parseObservationElements(event.Data.RawJSON()); ok {
+				result = elements
+			}
+		}
+		if result == nil {
+			if parsed, ok := parseLogResult(event.Data.RawJSON()); ok {
+				result = parsed
+			}
+		}
+		if event.Type == stagehand.StreamEventTypeSystem {
+			system := event.Data.AsStreamEventDataStreamEventSystemDataOutput()
+			if system.JSON.Result.Valid() {
+				result = system.Result
+			}
+			if system.Status == "error" {
+				if system.Error != "" {
+					return result, fmt.Errorf("stream error: %s", system.Error)
+				}
+				return result, fmt.Errorf("stream error: unknown error")
+			}
+		}
+	}
+	if err := stream.Err(); err != nil {
+		return result, err
+	}
+	if result == nil {
+		if label == "act" {
+			return result, nil
+		}
+		return result, fmt.Errorf("stream finished without result")
+	}
+	return result, nil
+}
+
+func parseExecuteResult(result any) (executeSummary, error) {
+	var summary executeSummary
+	raw, err := json.Marshal(result)
+	if err != nil {
+		return summary, err
+	}
+	var payload struct {
+		Message string `json:"message"`
+		Success bool   `json:"success"`
+		Actions []any  `json:"actions"`
+	}
+	if err := json.Unmarshal(raw, &payload); err != nil {
+		return summary, err
+	}
+	summary.Message = payload.Message
+	summary.Success = payload.Success
+	summary.Actions = len(payload.Actions)
+	return summary, nil
+}
+
+func countSlice(result any) (int, error) {
+	raw, err := json.Marshal(result)
+	if err != nil {
+		return 0, err
+	}
+	var items []any
+	if err := json.Unmarshal(raw, &items); err != nil {
+		return 0, err
+	}
+	return len(items), nil
 }
 
 func requireEnv(names ...string) {
