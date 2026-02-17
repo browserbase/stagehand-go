@@ -35,7 +35,7 @@ func main() {
 	// Start a new session with a local browser.
 	fmt.Println("Starting local session...")
 	startResp, err := client.Sessions.Start(ctx, stagehand.SessionStartParams{
-		ModelName: "openai/gpt-5-nano",
+		ModelName: "anthropic/claude-sonnet-4-6",
 		Browser: stagehand.SessionStartParamsBrowser{
 			Type: "local",
 			LaunchOptions: stagehand.SessionStartParamsBrowserLaunchOptions{

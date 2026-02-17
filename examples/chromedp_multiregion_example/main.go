@@ -38,7 +38,7 @@ func main() {
 	ctx := context.Background()
 
 	startResp, err := client.Sessions.Start(ctx, stagehand.SessionStartParams{
-		ModelName: "openai/gpt-5-nano",
+		ModelName: "anthropic/claude-sonnet-4-6",
 		Browser: stagehand.SessionStartParamsBrowser{
 			Type: "browserbase",
 		},
@@ -120,7 +120,7 @@ func main() {
 		AgentConfig: stagehand.SessionExecuteParamsAgentConfig{
 			Model: stagehand.SessionExecuteParamsAgentConfigModelUnion{
 				OfModelConfig: &stagehand.ModelConfigParam{
-					ModelName: "openai/gpt-5-nano",
+					ModelName: "anthropic/claude-sonnet-4-6",
 					APIKey:    stagehand.String(os.Getenv("MODEL_API_KEY")),
 				},
 			},
