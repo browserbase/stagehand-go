@@ -1,3 +1,4 @@
+<!-- x-stagehand-custom-start -->
 <div id="toc" align="center" style="margin-bottom: 0;">
   <ul style="list-style: none; margin: 0; padding: 0;">
     <a href="https://stagehand.dev">
@@ -48,6 +49,7 @@ If you're looking for other languages, you can find them
     <img alt="Director" src="https://raw.githubusercontent.com/browserbase/stagehand/main/media/director_icon.svg" width="25" />
   </picture>
 </div>
+<!-- x-stagehand-custom-end -->
 
 ## What is Stagehand?
 
@@ -99,299 +101,101 @@ This library requires Go 1.22+.
 
 ## Usage
 
-The full API of this library can be found in [api.md](api.md).
-
-Stagehand can run in two modes:
-- **Cloud mode**: Uses [Browserbase](https://www.browserbase.com/) cloud browsers (recommended for production)
-- **Local mode**: Runs a local browser on your machine (great for development and testing)
-
-### Cloud Mode (Browserbase)
+The full API of this library can be found in [api.md](api.md). This mirrors
+`examples/remote_browser_chromedp_example/main.go`.
 
 ```go
 package main
 
 import (
 	"context"
-	"fmt"
+	"log"
 
 	"github.com/browserbase/stagehand-go/v3"
-	"github.com/browserbase/stagehand-go/v3/option"
+	"github.com/chromedp/chromedp"
 )
 
 func main() {
-	client := stagehand.NewClient(
-		option.WithBrowserbaseAPIKey("My Browserbase API Key"),       // defaults to os.LookupEnv("BROWSERBASE_API_KEY")
-		option.WithBrowserbaseProjectID("My Browserbase Project ID"), // defaults to os.LookupEnv("BROWSERBASE_PROJECT_ID")
-		option.WithModelAPIKey("My Model API Key"),                   // defaults to os.LookupEnv("MODEL_API_KEY")
-	)
+	loadExampleEnv()
+	client := stagehand.NewClient()
 
-	// Start a new browser session (uses Browserbase cloud by default)
+	// 1) Start a remote Browserbase session and grab the CDP URL.
 	startResponse, err := client.Sessions.Start(context.TODO(), stagehand.SessionStartParams{
-		ModelName: "openai/gpt-5-nano",
+		ModelName: "anthropic/claude-sonnet-4-6",
+		Browser: stagehand.SessionStartParamsBrowser{
+			Type: "browserbase",
+		},
 	})
 	if err != nil {
-		panic(err.Error())
+		log.Fatal(err)
 	}
 	sessionID := startResponse.Data.SessionID
+	cdpURL := ensurePort(startResponse.Data.CdpURL)
 
-	// Navigate, act, extract, etc.
-	client.Sessions.Navigate(context.TODO(), sessionID, stagehand.SessionNavigateParams{
+	// 2) Navigate with Stagehand so chromedp attaches to the existing tab.
+	_, err = client.Sessions.Navigate(context.TODO(), sessionID, stagehand.SessionNavigateParams{
 		URL: "https://example.com",
 	})
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// 3) Connect chromedp to the same remote browser over CDP.
+	allocatorCtx, cancelAllocator := chromedp.NewRemoteAllocator(context.Background(), cdpURL, chromedp.NoModifyURL)
+	defer cancelAllocator()
+
+	browserCtx, cancelBrowser := chromedp.NewContext(allocatorCtx)
+	defer cancelBrowser()
+
+	// 4) Use Stagehand streaming endpoints on the same session.
+	observeStream := client.Sessions.ObserveStreaming(context.TODO(), sessionID, stagehand.SessionObserveParams{
+		Instruction: stagehand.String("Find the most relevant click target on this page"),
+	})
+	_, _ = consumeStream("observe", observeStream)
+
+	actStream := client.Sessions.ActStreaming(context.TODO(), sessionID, stagehand.SessionActParams{
+		Input: stagehand.SessionActParamsInputUnion{
+			OfString: stagehand.String("Click the 'Learn more' link"),
+		},
+	})
+	_, _ = consumeStream("act", actStream)
+
+	extractStream := client.Sessions.ExtractStreaming(context.TODO(), sessionID, stagehand.SessionExtractParams{
+		Instruction: stagehand.String("Extract the page title and current URL"),
+		Schema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"title": map[string]any{"type": "string"},
+				"url":   map[string]any{"type": "string"},
+			},
+		},
+	})
+	_, _ = consumeStream("extract", extractStream)
+
+	executeStream := client.Sessions.ExecuteStreaming(context.TODO(), sessionID, stagehand.SessionExecuteParams{
+		ExecuteOptions: stagehand.SessionExecuteParamsExecuteOptions{
+			Instruction: "Click the 'Learn more' link if available",
+			MaxSteps:    stagehand.Float(3),
+		},
+		AgentConfig: stagehand.SessionExecuteParamsAgentConfig{
+			Cua: stagehand.Bool(false),
+		},
+	})
+	_, _ = consumeStream("execute", executeStream)
 
 	// End the session
 	client.Sessions.End(context.TODO(), sessionID, stagehand.SessionEndParams{})
 }
 ```
 
-### Local Mode
+## Running the Example
 
-Local mode runs the browser on your machine. This is useful for development and testing without needing Browserbase credentials.
+Set your environment variables (from `examples/.env.example`):
 
-```go
-package main
-
-import (
-	"context"
-	"fmt"
-
-	"github.com/browserbase/stagehand-go/v3"
-	"github.com/browserbase/stagehand-go/v3/option"
-)
-
-func main() {
-	// Create a client in local mode
-	client := stagehand.NewClient(option.WithServer("local"))
-	defer client.Close()
-
-	ctx := context.Background()
-
-	// Start a session with local browser
-	startResp, err := client.Sessions.Start(ctx, stagehand.SessionStartParams{
-		ModelName: "openai/gpt-5-nano",
-		Browser: stagehand.SessionStartParamsBrowser{
-			Type: "local",
-			LaunchOptions: stagehand.SessionStartParamsBrowserLaunchOptions{
-				Headless: stagehand.Bool(true),
-			},
-		},
-	})
-	if err != nil {
-		panic(err.Error())
-	}
-	sessionID := startResp.Data.SessionID
-
-	// Navigate, act, extract - same API as cloud mode
-	client.Sessions.Navigate(ctx, sessionID, stagehand.SessionNavigateParams{
-		URL: "https://example.com",
-	})
-
-	extractResp, _ := client.Sessions.Extract(ctx, sessionID, stagehand.SessionExtractParams{
-		Instruction: stagehand.String("extract the main heading"),
-		Schema: map[string]any{
-			"type": "object",
-			"properties": map[string]any{
-				"title": map[string]any{"type": "string"},
-			},
-		},
-	})
-	fmt.Printf("Extracted: %+v\n", extractResp.Data.Result)
-
-	// End the session
-	client.Sessions.End(ctx, sessionID, stagehand.SessionEndParams{})
-}
-```
-
-### Full Example (Cloud Mode)
-
-This example demonstrates the complete workflow of using Stagehand. A runnable version is available at [`examples/basic/main.go`](examples/basic/main.go).
-
-```go
-package main
-
-import (
-	"context"
-	"fmt"
-	"os"
-
-	"github.com/browserbase/stagehand-go/v3"
-)
-
-func main() {
-	// Create a new Stagehand client using environment variables
-	// Configures using BROWSERBASE_API_KEY, BROWSERBASE_PROJECT_ID, and MODEL_API_KEY
-	client := stagehand.NewClient()
-
-	// Start a new browser session
-	startResponse, err := client.Sessions.Start(context.TODO(), stagehand.SessionStartParams{
-		ModelName: "openai/gpt-5-nano",
-	})
-	if err != nil {
-		panic(err.Error())
-	}
-	fmt.Printf("Session started: %s\n", startResponse.Data.SessionID)
-
-	sessionID := startResponse.Data.SessionID
-
-	// Navigate to Hacker News
-	_, err = client.Sessions.Navigate(
-		context.TODO(),
-		sessionID,
-		stagehand.SessionNavigateParams{
-			URL: "https://news.ycombinator.com",
-		},
-	)
-	if err != nil {
-		panic(err.Error())
-	}
-	fmt.Println("Navigated to Hacker News")
-
-	// Use Observe to find possible actions on the page
-	observeResponse, err := client.Sessions.Observe(
-		context.TODO(),
-		sessionID,
-		stagehand.SessionObserveParams{
-			Instruction: stagehand.String("find the link to view comments for the top post"),
-		},
-	)
-	if err != nil {
-		panic(err.Error())
-	}
-
-	actions := observeResponse.Data.Result
-	fmt.Printf("Found %d possible actions\n", len(actions))
-
-	if len(actions) == 0 {
-		fmt.Println("No actions found")
-		return
-	}
-
-	// Take the first action returned by Observe
-	action := actions[0]
-	fmt.Printf("Acting on: %s\n", action.Description)
-
-	// Pass the structured action to Act
-	actResponse, err := client.Sessions.Act(
-		context.TODO(),
-		sessionID,
-		stagehand.SessionActParams{
-			Input: stagehand.SessionActParamsInputUnion{
-				OfAction: &stagehand.ActionParam{
-					Description: action.Description,
-					Selector:    action.Selector,
-					Method:      stagehand.String(action.Method),
-					Arguments:   action.Arguments,
-				},
-			},
-		},
-	)
-	if err != nil {
-		panic(err.Error())
-	}
-	fmt.Printf("Act completed: %s\n", actResponse.Data.Result.Message)
-
-	// Extract structured data from the page using a JSON schema
-	// We're now on the comments page, so extract the top comment text
-	extractResponse, err := client.Sessions.Extract(
-		context.TODO(),
-		sessionID,
-		stagehand.SessionExtractParams{
-			Instruction: stagehand.String("extract the text of the top comment on this page"),
-			Schema: map[string]any{
-				"type": "object",
-				"properties": map[string]any{
-					"commentText": map[string]any{
-						"type":        "string",
-						"description": "The text content of the top comment",
-					},
-					"author": map[string]any{
-						"type":        "string",
-						"description": "The username of the comment author",
-					},
-				},
-				"required": []string{"commentText"},
-			},
-		},
-	)
-	if err != nil {
-		panic(err.Error())
-	}
-	fmt.Printf("Extracted data: %+v\n", extractResponse.Data.Result)
-
-	// Get the author from the extracted data
-	extractedData := extractResponse.Data.Result.(map[string]any)
-	author := extractedData["author"].(string)
-	fmt.Printf("Looking up profile for author: %s\n", author)
-
-	// Use the Agent to find the author's profile
-	// Execute runs an autonomous agent that can navigate and interact with pages
-	executeResponse, err := client.Sessions.Execute(
-		context.TODO(),
-		sessionID,
-		stagehand.SessionExecuteParams{
-			ExecuteOptions: stagehand.SessionExecuteParamsExecuteOptions{
-				Instruction: fmt.Sprintf(
-					"Find any personal website, GitHub, LinkedIn, or other best profile URL for the Hacker News user '%s'. "+
-						"Click on their username to go to their profile page and look for any links they have shared. "+
-						"Use Google Search with their username or other details from their profile if you dont find any direct links.",
-					author,
-				),
-				MaxSteps: stagehand.Float(15),
-			},
-			AgentConfig: stagehand.SessionExecuteParamsAgentConfig{
-				Model: stagehand.SessionExecuteParamsAgentConfigModelUnion{
-					OfModelConfig: &stagehand.ModelConfigParam{
-						ModelName: "openai/gpt-5-nano",
-						APIKey:    stagehand.String(os.Getenv("MODEL_API_KEY")),
-					},
-				},
-				Cua: stagehand.Bool(false),
-			},
-		},
-	)
-	if err != nil {
-		panic(err.Error())
-	}
-	fmt.Printf("Agent completed: %s\n", executeResponse.Data.Result.Message)
-	fmt.Printf("Agent success: %t\n", executeResponse.Data.Result.Success)
-	fmt.Printf("Agent actions taken: %d\n", len(executeResponse.Data.Result.Actions))
-
-	// End the session to clean up resources
-	_, err = client.Sessions.End(
-		context.TODO(),
-		sessionID,
-		stagehand.SessionEndParams{},
-	)
-	if err != nil {
-		panic(err.Error())
-	}
-	fmt.Println("Session ended")
-}
-```
-
-### Running the Examples
-
-Several complete working examples are available:
-
-Cloud examples (Browserbase):
-
-| Example | Description |
-|---------|-------------|
-| `examples/basic/` | Cloud mode using Browserbase |
-| `examples/remote_browser_chromedp_example/` | Combining chromedp with a remote Browserbase browser |
-| `examples/chromedp_multiregion_example/` | Running with a Browserbase browser in a specific region |
-
-Local examples:
-
-| Example | Description |
-|---------|-------------|
-| `examples/local/` | Local mode using a local browser |
-| `examples/chromedp_local_example/` | Combining chromedp with local browser |
-| `examples/local_browser_chromedp_example/` | Combining chromedp with a local browser (SSE streaming) |
-
-#### Cloud Examples (Browserbase)
-
-Set up the example environment file:
+- `STAGEHAND_API_URL`
+- `MODEL_API_KEY`
+- `BROWSERBASE_API_KEY`
+- `BROWSERBASE_PROJECT_ID`
 
 ```bash
 cp examples/.env.example examples/.env
@@ -400,56 +204,22 @@ cp examples/.env.example examples/.env
 
 The examples load `examples/.env` automatically.
 
-You can get your Browserbase API key and project ID from the [Browserbase dashboard](https://www.browserbase.com/).
+Examples and dependencies:
 
-Install the dependencies needed for the example you want to run and then run it:
+- `examples/basic/`: stagehand-go only
+- `examples/remote_browser_chromedp_example/`: `chromedp`
+- `examples/chromedp_multiregion_example/`: `chromedp`
+- `examples/local/`: stagehand-go only
+- `examples/chromedp_local_example/`: `chromedp`
+- `examples/local_browser_chromedp_example/`: `chromedp`
+
+Run any example:
 
 ```bash
-cd examples/basic
-go mod download
-go run main.go
-
-# OR
 cd examples/remote_browser_chromedp_example
 go mod download
 go run main.go
-
-# OR
-cd examples/chromedp_multiregion_example
-go mod download
-go run main.go
 ```
-
-#### Local Examples
-
-Set up the example environment file (only `MODEL_API_KEY` is required for local mode):
-
-```bash
-cp examples/.env.example examples/.env
-# Edit examples/.env with your credentials.
-```
-
-The examples load `examples/.env` automatically.
-
-Install the dependencies needed for the example you want to run and then run it:
-
-```bash
-cd examples/local
-go mod download
-go run main.go
-
-# OR
-cd examples/chromedp_local_example
-go mod download
-go run main.go
-
-# OR
-cd examples/local_browser_chromedp_example
-go mod download
-go run main.go
-```
-
-The chromedp examples demonstrate how to combine low-level browser control (via chromedp) with AI-powered actions (via Stagehand) on the same browser session.
 
 ### Request fields
 
@@ -684,7 +454,7 @@ To handle errors, we recommend that you use the `errors.As` pattern:
 
 ```go
 _, err := client.Sessions.Start(context.TODO(), stagehand.SessionStartParams{
-	ModelName: "openai/gpt-5-nano",
+	ModelName: "anthropic/claude-sonnet-4-6",
 })
 if err != nil {
 	var apierr *stagehand.Error
@@ -713,7 +483,7 @@ defer cancel()
 client.Sessions.Start(
 	ctx,
 	stagehand.SessionStartParams{
-		ModelName: "openai/gpt-5-nano",
+		ModelName: "anthropic/claude-sonnet-4-6",
 	},
 	// This sets the per-retry timeout
 	option.WithRequestTimeout(20*time.Second),
@@ -751,7 +521,7 @@ client := stagehand.NewClient(
 client.Sessions.Start(
 	context.TODO(),
 	stagehand.SessionStartParams{
-		ModelName: "openai/gpt-5-nano",
+		ModelName: "anthropic/claude-sonnet-4-6",
 	},
 	option.WithMaxRetries(5),
 )
@@ -768,7 +538,7 @@ var response *http.Response
 response, err := client.Sessions.Start(
 	context.TODO(),
 	stagehand.SessionStartParams{
-		ModelName: "openai/gpt-5-nano",
+		ModelName: "anthropic/claude-sonnet-4-6",
 	},
 	option.WithResponseInto(&response),
 )
