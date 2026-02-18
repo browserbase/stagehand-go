@@ -120,7 +120,7 @@ func main() {
 		AgentConfig: stagehand.SessionExecuteParamsAgentConfig{
 			Model: stagehand.SessionExecuteParamsAgentConfigModelUnion{
 				OfModelConfig: &stagehand.ModelConfigParam{
-					ModelName: "anthropic/claude-sonnet-4-6",
+					ModelName: "anthropic/claude-opus-4-6",
 					APIKey:    stagehand.String(os.Getenv("MODEL_API_KEY")),
 				},
 			},
