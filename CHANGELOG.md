@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.10.0 (2026-02-18)
+
+Full Changelog: [v3.9.1...v3.10.0](https://github.com/browserbase/stagehand-go/compare/v3.9.1...v3.10.0)
+
+### Features
+
+* randomize region used for evals, split out pnpm and turbo cache, veri… ([389c467](https://github.com/browserbase/stagehand-go/commit/389c467f93496fc9b06442ec82d1cacd81dd5bbd))
+
 ## 3.9.1 (2026-02-11)
 
 Full Changelog: [v3.9.0...v3.9.1](https://github.com/browserbase/stagehand-go/compare/v3.9.0...v3.9.1)
