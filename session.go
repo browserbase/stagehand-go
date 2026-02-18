@@ -835,12 +835,14 @@ func (r *SessionReplayResponse) UnmarshalJSON(data []byte) error {
 }
 
 type SessionReplayResponseData struct {
-	Pages []SessionReplayResponseDataPage `json:"pages"`
+	Pages          []SessionReplayResponseDataPage `json:"pages,required"`
+	ClientLanguage string                          `json:"clientLanguage"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		Pages       respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
+		Pages          respjson.Field
+		ClientLanguage respjson.Field
+		ExtraFields    map[string]respjson.Field
+		raw            string
 	} `json:"-"`
 }
 
@@ -851,10 +853,16 @@ func (r *SessionReplayResponseData) UnmarshalJSON(data []byte) error {
 }
 
 type SessionReplayResponseDataPage struct {
-	Actions []SessionReplayResponseDataPageAction `json:"actions"`
+	Actions   []SessionReplayResponseDataPageAction `json:"actions,required"`
+	Duration  float64                               `json:"duration,required"`
+	Timestamp float64                               `json:"timestamp,required"`
+	URL       string                                `json:"url,required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Actions     respjson.Field
+		Duration    respjson.Field
+		Timestamp   respjson.Field
+		URL         respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -867,11 +875,19 @@ func (r *SessionReplayResponseDataPage) UnmarshalJSON(data []byte) error {
 }
 
 type SessionReplayResponseDataPageAction struct {
-	Method     string                                        `json:"method"`
+	Method     string                                        `json:"method,required"`
+	Parameters map[string]any                                `json:"parameters,required"`
+	Result     map[string]any                                `json:"result,required"`
+	Timestamp  float64                                       `json:"timestamp,required"`
+	EndTime    float64                                       `json:"endTime"`
 	TokenUsage SessionReplayResponseDataPageActionTokenUsage `json:"tokenUsage"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Method      respjson.Field
+		Parameters  respjson.Field
+		Result      respjson.Field
+		Timestamp   respjson.Field
+		EndTime     respjson.Field
 		TokenUsage  respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
@@ -885,20 +901,18 @@ func (r *SessionReplayResponseDataPageAction) UnmarshalJSON(data []byte) error {
 }
 
 type SessionReplayResponseDataPageActionTokenUsage struct {
-	CachedInputTokens float64 `json:"cachedInputTokens"`
-	InputTokens       float64 `json:"inputTokens"`
-	OutputTokens      float64 `json:"outputTokens"`
-	ReasoningTokens   float64 `json:"reasoningTokens"`
-	TimeMs            float64 `json:"timeMs"`
+	Cost         float64 `json:"cost"`
+	InputTokens  float64 `json:"inputTokens"`
+	OutputTokens float64 `json:"outputTokens"`
+	TimeMs       float64 `json:"timeMs"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		CachedInputTokens respjson.Field
-		InputTokens       respjson.Field
-		OutputTokens      respjson.Field
-		ReasoningTokens   respjson.Field
-		TimeMs            respjson.Field
-		ExtraFields       map[string]respjson.Field
-		raw               string
+		Cost         respjson.Field
+		InputTokens  respjson.Field
+		OutputTokens respjson.Field
+		TimeMs       respjson.Field
+		ExtraFields  map[string]respjson.Field
+		raw          string
 	} `json:"-"`
 }
 
