@@ -27,7 +27,7 @@ func main() {
 	client := stagehand.NewClient() // Uses env vars: BROWSERBASE_API_KEY, BROWSERBASE_PROJECT_ID, MODEL_API_KEY
 
 	startResponse, err := client.Sessions.Start(context.TODO(), stagehand.SessionStartParams{
-		ModelName: "openai/gpt-5-nano",
+		ModelName: "anthropic/claude-sonnet-4-6",
 	})
 	if err != nil {
 		panic(err.Error())
@@ -152,7 +152,7 @@ func main() {
 			AgentConfig: stagehand.SessionExecuteParamsAgentConfig{
 				Model: stagehand.SessionExecuteParamsAgentConfigModelUnion{
 					OfModelConfig: &stagehand.ModelConfigParam{
-						ModelName: "openai/gpt-5-nano",
+						ModelName: "anthropic/claude-opus-4-6",
 						APIKey:    stagehand.String(os.Getenv("MODEL_API_KEY")),
 					},
 				},

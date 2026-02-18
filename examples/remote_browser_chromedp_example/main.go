@@ -38,7 +38,7 @@ func main() {
 
 	// 1) Start a Stagehand session and get the Browserbase CDP URL.
 	startResponse, err := client.Sessions.Start(context.TODO(), stagehand.SessionStartParams{
-		ModelName: "openai/gpt-5-nano",
+		ModelName: "anthropic/claude-sonnet-4-6",
 		Browser: stagehand.SessionStartParamsBrowser{
 			Type: "browserbase",
 		},
@@ -175,7 +175,7 @@ func main() {
 			AgentConfig: stagehand.SessionExecuteParamsAgentConfig{
 				Model: stagehand.SessionExecuteParamsAgentConfigModelUnion{
 					OfModelConfig: &stagehand.ModelConfigParam{
-						ModelName: "openai/gpt-5-nano",
+						ModelName: "anthropic/claude-opus-4-6",
 						APIKey:    stagehand.String(os.Getenv("MODEL_API_KEY")),
 					},
 				},
