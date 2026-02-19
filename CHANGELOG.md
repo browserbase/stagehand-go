@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.10.1 (2026-02-19)
+
+Full Changelog: [v3.10.0...v3.10.1](https://github.com/browserbase/stagehand-go/compare/v3.10.0...v3.10.1)
+
+### Bug Fixes
+
+* **client:** use correct format specifier for header serialization ([b1cc5fc](https://github.com/browserbase/stagehand-go/commit/b1cc5fc1e4e8dd8830009fe34dd8b710a04bd261))
+
 ## 3.10.0 (2026-02-18)
 
 Full Changelog: [v3.9.1...v3.10.0](https://github.com/browserbase/stagehand-go/compare/v3.9.1...v3.10.0)
