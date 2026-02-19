@@ -42,7 +42,7 @@ func NewSessionService(opts ...option.RequestOption) (r SessionService) {
 // Action object.
 func (r *SessionService) Act(ctx context.Context, id string, params SessionActParams, opts ...option.RequestOption) (res *SessionActResponse, err error) {
 	if !param.IsOmitted(params.XStreamResponse) {
-		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%s", params.XStreamResponse)))
+		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%v", params.XStreamResponse)))
 	}
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -62,7 +62,7 @@ func (r *SessionService) ActStreaming(ctx context.Context, id string, params Ses
 		err error
 	)
 	if !param.IsOmitted(params.XStreamResponse) {
-		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%s", params.XStreamResponse)))
+		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%v", params.XStreamResponse)))
 	}
 	opts = slices.Concat(r.Options, opts)
 	opts = append(opts, option.WithJSONSet("streamResponse", true))
@@ -78,7 +78,7 @@ func (r *SessionService) ActStreaming(ctx context.Context, id string, params Ses
 // Terminates the browser session and releases all associated resources.
 func (r *SessionService) End(ctx context.Context, id string, body SessionEndParams, opts ...option.RequestOption) (res *SessionEndResponse, err error) {
 	if !param.IsOmitted(body.XStreamResponse) {
-		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%s", body.XStreamResponse)))
+		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%v", body.XStreamResponse)))
 	}
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -93,7 +93,7 @@ func (r *SessionService) End(ctx context.Context, id string, body SessionEndPara
 // Runs an autonomous AI agent that can perform complex multi-step browser tasks.
 func (r *SessionService) Execute(ctx context.Context, id string, params SessionExecuteParams, opts ...option.RequestOption) (res *SessionExecuteResponse, err error) {
 	if !param.IsOmitted(params.XStreamResponse) {
-		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%s", params.XStreamResponse)))
+		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%v", params.XStreamResponse)))
 	}
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -112,7 +112,7 @@ func (r *SessionService) ExecuteStreaming(ctx context.Context, id string, params
 		err error
 	)
 	if !param.IsOmitted(params.XStreamResponse) {
-		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%s", params.XStreamResponse)))
+		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%v", params.XStreamResponse)))
 	}
 	opts = slices.Concat(r.Options, opts)
 	opts = append(opts, option.WithJSONSet("streamResponse", true))
@@ -128,7 +128,7 @@ func (r *SessionService) ExecuteStreaming(ctx context.Context, id string, params
 // Extracts structured data from the current page using AI-powered analysis.
 func (r *SessionService) Extract(ctx context.Context, id string, params SessionExtractParams, opts ...option.RequestOption) (res *SessionExtractResponse, err error) {
 	if !param.IsOmitted(params.XStreamResponse) {
-		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%s", params.XStreamResponse)))
+		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%v", params.XStreamResponse)))
 	}
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -147,7 +147,7 @@ func (r *SessionService) ExtractStreaming(ctx context.Context, id string, params
 		err error
 	)
 	if !param.IsOmitted(params.XStreamResponse) {
-		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%s", params.XStreamResponse)))
+		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%v", params.XStreamResponse)))
 	}
 	opts = slices.Concat(r.Options, opts)
 	opts = append(opts, option.WithJSONSet("streamResponse", true))
@@ -163,7 +163,7 @@ func (r *SessionService) ExtractStreaming(ctx context.Context, id string, params
 // Navigates the browser to the specified URL.
 func (r *SessionService) Navigate(ctx context.Context, id string, params SessionNavigateParams, opts ...option.RequestOption) (res *SessionNavigateResponse, err error) {
 	if !param.IsOmitted(params.XStreamResponse) {
-		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%s", params.XStreamResponse)))
+		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%v", params.XStreamResponse)))
 	}
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -179,7 +179,7 @@ func (r *SessionService) Navigate(ctx context.Context, id string, params Session
 // given instruction.
 func (r *SessionService) Observe(ctx context.Context, id string, params SessionObserveParams, opts ...option.RequestOption) (res *SessionObserveResponse, err error) {
 	if !param.IsOmitted(params.XStreamResponse) {
-		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%s", params.XStreamResponse)))
+		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%v", params.XStreamResponse)))
 	}
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -199,7 +199,7 @@ func (r *SessionService) ObserveStreaming(ctx context.Context, id string, params
 		err error
 	)
 	if !param.IsOmitted(params.XStreamResponse) {
-		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%s", params.XStreamResponse)))
+		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%v", params.XStreamResponse)))
 	}
 	opts = slices.Concat(r.Options, opts)
 	opts = append(opts, option.WithJSONSet("streamResponse", true))
@@ -215,7 +215,7 @@ func (r *SessionService) ObserveStreaming(ctx context.Context, id string, params
 // Retrieves replay metrics for a session.
 func (r *SessionService) Replay(ctx context.Context, id string, query SessionReplayParams, opts ...option.RequestOption) (res *SessionReplayResponse, err error) {
 	if !param.IsOmitted(query.XStreamResponse) {
-		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%s", query.XStreamResponse)))
+		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%v", query.XStreamResponse)))
 	}
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -231,7 +231,7 @@ func (r *SessionService) Replay(ctx context.Context, id string, query SessionRep
 // session ID used for all subsequent operations.
 func (r *SessionService) Start(ctx context.Context, params SessionStartParams, opts ...option.RequestOption) (res *SessionStartResponse, err error) {
 	if !param.IsOmitted(params.XStreamResponse) {
-		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%s", params.XStreamResponse)))
+		opts = append(opts, option.WithHeader("x-stream-response", fmt.Sprintf("%v", params.XStreamResponse)))
 	}
 	opts = slices.Concat(r.Options, opts)
 	path := "v1/sessions/start"
