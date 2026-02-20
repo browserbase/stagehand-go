@@ -1,5 +1,19 @@
 # Changelog
 
+## 3.10.2 (2026-02-20)
+
+Full Changelog: [v3.10.1...v3.10.2](https://github.com/browserbase/stagehand-go/compare/v3.10.1...v3.10.2)
+
+### Bug Fixes
+
+* allow canceling a request while it is waiting to retry ([73603de](https://github.com/browserbase/stagehand-go/commit/73603de92bb462bc7e801d2821e975af20eb7d9f))
+
+
+### Chores
+
+* **internal:** remove mock server code ([7123117](https://github.com/browserbase/stagehand-go/commit/7123117617055bd272427c27a0007197db825f28))
+* update mock server docs ([1bea98f](https://github.com/browserbase/stagehand-go/commit/1bea98f0106e08044e9a4bd7119cbe8b481ab708))
+
 ## 3.10.1 (2026-02-19)
 
 Full Changelog: [v3.10.0...v3.10.1](https://github.com/browserbase/stagehand-go/compare/v3.10.0...v3.10.1)
