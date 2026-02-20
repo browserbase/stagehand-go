@@ -26,7 +26,7 @@ func TestUsage(t *testing.T) {
 		option.WithBrowserbaseProjectID("My Browserbase Project ID"),
 		option.WithModelAPIKey("My Model API Key"),
 	)
-	t.Skip("Prism tests are disabled")
+	t.Skip("Mock server tests are disabled")
 	response, err := client.Sessions.Act(
 		context.TODO(),
 		"00000000-your-session-id-000000000000",
