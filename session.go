@@ -244,9 +244,9 @@ func (r *SessionService) Start(ctx context.Context, params SessionStartParams, o
 // The properties Description, Selector are required.
 type ActionParam struct {
 	// Human-readable description of the action
-	Description string `json:"description,required"`
+	Description string `json:"description" api:"required"`
 	// CSS selector or XPath for the element
-	Selector string `json:"selector,required"`
+	Selector string `json:"selector" api:"required"`
 	// Backend node ID for the element
 	BackendNodeID param.Opt[float64] `json:"backendNodeId,omitzero"`
 	// The method to execute (click, fill, etc.)
@@ -267,7 +267,7 @@ func (r *ActionParam) UnmarshalJSON(data []byte) error {
 // The property ModelName is required.
 type ModelConfigParam struct {
 	// Model name string with provider prefix (e.g., 'openai/gpt-5-nano')
-	ModelName string `json:"modelName,required"`
+	ModelName string `json:"modelName" api:"required"`
 	// API key for the model provider
 	APIKey param.Opt[string] `json:"apiKey,omitzero"`
 	// Base URL for the model provider
@@ -301,12 +301,12 @@ const (
 // `data: <JSON>\n\n`. Key order: data (with status first), type, id.
 type StreamEvent struct {
 	// Unique identifier for this event
-	ID   string               `json:"id,required" format:"uuid"`
-	Data StreamEventDataUnion `json:"data,required"`
+	ID   string               `json:"id" api:"required" format:"uuid"`
+	Data StreamEventDataUnion `json:"data" api:"required"`
 	// Type of stream event - system events or log messages
 	//
 	// Any of "system", "log".
-	Type StreamEventType `json:"type,required"`
+	Type StreamEventType `json:"type" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ID          respjson.Field
@@ -366,7 +366,7 @@ type StreamEventDataStreamEventSystemDataOutput struct {
 	// Current status of the streaming operation
 	//
 	// Any of "starting", "connected", "running", "finished", "error".
-	Status string `json:"status,required"`
+	Status string `json:"status" api:"required"`
 	// Error message (present when status is 'error')
 	Error string `json:"error"`
 	// Operation result (present when status is 'finished')
@@ -389,8 +389,8 @@ func (r *StreamEventDataStreamEventSystemDataOutput) UnmarshalJSON(data []byte) 
 
 type StreamEventDataStreamEventLogDataOutput struct {
 	// Log message from the operation
-	Message string           `json:"message,required"`
-	Status  constant.Running `json:"status,required"`
+	Message string           `json:"message" api:"required"`
+	Status  constant.Running `json:"status" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Message     respjson.Field
@@ -415,9 +415,9 @@ const (
 )
 
 type SessionActResponse struct {
-	Data SessionActResponseData `json:"data,required"`
+	Data SessionActResponseData `json:"data" api:"required"`
 	// Indicates whether the request was successful
-	Success bool `json:"success,required"`
+	Success bool `json:"success" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Data        respjson.Field
@@ -434,7 +434,7 @@ func (r *SessionActResponse) UnmarshalJSON(data []byte) error {
 }
 
 type SessionActResponseData struct {
-	Result SessionActResponseDataResult `json:"result,required"`
+	Result SessionActResponseDataResult `json:"result" api:"required"`
 	// Action ID for tracking
 	ActionID string `json:"actionId"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
@@ -454,13 +454,13 @@ func (r *SessionActResponseData) UnmarshalJSON(data []byte) error {
 
 type SessionActResponseDataResult struct {
 	// Description of the action that was performed
-	ActionDescription string `json:"actionDescription,required"`
+	ActionDescription string `json:"actionDescription" api:"required"`
 	// List of actions that were executed
-	Actions []SessionActResponseDataResultAction `json:"actions,required"`
+	Actions []SessionActResponseDataResultAction `json:"actions" api:"required"`
 	// Human-readable result message
-	Message string `json:"message,required"`
+	Message string `json:"message" api:"required"`
 	// Whether the action completed successfully
-	Success bool `json:"success,required"`
+	Success bool `json:"success" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ActionDescription respjson.Field
@@ -481,9 +481,9 @@ func (r *SessionActResponseDataResult) UnmarshalJSON(data []byte) error {
 // Action object returned by observe and used by act
 type SessionActResponseDataResultAction struct {
 	// Human-readable description of the action
-	Description string `json:"description,required"`
+	Description string `json:"description" api:"required"`
 	// CSS selector or XPath for the element
-	Selector string `json:"selector,required"`
+	Selector string `json:"selector" api:"required"`
 	// Arguments to pass to the method
 	Arguments []string `json:"arguments"`
 	// Backend node ID for the element
@@ -510,7 +510,7 @@ func (r *SessionActResponseDataResultAction) UnmarshalJSON(data []byte) error {
 
 type SessionEndResponse struct {
 	// Indicates whether the request was successful
-	Success bool `json:"success,required"`
+	Success bool `json:"success" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Success     respjson.Field
@@ -526,9 +526,9 @@ func (r *SessionEndResponse) UnmarshalJSON(data []byte) error {
 }
 
 type SessionExecuteResponse struct {
-	Data SessionExecuteResponseData `json:"data,required"`
+	Data SessionExecuteResponseData `json:"data" api:"required"`
 	// Indicates whether the request was successful
-	Success bool `json:"success,required"`
+	Success bool `json:"success" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Data        respjson.Field
@@ -545,7 +545,7 @@ func (r *SessionExecuteResponse) UnmarshalJSON(data []byte) error {
 }
 
 type SessionExecuteResponseData struct {
-	Result     SessionExecuteResponseDataResult     `json:"result,required"`
+	Result     SessionExecuteResponseDataResult     `json:"result" api:"required"`
 	CacheEntry SessionExecuteResponseDataCacheEntry `json:"cacheEntry"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -563,13 +563,13 @@ func (r *SessionExecuteResponseData) UnmarshalJSON(data []byte) error {
 }
 
 type SessionExecuteResponseDataResult struct {
-	Actions []SessionExecuteResponseDataResultAction `json:"actions,required"`
+	Actions []SessionExecuteResponseDataResultAction `json:"actions" api:"required"`
 	// Whether the agent finished its task
-	Completed bool `json:"completed,required"`
+	Completed bool `json:"completed" api:"required"`
 	// Summary of what the agent accomplished
-	Message string `json:"message,required"`
+	Message string `json:"message" api:"required"`
 	// Whether the agent completed successfully
-	Success  bool                                  `json:"success,required"`
+	Success  bool                                  `json:"success" api:"required"`
 	Metadata map[string]any                        `json:"metadata"`
 	Usage    SessionExecuteResponseDataResultUsage `json:"usage"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
@@ -593,7 +593,7 @@ func (r *SessionExecuteResponseDataResult) UnmarshalJSON(data []byte) error {
 
 type SessionExecuteResponseDataResultAction struct {
 	// Type of action taken
-	Type        string `json:"type,required"`
+	Type        string `json:"type" api:"required"`
 	Action      string `json:"action"`
 	Instruction string `json:"instruction"`
 	PageText    string `json:"pageText"`
@@ -603,7 +603,7 @@ type SessionExecuteResponseDataResultAction struct {
 	TaskCompleted bool   `json:"taskCompleted"`
 	// Time taken for this action in ms
 	TimeMs      float64        `json:"timeMs"`
-	ExtraFields map[string]any `json:",extras"`
+	ExtraFields map[string]any `json:"" api:"extrafields"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Type          respjson.Field
@@ -626,9 +626,9 @@ func (r *SessionExecuteResponseDataResultAction) UnmarshalJSON(data []byte) erro
 }
 
 type SessionExecuteResponseDataResultUsage struct {
-	InferenceTimeMs   float64 `json:"inference_time_ms,required"`
-	InputTokens       float64 `json:"input_tokens,required"`
-	OutputTokens      float64 `json:"output_tokens,required"`
+	InferenceTimeMs   float64 `json:"inference_time_ms" api:"required"`
+	InputTokens       float64 `json:"input_tokens" api:"required"`
+	OutputTokens      float64 `json:"output_tokens" api:"required"`
 	CachedInputTokens float64 `json:"cached_input_tokens"`
 	ReasoningTokens   float64 `json:"reasoning_tokens"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
@@ -651,9 +651,9 @@ func (r *SessionExecuteResponseDataResultUsage) UnmarshalJSON(data []byte) error
 
 type SessionExecuteResponseDataCacheEntry struct {
 	// Opaque cache identifier computed from instruction, URL, options, and config
-	CacheKey string `json:"cacheKey,required"`
+	CacheKey string `json:"cacheKey" api:"required"`
 	// Serialized cache entry that can be written to disk
-	Entry any `json:"entry,required"`
+	Entry any `json:"entry" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		CacheKey    respjson.Field
@@ -670,9 +670,9 @@ func (r *SessionExecuteResponseDataCacheEntry) UnmarshalJSON(data []byte) error 
 }
 
 type SessionExtractResponse struct {
-	Data SessionExtractResponseData `json:"data,required"`
+	Data SessionExtractResponseData `json:"data" api:"required"`
 	// Indicates whether the request was successful
-	Success bool `json:"success,required"`
+	Success bool `json:"success" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Data        respjson.Field
@@ -690,7 +690,7 @@ func (r *SessionExtractResponse) UnmarshalJSON(data []byte) error {
 
 type SessionExtractResponseData struct {
 	// Extracted data matching the requested schema
-	Result any `json:"result,required"`
+	Result any `json:"result" api:"required"`
 	// Action ID for tracking
 	ActionID string `json:"actionId"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
@@ -709,9 +709,9 @@ func (r *SessionExtractResponseData) UnmarshalJSON(data []byte) error {
 }
 
 type SessionNavigateResponse struct {
-	Data SessionNavigateResponseData `json:"data,required"`
+	Data SessionNavigateResponseData `json:"data" api:"required"`
 	// Indicates whether the request was successful
-	Success bool `json:"success,required"`
+	Success bool `json:"success" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Data        respjson.Field
@@ -729,7 +729,7 @@ func (r *SessionNavigateResponse) UnmarshalJSON(data []byte) error {
 
 type SessionNavigateResponseData struct {
 	// Navigation response (Playwright Response object or null)
-	Result any `json:"result,required"`
+	Result any `json:"result" api:"required"`
 	// Action ID for tracking
 	ActionID string `json:"actionId"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
@@ -748,9 +748,9 @@ func (r *SessionNavigateResponseData) UnmarshalJSON(data []byte) error {
 }
 
 type SessionObserveResponse struct {
-	Data SessionObserveResponseData `json:"data,required"`
+	Data SessionObserveResponseData `json:"data" api:"required"`
 	// Indicates whether the request was successful
-	Success bool `json:"success,required"`
+	Success bool `json:"success" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Data        respjson.Field
@@ -767,7 +767,7 @@ func (r *SessionObserveResponse) UnmarshalJSON(data []byte) error {
 }
 
 type SessionObserveResponseData struct {
-	Result []SessionObserveResponseDataResult `json:"result,required"`
+	Result []SessionObserveResponseDataResult `json:"result" api:"required"`
 	// Action ID for tracking
 	ActionID string `json:"actionId"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
@@ -788,9 +788,9 @@ func (r *SessionObserveResponseData) UnmarshalJSON(data []byte) error {
 // Action object returned by observe and used by act
 type SessionObserveResponseDataResult struct {
 	// Human-readable description of the action
-	Description string `json:"description,required"`
+	Description string `json:"description" api:"required"`
 	// CSS selector or XPath for the element
-	Selector string `json:"selector,required"`
+	Selector string `json:"selector" api:"required"`
 	// Arguments to pass to the method
 	Arguments []string `json:"arguments"`
 	// Backend node ID for the element
@@ -816,9 +816,9 @@ func (r *SessionObserveResponseDataResult) UnmarshalJSON(data []byte) error {
 }
 
 type SessionReplayResponse struct {
-	Data SessionReplayResponseData `json:"data,required"`
+	Data SessionReplayResponseData `json:"data" api:"required"`
 	// Indicates whether the request was successful
-	Success bool `json:"success,required"`
+	Success bool `json:"success" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Data        respjson.Field
@@ -835,7 +835,7 @@ func (r *SessionReplayResponse) UnmarshalJSON(data []byte) error {
 }
 
 type SessionReplayResponseData struct {
-	Pages          []SessionReplayResponseDataPage `json:"pages,required"`
+	Pages          []SessionReplayResponseDataPage `json:"pages" api:"required"`
 	ClientLanguage string                          `json:"clientLanguage"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
@@ -853,10 +853,10 @@ func (r *SessionReplayResponseData) UnmarshalJSON(data []byte) error {
 }
 
 type SessionReplayResponseDataPage struct {
-	Actions   []SessionReplayResponseDataPageAction `json:"actions,required"`
-	Duration  float64                               `json:"duration,required"`
-	Timestamp float64                               `json:"timestamp,required"`
-	URL       string                                `json:"url,required"`
+	Actions   []SessionReplayResponseDataPageAction `json:"actions" api:"required"`
+	Duration  float64                               `json:"duration" api:"required"`
+	Timestamp float64                               `json:"timestamp" api:"required"`
+	URL       string                                `json:"url" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Actions     respjson.Field
@@ -875,10 +875,10 @@ func (r *SessionReplayResponseDataPage) UnmarshalJSON(data []byte) error {
 }
 
 type SessionReplayResponseDataPageAction struct {
-	Method     string                                        `json:"method,required"`
-	Parameters map[string]any                                `json:"parameters,required"`
-	Result     map[string]any                                `json:"result,required"`
-	Timestamp  float64                                       `json:"timestamp,required"`
+	Method     string                                        `json:"method" api:"required"`
+	Parameters map[string]any                                `json:"parameters" api:"required"`
+	Result     map[string]any                                `json:"result" api:"required"`
+	Timestamp  float64                                       `json:"timestamp" api:"required"`
 	EndTime    float64                                       `json:"endTime"`
 	TokenUsage SessionReplayResponseDataPageActionTokenUsage `json:"tokenUsage"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
@@ -923,9 +923,9 @@ func (r *SessionReplayResponseDataPageActionTokenUsage) UnmarshalJSON(data []byt
 }
 
 type SessionStartResponse struct {
-	Data SessionStartResponseData `json:"data,required"`
+	Data SessionStartResponseData `json:"data" api:"required"`
 	// Indicates whether the request was successful
-	Success bool `json:"success,required"`
+	Success bool `json:"success" api:"required"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Data        respjson.Field
@@ -942,12 +942,12 @@ func (r *SessionStartResponse) UnmarshalJSON(data []byte) error {
 }
 
 type SessionStartResponseData struct {
-	Available bool `json:"available,required"`
+	Available bool `json:"available" api:"required"`
 	// Unique Browserbase session identifier
-	SessionID string `json:"sessionId,required"`
+	SessionID string `json:"sessionId" api:"required"`
 	// CDP WebSocket URL for connecting to the Browserbase cloud browser (present when
 	// available)
-	CdpURL string `json:"cdpUrl,nullable"`
+	CdpURL string `json:"cdpUrl" api:"nullable"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Available   respjson.Field
@@ -966,7 +966,7 @@ func (r *SessionStartResponseData) UnmarshalJSON(data []byte) error {
 
 type SessionActParams struct {
 	// Natural language instruction or Action object
-	Input SessionActParamsInputUnion `json:"input,omitzero,required"`
+	Input SessionActParamsInputUnion `json:"input,omitzero" api:"required"`
 	// Target frame ID for the action
 	FrameID param.Opt[string]       `json:"frameId,omitzero"`
 	Options SessionActParamsOptions `json:"options,omitzero"`
@@ -1078,8 +1078,8 @@ const (
 )
 
 type SessionExecuteParams struct {
-	AgentConfig    SessionExecuteParamsAgentConfig    `json:"agentConfig,omitzero,required"`
-	ExecuteOptions SessionExecuteParamsExecuteOptions `json:"executeOptions,omitzero,required"`
+	AgentConfig    SessionExecuteParamsAgentConfig    `json:"agentConfig,omitzero" api:"required"`
+	ExecuteOptions SessionExecuteParamsExecuteOptions `json:"executeOptions,omitzero" api:"required"`
 	// Target frame ID for the agent
 	FrameID param.Opt[string] `json:"frameId,omitzero"`
 	// If true, the server captures a cache entry and returns it to the client
@@ -1192,7 +1192,7 @@ func (u *SessionExecuteParamsAgentConfigModelUnion) asAny() any {
 // The property Instruction is required.
 type SessionExecuteParamsExecuteOptions struct {
 	// Natural language instruction for the agent
-	Instruction string `json:"instruction,required"`
+	Instruction string `json:"instruction" api:"required"`
 	// Whether to visually highlight the cursor during execution
 	HighlightCursor param.Opt[bool] `json:"highlightCursor,omitzero"`
 	// Maximum number of steps the agent can take
@@ -1292,7 +1292,7 @@ const (
 
 type SessionNavigateParams struct {
 	// URL to navigate to
-	URL string `json:"url,required"`
+	URL string `json:"url" api:"required"`
 	// Target frame ID for the navigation
 	FrameID param.Opt[string] `json:"frameId,omitzero"`
 	// Whether to stream the response via SSE
@@ -1437,7 +1437,7 @@ const (
 
 type SessionStartParams struct {
 	// Model name to use for AI operations
-	ModelName string `json:"modelName,required"`
+	ModelName string `json:"modelName" api:"required"`
 	// Timeout in ms for act operations (deprecated, v2 only)
 	ActTimeoutMs param.Opt[float64] `json:"actTimeoutMs,omitzero"`
 	// Existing Browserbase session ID to resume
@@ -1555,7 +1555,7 @@ func (u *SessionStartParamsBrowserLaunchOptionsIgnoreDefaultArgsUnion) asAny() a
 
 // The property Server is required.
 type SessionStartParamsBrowserLaunchOptionsProxy struct {
-	Server   string            `json:"server,required"`
+	Server   string            `json:"server" api:"required"`
 	Bypass   param.Opt[string] `json:"bypass,omitzero"`
 	Password param.Opt[string] `json:"password,omitzero"`
 	Username param.Opt[string] `json:"username,omitzero"`
@@ -1572,8 +1572,8 @@ func (r *SessionStartParamsBrowserLaunchOptionsProxy) UnmarshalJSON(data []byte)
 
 // The properties Height, Width are required.
 type SessionStartParamsBrowserLaunchOptionsViewport struct {
-	Height float64 `json:"height,required"`
-	Width  float64 `json:"width,required"`
+	Height float64 `json:"height" api:"required"`
+	Width  float64 `json:"width" api:"required"`
 	paramObj
 }
 
@@ -1635,7 +1635,7 @@ func (r *SessionStartParamsBrowserbaseSessionCreateParamsBrowserSettings) Unmars
 
 // The property ID is required.
 type SessionStartParamsBrowserbaseSessionCreateParamsBrowserSettingsContext struct {
-	ID      string          `json:"id,required"`
+	ID      string          `json:"id" api:"required"`
 	Persist param.Opt[bool] `json:"persist,omitzero"`
 	paramObj
 }
@@ -1821,7 +1821,7 @@ type SessionStartParamsBrowserbaseSessionCreateParamsProxiesProxyConfigListItemB
 	DomainPattern param.Opt[string]                                                                                `json:"domainPattern,omitzero"`
 	Geolocation   SessionStartParamsBrowserbaseSessionCreateParamsProxiesProxyConfigListItemBrowserbaseGeolocation `json:"geolocation,omitzero"`
 	// This field can be elided, and will marshal its zero value as "browserbase".
-	Type constant.Browserbase `json:"type,required"`
+	Type constant.Browserbase `json:"type" api:"required"`
 	paramObj
 }
 
@@ -1835,7 +1835,7 @@ func (r *SessionStartParamsBrowserbaseSessionCreateParamsProxiesProxyConfigListI
 
 // The property Country is required.
 type SessionStartParamsBrowserbaseSessionCreateParamsProxiesProxyConfigListItemBrowserbaseGeolocation struct {
-	Country string            `json:"country,required"`
+	Country string            `json:"country" api:"required"`
 	City    param.Opt[string] `json:"city,omitzero"`
 	State   param.Opt[string] `json:"state,omitzero"`
 	paramObj
@@ -1851,12 +1851,12 @@ func (r *SessionStartParamsBrowserbaseSessionCreateParamsProxiesProxyConfigListI
 
 // The properties Server, Type are required.
 type SessionStartParamsBrowserbaseSessionCreateParamsProxiesProxyConfigListItemExternal struct {
-	Server        string            `json:"server,required"`
+	Server        string            `json:"server" api:"required"`
 	DomainPattern param.Opt[string] `json:"domainPattern,omitzero"`
 	Password      param.Opt[string] `json:"password,omitzero"`
 	Username      param.Opt[string] `json:"username,omitzero"`
 	// This field can be elided, and will marshal its zero value as "external".
-	Type constant.External `json:"type,required"`
+	Type constant.External `json:"type" api:"required"`
 	paramObj
 }
 
