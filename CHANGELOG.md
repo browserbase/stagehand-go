@@ -1,5 +1,18 @@
 # Changelog
 
+## 3.11.0 (2026-02-25)
+
+Full Changelog: [v3.10.2...v3.11.0](https://github.com/browserbase/stagehand-go/compare/v3.10.2...v3.11.0)
+
+### Features
+
+* Add bedrock to provider enum in Zod schemas and OpenAPI spec ([1996924](https://github.com/browserbase/stagehand-go/commit/199692479d1d2c2ed35d257e147e54639af39953))
+
+
+### Chores
+
+* **internal:** move custom custom `json` tags to `api` ([2a8a674](https://github.com/browserbase/stagehand-go/commit/2a8a67486fdd636538428c1753408c63c1ecccb6))
+
 ## 3.10.2 (2026-02-20)
 
 Full Changelog: [v3.10.1...v3.10.2](https://github.com/browserbase/stagehand-go/compare/v3.10.1...v3.10.2)
