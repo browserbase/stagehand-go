@@ -274,7 +274,7 @@ type ModelConfigParam struct {
 	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
 	// AI provider for the model (or provide a baseURL endpoint instead)
 	//
-	// Any of "openai", "anthropic", "google", "microsoft".
+	// Any of "openai", "anthropic", "google", "microsoft", "bedrock".
 	Provider ModelConfigProvider `json:"provider,omitzero"`
 	paramObj
 }
@@ -295,6 +295,7 @@ const (
 	ModelConfigProviderAnthropic ModelConfigProvider = "anthropic"
 	ModelConfigProviderGoogle    ModelConfigProvider = "google"
 	ModelConfigProviderMicrosoft ModelConfigProvider = "microsoft"
+	ModelConfigProviderBedrock   ModelConfigProvider = "bedrock"
 )
 
 // Server-Sent Event emitted during streaming responses. Events are sent as
@@ -1117,7 +1118,7 @@ type SessionExecuteParamsAgentConfig struct {
 	Model SessionExecuteParamsAgentConfigModelUnion `json:"model,omitzero"`
 	// AI provider for the agent (legacy, use model: openai/gpt-5-nano instead)
 	//
-	// Any of "openai", "anthropic", "google", "microsoft".
+	// Any of "openai", "anthropic", "google", "microsoft", "bedrock".
 	Provider string `json:"provider,omitzero"`
 	paramObj
 }
@@ -1135,7 +1136,7 @@ func init() {
 		"mode", "dom", "hybrid", "cua",
 	)
 	apijson.RegisterFieldValidator[SessionExecuteParamsAgentConfig](
-		"provider", "openai", "anthropic", "google", "microsoft",
+		"provider", "openai", "anthropic", "google", "microsoft", "bedrock",
 	)
 }
 
