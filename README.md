@@ -208,10 +208,11 @@ Examples and dependencies:
 
 - `examples/basic/`: stagehand-go only
 - `examples/remote_browser_chromedp_example/`: `chromedp`
-- `examples/chromedp_multiregion_example/`: `chromedp`
 - `examples/local/`: stagehand-go only
 - `examples/chromedp_local_example/`: `chromedp`
 - `examples/local_browser_chromedp_example/`: `chromedp`
+
+Multiregion support: see `examples/local_server_multiregion_browser_example/`.
 
 Run any example:
 
