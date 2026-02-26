@@ -1,4 +1,4 @@
-// Example: Local mode + Browserbase region + chromedp.
+// Example: Local mode + Browserbase multiregion + chromedp.
 //
 // Prerequisites:
 //   - Set BROWSERBASE_API_KEY
@@ -7,7 +7,7 @@
 //
 // Run:
 //
-//	cd examples/chromedp_multiregion_example
+//	cd examples/local_server_multiregion_browser_example
 //	go mod download
 //	go run main.go
 package main
@@ -95,6 +95,17 @@ func main() {
 		log.Fatalf("Failed to parse observe result: %v", err)
 	}
 	fmt.Printf("Observed %d possible actions\n", observeCount)
+
+	fmt.Println("Acting with SSE...")
+	actStream := client.Sessions.ActStreaming(ctx, sessionID, stagehand.SessionActParams{
+		Input: stagehand.SessionActParamsInputUnion{
+			OfString: stagehand.String("Click the 'Learn more' link"),
+		},
+	})
+	_, err = consumeStream("act", actStream)
+	if err != nil {
+		log.Fatalf("Failed to act: %v", err)
+	}
 
 	extractStream := client.Sessions.ExtractStreaming(ctx, sessionID, stagehand.SessionExtractParams{
 		Instruction: stagehand.String("Extract the page title and current URL"),

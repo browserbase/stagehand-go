@@ -1,4 +1,4 @@
-module github.com/browserbase/stagehand-go/v3/examples/chromedp_multiregion_example
+module github.com/browserbase/stagehand-go/v3/examples/local_server_multiregion_browser_example
 
 go 1.23
 
