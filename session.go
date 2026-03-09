@@ -1515,6 +1515,7 @@ type SessionStartParamsBrowserLaunchOptions struct {
 	PreserveUserDataDir param.Opt[bool]                                              `json:"preserveUserDataDir,omitzero"`
 	UserDataDir         param.Opt[string]                                            `json:"userDataDir,omitzero"`
 	Args                []string                                                     `json:"args,omitzero"`
+	CdpHeaders          map[string]string                                            `json:"cdpHeaders,omitzero"`
 	IgnoreDefaultArgs   SessionStartParamsBrowserLaunchOptionsIgnoreDefaultArgsUnion `json:"ignoreDefaultArgs,omitzero"`
 	Proxy               SessionStartParamsBrowserLaunchOptionsProxy                  `json:"proxy,omitzero"`
 	Viewport            SessionStartParamsBrowserLaunchOptionsViewport               `json:"viewport,omitzero"`

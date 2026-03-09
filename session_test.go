@@ -337,8 +337,11 @@ func TestSessionStartWithOptionalParams(t *testing.T) {
 		Browser: stagehand.SessionStartParamsBrowser{
 			CdpURL: stagehand.String("ws://localhost:9222"),
 			LaunchOptions: stagehand.SessionStartParamsBrowserLaunchOptions{
-				AcceptDownloads:   stagehand.Bool(true),
-				Args:              []string{"string"},
+				AcceptDownloads: stagehand.Bool(true),
+				Args:            []string{"string"},
+				CdpHeaders: map[string]string{
+					"foo": "string",
+				},
 				CdpURL:            stagehand.String("cdpUrl"),
 				ChromiumSandbox:   stagehand.Bool(true),
 				ConnectTimeoutMs:  stagehand.Float(0),
