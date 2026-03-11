@@ -47,11 +47,11 @@ func (r *SessionService) Act(ctx context.Context, id string, params SessionActPa
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
 		err = errors.New("missing required id parameter")
-		return
+		return nil, err
 	}
 	path := fmt.Sprintf("v1/sessions/%s/act", id)
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
-	return
+	return res, err
 }
 
 // Executes a browser action using natural language instructions or a predefined
@@ -68,7 +68,7 @@ func (r *SessionService) ActStreaming(ctx context.Context, id string, params Ses
 	opts = append(opts, option.WithJSONSet("streamResponse", true))
 	if id == "" {
 		err = errors.New("missing required id parameter")
-		return
+		return ssestream.NewStream[StreamEvent](nil, err)
 	}
 	path := fmt.Sprintf("v1/sessions/%s/act", id)
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &raw, opts...)
@@ -83,11 +83,11 @@ func (r *SessionService) End(ctx context.Context, id string, body SessionEndPara
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
 		err = errors.New("missing required id parameter")
-		return
+		return nil, err
 	}
 	path := fmt.Sprintf("v1/sessions/%s/end", id)
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, nil, &res, opts...)
-	return
+	return res, err
 }
 
 // Runs an autonomous AI agent that can perform complex multi-step browser tasks.
@@ -98,11 +98,11 @@ func (r *SessionService) Execute(ctx context.Context, id string, params SessionE
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
 		err = errors.New("missing required id parameter")
-		return
+		return nil, err
 	}
 	path := fmt.Sprintf("v1/sessions/%s/agentExecute", id)
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
-	return
+	return res, err
 }
 
 // Runs an autonomous AI agent that can perform complex multi-step browser tasks.
@@ -118,7 +118,7 @@ func (r *SessionService) ExecuteStreaming(ctx context.Context, id string, params
 	opts = append(opts, option.WithJSONSet("streamResponse", true))
 	if id == "" {
 		err = errors.New("missing required id parameter")
-		return
+		return ssestream.NewStream[StreamEvent](nil, err)
 	}
 	path := fmt.Sprintf("v1/sessions/%s/agentExecute", id)
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &raw, opts...)
@@ -133,11 +133,11 @@ func (r *SessionService) Extract(ctx context.Context, id string, params SessionE
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
 		err = errors.New("missing required id parameter")
-		return
+		return nil, err
 	}
 	path := fmt.Sprintf("v1/sessions/%s/extract", id)
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
-	return
+	return res, err
 }
 
 // Extracts structured data from the current page using AI-powered analysis.
@@ -153,7 +153,7 @@ func (r *SessionService) ExtractStreaming(ctx context.Context, id string, params
 	opts = append(opts, option.WithJSONSet("streamResponse", true))
 	if id == "" {
 		err = errors.New("missing required id parameter")
-		return
+		return ssestream.NewStream[StreamEvent](nil, err)
 	}
 	path := fmt.Sprintf("v1/sessions/%s/extract", id)
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &raw, opts...)
@@ -168,11 +168,11 @@ func (r *SessionService) Navigate(ctx context.Context, id string, params Session
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
 		err = errors.New("missing required id parameter")
-		return
+		return nil, err
 	}
 	path := fmt.Sprintf("v1/sessions/%s/navigate", id)
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
-	return
+	return res, err
 }
 
 // Identifies and returns available actions on the current page that match the
@@ -184,11 +184,11 @@ func (r *SessionService) Observe(ctx context.Context, id string, params SessionO
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
 		err = errors.New("missing required id parameter")
-		return
+		return nil, err
 	}
 	path := fmt.Sprintf("v1/sessions/%s/observe", id)
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
-	return
+	return res, err
 }
 
 // Identifies and returns available actions on the current page that match the
@@ -205,7 +205,7 @@ func (r *SessionService) ObserveStreaming(ctx context.Context, id string, params
 	opts = append(opts, option.WithJSONSet("streamResponse", true))
 	if id == "" {
 		err = errors.New("missing required id parameter")
-		return
+		return ssestream.NewStream[StreamEvent](nil, err)
 	}
 	path := fmt.Sprintf("v1/sessions/%s/observe", id)
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &raw, opts...)
@@ -220,11 +220,11 @@ func (r *SessionService) Replay(ctx context.Context, id string, query SessionRep
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
 		err = errors.New("missing required id parameter")
-		return
+		return nil, err
 	}
 	path := fmt.Sprintf("v1/sessions/%s/replay", id)
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
-	return
+	return res, err
 }
 
 // Creates a new browser session with the specified configuration. Returns a
@@ -236,7 +236,7 @@ func (r *SessionService) Start(ctx context.Context, params SessionStartParams, o
 	opts = slices.Concat(r.Options, opts)
 	path := "v1/sessions/start"
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
-	return
+	return res, err
 }
 
 // Action object returned by observe and used by act
