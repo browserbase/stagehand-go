@@ -74,7 +74,7 @@ func TestResolveBinaryPath_UsesCacheWithoutNetwork(t *testing.T) {
 
 func TestResolveBinaryPath_DownloadsWithPinnedVersion(t *testing.T) {
 	withTempHome(t)
-	t.Setenv("STAGEHAND_SERVER_VERSION", "stagehand-server/v0.0.1")
+	t.Setenv("STAGEHAND_SERVER_VERSION", "stagehand-server-v3/v0.0.1")
 
 	root, path := expectedCachePath(t)
 	filename := binaryFilename()
@@ -83,7 +83,7 @@ func TestResolveBinaryPath_DownloadsWithPinnedVersion(t *testing.T) {
 		if strings.Contains(req.URL.Host, "api.github.com") {
 			t.Fatalf("unexpected tag resolution call: %s", req.URL.String())
 		}
-		want := "https://github.com/browserbase/stagehand/releases/download/stagehand-server/v0.0.1/" + filename
+		want := "https://github.com/browserbase/stagehand/releases/download/stagehand-server-v3/v0.0.1/" + filename
 		if req.URL.String() != want {
 			t.Fatalf("unexpected download url: %s", req.URL.String())
 		}
@@ -135,11 +135,11 @@ func TestResolveBinaryPath_ResolvesLatestTag(t *testing.T) {
 
 		switch {
 		case strings.Contains(req.URL.Host, "api.github.com"):
-			payload := []map[string]string{{"tag_name": "stagehand-server/v9.9.9"}}
+			payload := []map[string]string{{"tag_name": "stagehand-server-v3/v9.9.9"}}
 			buf, _ := json.Marshal(payload)
 			return &http.Response{StatusCode: http.StatusOK, Body: io.NopCloser(bytes.NewBuffer(buf))}, nil
 		case strings.Contains(req.URL.Host, "github.com"):
-			want := "https://github.com/browserbase/stagehand/releases/download/stagehand-server/v9.9.9/" + filename
+			want := "https://github.com/browserbase/stagehand/releases/download/stagehand-server-v3/v9.9.9/" + filename
 			if req.URL.String() != want {
 				t.Fatalf("unexpected download url: %s", req.URL.String())
 			}
