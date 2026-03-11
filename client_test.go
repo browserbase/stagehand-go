@@ -41,7 +41,7 @@ func TestUserAgentHeader(t *testing.T) {
 			},
 		}),
 	)
-	client.Sessions.Start(context.Background(), stagehand.SessionStartParams{
+	_, _ = client.Sessions.Start(context.Background(), stagehand.SessionStartParams{
 		ModelName: "openai/gpt-5-nano",
 	})
 	if userAgent != fmt.Sprintf("Stagehand/Go %s", internal.PackageVersion) {

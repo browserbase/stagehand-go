@@ -13,6 +13,7 @@ import (
 )
 
 func TestUsage(t *testing.T) {
+	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
@@ -26,7 +27,6 @@ func TestUsage(t *testing.T) {
 		option.WithBrowserbaseProjectID("My Browserbase Project ID"),
 		option.WithModelAPIKey("My Model API Key"),
 	)
-	t.Skip("Mock server tests are disabled")
 	response, err := client.Sessions.Act(
 		context.TODO(),
 		"00000000-your-session-id-000000000000",
