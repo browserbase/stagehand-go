@@ -58,10 +58,10 @@ func platformTag() (platform, arch string) {
 }
 
 // binaryFilename returns the expected binary filename for the current platform.
-// Format: stagehand-server-{platform}-{arch}[.exe]
+// Format: stagehand-server-v3-{platform}-{arch}[.exe]
 func binaryFilename() string {
 	platform, arch := platformTag()
-	name := fmt.Sprintf("stagehand-server-%s-%s", platform, arch)
+	name := fmt.Sprintf("stagehand-server-v3-%s-%s", platform, arch)
 	if runtime.GOOS == "windows" {
 		name += ".exe"
 	}
@@ -171,8 +171,8 @@ func resolveVersion(ctx context.Context, version string) (string, error) {
 	if version == "" || version == "latest" {
 		return fetchLatestTag(ctx)
 	}
-	if !strings.HasPrefix(version, "stagehand-server/") {
-		version = "stagehand-server/" + version
+	if !strings.HasPrefix(version, "stagehand-server-v3/") {
+		version = "stagehand-server-v3/" + version
 	}
 	return version, nil
 }
@@ -201,12 +201,12 @@ func fetchLatestTag(ctx context.Context) (string, error) {
 		return "", err
 	}
 	for _, release := range releases {
-		if strings.HasPrefix(release.TagName, "stagehand-server/") {
+		if strings.HasPrefix(release.TagName, "stagehand-server-v3/") {
 			return release.TagName, nil
 		}
 	}
 
-	return "", fmt.Errorf("failed to find stagehand-server release tag")
+	return "", fmt.Errorf("failed to find stagehand-server-v3 release tag")
 }
 
 func downloadBinary(ctx context.Context, version, destPath string) error {
