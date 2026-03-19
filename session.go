@@ -1198,6 +1198,10 @@ type SessionExecuteParamsExecuteOptions struct {
 	HighlightCursor param.Opt[bool] `json:"highlightCursor,omitzero"`
 	// Maximum number of steps the agent can take
 	MaxSteps param.Opt[float64] `json:"maxSteps,omitzero"`
+	// Timeout in milliseconds for each agent tool call
+	ToolTimeout param.Opt[float64] `json:"toolTimeout,omitzero"`
+	// Whether to enable the web search tool powered by Browserbase Search API
+	UseSearch param.Opt[bool] `json:"useSearch,omitzero"`
 	paramObj
 }
 
