@@ -138,6 +138,8 @@ func TestSessionExecuteWithOptionalParams(t *testing.T) {
 				Instruction:     "Log in with username 'demo' and password 'test123', then navigate to settings",
 				HighlightCursor: stagehand.Bool(true),
 				MaxSteps:        stagehand.Float(20),
+				ToolTimeout:     stagehand.Float(30000),
+				UseSearch:       stagehand.Bool(true),
 			},
 			FrameID:         stagehand.String("frameId"),
 			ShouldCache:     stagehand.Bool(true),
