@@ -1016,8 +1016,9 @@ type SessionActParamsOptions struct {
 	Timeout param.Opt[float64] `json:"timeout,omitzero"`
 	// Model configuration object or model name string (e.g., 'openai/gpt-5-nano')
 	Model SessionActParamsOptionsModelUnion `json:"model,omitzero"`
-	// Variables to substitute in the action instruction
-	Variables map[string]string `json:"variables,omitzero"`
+	// Variables to substitute in the action instruction. Accepts flat primitives or {
+	// value, description? } objects.
+	Variables map[string]SessionActParamsOptionsVariableUnion `json:"variables,omitzero"`
 	paramObj
 }
 
@@ -1050,6 +1051,80 @@ func (u *SessionActParamsOptionsModelUnion) asAny() any {
 		return u.OfModelConfig
 	} else if !param.IsOmitted(u.OfString) {
 		return &u.OfString.Value
+	}
+	return nil
+}
+
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
+type SessionActParamsOptionsVariableUnion struct {
+	OfString                           param.Opt[string]                      `json:",omitzero,inline"`
+	OfFloat                            param.Opt[float64]                     `json:",omitzero,inline"`
+	OfBool                             param.Opt[bool]                        `json:",omitzero,inline"`
+	OfSessionActsOptionsVariableObject *SessionActParamsOptionsVariableObject `json:",omitzero,inline"`
+	paramUnion
+}
+
+func (u SessionActParamsOptionsVariableUnion) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion(u, u.OfString, u.OfFloat, u.OfBool, u.OfSessionActsOptionsVariableObject)
+}
+func (u *SessionActParamsOptionsVariableUnion) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *SessionActParamsOptionsVariableUnion) asAny() any {
+	if !param.IsOmitted(u.OfString) {
+		return &u.OfString.Value
+	} else if !param.IsOmitted(u.OfFloat) {
+		return &u.OfFloat.Value
+	} else if !param.IsOmitted(u.OfBool) {
+		return &u.OfBool.Value
+	} else if !param.IsOmitted(u.OfSessionActsOptionsVariableObject) {
+		return u.OfSessionActsOptionsVariableObject
+	}
+	return nil
+}
+
+// The property Value is required.
+type SessionActParamsOptionsVariableObject struct {
+	Value       SessionActParamsOptionsVariableObjectValueUnion `json:"value,omitzero" api:"required"`
+	Description param.Opt[string]                               `json:"description,omitzero"`
+	paramObj
+}
+
+func (r SessionActParamsOptionsVariableObject) MarshalJSON() (data []byte, err error) {
+	type shadow SessionActParamsOptionsVariableObject
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionActParamsOptionsVariableObject) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
+type SessionActParamsOptionsVariableObjectValueUnion struct {
+	OfString param.Opt[string]  `json:",omitzero,inline"`
+	OfFloat  param.Opt[float64] `json:",omitzero,inline"`
+	OfBool   param.Opt[bool]    `json:",omitzero,inline"`
+	paramUnion
+}
+
+func (u SessionActParamsOptionsVariableObjectValueUnion) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion(u, u.OfString, u.OfFloat, u.OfBool)
+}
+func (u *SessionActParamsOptionsVariableObjectValueUnion) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *SessionActParamsOptionsVariableObjectValueUnion) asAny() any {
+	if !param.IsOmitted(u.OfString) {
+		return &u.OfString.Value
+	} else if !param.IsOmitted(u.OfFloat) {
+		return &u.OfFloat.Value
+	} else if !param.IsOmitted(u.OfBool) {
+		return &u.OfBool.Value
 	}
 	return nil
 }
@@ -1380,6 +1455,10 @@ type SessionObserveParamsOptions struct {
 	Timeout param.Opt[float64] `json:"timeout,omitzero"`
 	// Model configuration object or model name string (e.g., 'openai/gpt-5-nano')
 	Model SessionObserveParamsOptionsModelUnion `json:"model,omitzero"`
+	// Variables whose names are exposed to the model so observe() returns
+	// %variableName% placeholders in suggested action arguments instead of literal
+	// values. Accepts flat primitives or { value, description? } objects.
+	Variables map[string]SessionObserveParamsOptionsVariableUnion `json:"variables,omitzero"`
 	paramObj
 }
 
@@ -1412,6 +1491,80 @@ func (u *SessionObserveParamsOptionsModelUnion) asAny() any {
 		return u.OfModelConfig
 	} else if !param.IsOmitted(u.OfString) {
 		return &u.OfString.Value
+	}
+	return nil
+}
+
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
+type SessionObserveParamsOptionsVariableUnion struct {
+	OfString                               param.Opt[string]                          `json:",omitzero,inline"`
+	OfFloat                                param.Opt[float64]                         `json:",omitzero,inline"`
+	OfBool                                 param.Opt[bool]                            `json:",omitzero,inline"`
+	OfSessionObservesOptionsVariableObject *SessionObserveParamsOptionsVariableObject `json:",omitzero,inline"`
+	paramUnion
+}
+
+func (u SessionObserveParamsOptionsVariableUnion) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion(u, u.OfString, u.OfFloat, u.OfBool, u.OfSessionObservesOptionsVariableObject)
+}
+func (u *SessionObserveParamsOptionsVariableUnion) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *SessionObserveParamsOptionsVariableUnion) asAny() any {
+	if !param.IsOmitted(u.OfString) {
+		return &u.OfString.Value
+	} else if !param.IsOmitted(u.OfFloat) {
+		return &u.OfFloat.Value
+	} else if !param.IsOmitted(u.OfBool) {
+		return &u.OfBool.Value
+	} else if !param.IsOmitted(u.OfSessionObservesOptionsVariableObject) {
+		return u.OfSessionObservesOptionsVariableObject
+	}
+	return nil
+}
+
+// The property Value is required.
+type SessionObserveParamsOptionsVariableObject struct {
+	Value       SessionObserveParamsOptionsVariableObjectValueUnion `json:"value,omitzero" api:"required"`
+	Description param.Opt[string]                                   `json:"description,omitzero"`
+	paramObj
+}
+
+func (r SessionObserveParamsOptionsVariableObject) MarshalJSON() (data []byte, err error) {
+	type shadow SessionObserveParamsOptionsVariableObject
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionObserveParamsOptionsVariableObject) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
+type SessionObserveParamsOptionsVariableObjectValueUnion struct {
+	OfString param.Opt[string]  `json:",omitzero,inline"`
+	OfFloat  param.Opt[float64] `json:",omitzero,inline"`
+	OfBool   param.Opt[bool]    `json:",omitzero,inline"`
+	paramUnion
+}
+
+func (u SessionObserveParamsOptionsVariableObjectValueUnion) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion(u, u.OfString, u.OfFloat, u.OfBool)
+}
+func (u *SessionObserveParamsOptionsVariableObjectValueUnion) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *SessionObserveParamsOptionsVariableObjectValueUnion) asAny() any {
+	if !param.IsOmitted(u.OfString) {
+		return &u.OfString.Value
+	} else if !param.IsOmitted(u.OfFloat) {
+		return &u.OfFloat.Value
+	} else if !param.IsOmitted(u.OfBool) {
+		return &u.OfBool.Value
 	}
 	return nil
 }
