@@ -46,8 +46,18 @@ func TestSessionActWithOptionalParams(t *testing.T) {
 					},
 				},
 				Timeout: stagehand.Float(30000),
-				Variables: map[string]string{
-					"username": "john_doe",
+				Variables: map[string]stagehand.SessionActParamsOptionsVariableUnion{
+					"username": {
+						OfString: stagehand.String("john_doe"),
+					},
+					"password": {
+						OfSessionActsOptionsVariableObject: &stagehand.SessionActParamsOptionsVariableObject{
+							Value: stagehand.SessionActParamsOptionsVariableObjectValueUnion{
+								OfString: stagehand.String("secret123"),
+							},
+							Description: stagehand.String("The login password"),
+						},
+					},
 				},
 			},
 			XStreamResponse: stagehand.SessionActParamsXStreamResponseTrue,
@@ -274,6 +284,19 @@ func TestSessionObserveWithOptionalParams(t *testing.T) {
 				},
 				Selector: stagehand.String("nav"),
 				Timeout:  stagehand.Float(30000),
+				Variables: map[string]stagehand.SessionObserveParamsOptionsVariableUnion{
+					"username": {
+						OfSessionObservesOptionsVariableObject: &stagehand.SessionObserveParamsOptionsVariableObject{
+							Value: stagehand.SessionObserveParamsOptionsVariableObjectValueUnion{
+								OfString: stagehand.String("john@example.com"),
+							},
+							Description: stagehand.String("The login email"),
+						},
+					},
+					"rememberMe": {
+						OfBool: stagehand.Bool(true),
+					},
+				},
 			},
 			XStreamResponse: stagehand.SessionObserveParamsXStreamResponseTrue,
 		},
