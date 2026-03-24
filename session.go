@@ -272,6 +272,8 @@ type ModelConfigParam struct {
 	APIKey param.Opt[string] `json:"apiKey,omitzero"`
 	// Base URL for the model provider
 	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
+	// Custom headers sent with every request to the model provider
+	Headers map[string]string `json:"headers,omitzero"`
 	// AI provider for the model (or provide a baseURL endpoint instead)
 	//
 	// Any of "openai", "anthropic", "google", "microsoft", "bedrock".
