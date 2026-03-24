@@ -299,7 +299,8 @@ const (
 )
 
 // Server-Sent Event emitted during streaming responses. Events are sent as
-// `data: <JSON>\n\n`. Key order: data (with status first), type, id.
+// `event: <status>\ndata: <JSON>\n\n`, where the JSON payload has the shape
+// `{ data, type, id }`.
 type StreamEvent struct {
 	// Unique identifier for this event
 	ID   string               `json:"id" api:"required" format:"uuid"`
