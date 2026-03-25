@@ -1,5 +1,32 @@
 # Changelog
 
+## 3.18.0 (2026-03-25)
+
+Full Changelog: [v3.11.0...v3.18.0](https://github.com/browserbase/stagehand-go/compare/v3.11.0...v3.18.0)
+
+### Features
+
+* [fix]: add `useSearch` & `toolTimeout` to stainless types ([0151c5d](https://github.com/browserbase/stagehand-go/commit/0151c5dfeedfb02010927a730d1c870c21dabb0b))
+* [STG-1607] Yield finished SSE event instead of silently dropping it ([0d81aaa](https://github.com/browserbase/stagehand-go/commit/0d81aaac2388be111da866e09feee7ffc12552d3))
+* Add explicit SSE event names for local v3 streaming ([148f0cb](https://github.com/browserbase/stagehand-go/commit/148f0cb23a0d9a6df1de56033278a3e7c4cc2363))
+* Add missing cdpHeaders field to v3 server openapi spec ([a765d54](https://github.com/browserbase/stagehand-go/commit/a765d545f26d9e082a28a670fea9ed2179dba7d4))
+* Include LLM headers in ModelConfig ([e71431f](https://github.com/browserbase/stagehand-go/commit/e71431fab093b7269cdf5dcfcab0d7dc4758c0b4))
+* Revert broken finished SSE yield config ([5c17c05](https://github.com/browserbase/stagehand-go/commit/5c17c05dfb442f6b64c04dcad950a6f71e70d08a))
+* variables for observe ([1b2c60e](https://github.com/browserbase/stagehand-go/commit/1b2c60e3ba18fa94b1b123debce9fdf6359a069f))
+
+
+### Chores
+
+* **ci:** skip lint on metadata-only changes ([06eb701](https://github.com/browserbase/stagehand-go/commit/06eb701757a3c149345d690a2d53039add7628e9))
+* **ci:** skip uploading artifacts on stainless-internal branches ([ede6cc4](https://github.com/browserbase/stagehand-go/commit/ede6cc4739a33f9ddcba6216a154f06adc590b69))
+* **internal:** codegen related update ([45e9bdf](https://github.com/browserbase/stagehand-go/commit/45e9bdf8c121ca7a8463db671fa61c5a06070211))
+* **internal:** codegen related update ([2a74ae5](https://github.com/browserbase/stagehand-go/commit/2a74ae5925ac6ade1f5719d7ad2e46a2c6b81fea))
+* **internal:** minor cleanup ([19ffdb3](https://github.com/browserbase/stagehand-go/commit/19ffdb3aa9788e8490317652b9828c8658f4c8bf))
+* **internal:** tweak CI branches ([adfa7c1](https://github.com/browserbase/stagehand-go/commit/adfa7c157dd2d7f0facd28940c644f55e2d69d76))
+* **internal:** update gitignore ([d2896eb](https://github.com/browserbase/stagehand-go/commit/d2896ebc345340faf4b41c754019e6966b4d8d74))
+* **internal:** use explicit returns ([494cd9b](https://github.com/browserbase/stagehand-go/commit/494cd9ba9eff1bc100761f745a27f78a86d6b255))
+* **internal:** use explicit returns in more places ([10e6358](https://github.com/browserbase/stagehand-go/commit/10e63584f67d8fc4188529ec35baa4e8ad7dd7fd))
+
 ## 3.11.0 (2026-02-25)
 
 Full Changelog: [v3.10.2...v3.11.0](https://github.com/browserbase/stagehand-go/compare/v3.10.2...v3.11.0)
