@@ -1,5 +1,27 @@
 # Changelog
 
+## 3.19.0 (2026-03-28)
+
+Full Changelog: [v3.18.0...v3.19.0](https://github.com/browserbase/stagehand-go/compare/v3.18.0...v3.19.0)
+
+### Features
+
+* **internal:** support comma format in multipart form encoding ([35ad44d](https://github.com/browserbase/stagehand-go/commit/35ad44d9b83cd3d90caeb793a99adafaf0efdb3e))
+
+
+### Bug Fixes
+
+* prevent duplicate ? in query params ([dd60ddd](https://github.com/browserbase/stagehand-go/commit/dd60dddf6486331df3fc8b9b16d3396066277f12))
+
+
+### Chores
+
+* **ci:** support opting out of skipping builds on metadata-only commits ([624eaa5](https://github.com/browserbase/stagehand-go/commit/624eaa5cc894e0be5db88794077c890df0d503bc))
+* **client:** fix multipart serialisation of Default() fields ([e8161f4](https://github.com/browserbase/stagehand-go/commit/e8161f41e1593e3793b2d128cf4af17247c311b4))
+* **internal:** support default value struct tag ([e13c5ec](https://github.com/browserbase/stagehand-go/commit/e13c5ecc825fe1abca095f6a54f81fcfee42878c))
+* remove unnecessary error check for url parsing ([f1225a4](https://github.com/browserbase/stagehand-go/commit/f1225a46ab1b4654584967c9240610eb830b0f71))
+* update docs for api:"required" ([ebba897](https://github.com/browserbase/stagehand-go/commit/ebba897d119f51e848ef093069fde71fdcc1cbd6))
+
 ## 3.18.0 (2026-03-25)
 
 Full Changelog: [v3.11.0...v3.18.0](https://github.com/browserbase/stagehand-go/compare/v3.11.0...v3.18.0)
