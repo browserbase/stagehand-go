@@ -394,7 +394,7 @@ func (r *StreamEventDataStreamEventSystemDataOutput) UnmarshalJSON(data []byte) 
 type StreamEventDataStreamEventLogDataOutput struct {
 	// Log message from the operation
 	Message string           `json:"message" api:"required"`
-	Status  constant.Running `json:"status" api:"required"`
+	Status  constant.Running `json:"status" default:"running"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		Message     respjson.Field
@@ -1983,7 +1983,7 @@ type SessionStartParamsBrowserbaseSessionCreateParamsProxiesProxyConfigListItemB
 	DomainPattern param.Opt[string]                                                                                `json:"domainPattern,omitzero"`
 	Geolocation   SessionStartParamsBrowserbaseSessionCreateParamsProxiesProxyConfigListItemBrowserbaseGeolocation `json:"geolocation,omitzero"`
 	// This field can be elided, and will marshal its zero value as "browserbase".
-	Type constant.Browserbase `json:"type" api:"required"`
+	Type constant.Browserbase `json:"type" default:"browserbase"`
 	paramObj
 }
 
@@ -2018,7 +2018,7 @@ type SessionStartParamsBrowserbaseSessionCreateParamsProxiesProxyConfigListItemE
 	Password      param.Opt[string] `json:"password,omitzero"`
 	Username      param.Opt[string] `json:"username,omitzero"`
 	// This field can be elided, and will marshal its zero value as "external".
-	Type constant.External `json:"type" api:"required"`
+	Type constant.External `json:"type" default:"external"`
 	paramObj
 }
 
