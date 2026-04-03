@@ -39,7 +39,7 @@ func TestSessionActWithOptionalParams(t *testing.T) {
 			Options: stagehand.SessionActParamsOptions{
 				Model: stagehand.SessionActParamsOptionsModelUnion{
 					OfModelConfig: &stagehand.ModelConfigParam{
-						ModelName: "openai/gpt-5-nano",
+						ModelName: "openai/gpt-5.4-mini",
 						APIKey:    stagehand.String("sk-some-openai-api-key"),
 						BaseURL:   stagehand.String("https://api.openai.com/v1"),
 						Headers: map[string]string{
@@ -129,7 +129,7 @@ func TestSessionExecuteWithOptionalParams(t *testing.T) {
 				Cua: stagehand.Bool(true),
 				ExecutionModel: stagehand.SessionExecuteParamsAgentConfigExecutionModelUnion{
 					OfModelConfig: &stagehand.ModelConfigParam{
-						ModelName: "openai/gpt-5-nano",
+						ModelName: "openai/gpt-5.4-mini",
 						APIKey:    stagehand.String("sk-some-openai-api-key"),
 						BaseURL:   stagehand.String("https://api.openai.com/v1"),
 						Headers: map[string]string{
@@ -141,7 +141,7 @@ func TestSessionExecuteWithOptionalParams(t *testing.T) {
 				Mode: "cua",
 				Model: stagehand.SessionExecuteParamsAgentConfigModelUnion{
 					OfModelConfig: &stagehand.ModelConfigParam{
-						ModelName: "openai/gpt-5-nano",
+						ModelName: "openai/gpt-5.4-mini",
 						APIKey:    stagehand.String("sk-some-openai-api-key"),
 						BaseURL:   stagehand.String("https://api.openai.com/v1"),
 						Headers: map[string]string{
@@ -198,7 +198,7 @@ func TestSessionExtractWithOptionalParams(t *testing.T) {
 			Options: stagehand.SessionExtractParamsOptions{
 				Model: stagehand.SessionExtractParamsOptionsModelUnion{
 					OfModelConfig: &stagehand.ModelConfigParam{
-						ModelName: "openai/gpt-5-nano",
+						ModelName: "openai/gpt-5.4-mini",
 						APIKey:    stagehand.String("sk-some-openai-api-key"),
 						BaseURL:   stagehand.String("https://api.openai.com/v1"),
 						Headers: map[string]string{
@@ -288,7 +288,7 @@ func TestSessionObserveWithOptionalParams(t *testing.T) {
 			Options: stagehand.SessionObserveParamsOptions{
 				Model: stagehand.SessionObserveParamsOptionsModelUnion{
 					OfModelConfig: &stagehand.ModelConfigParam{
-						ModelName: "openai/gpt-5-nano",
+						ModelName: "openai/gpt-5.4-mini",
 						APIKey:    stagehand.String("sk-some-openai-api-key"),
 						BaseURL:   stagehand.String("https://api.openai.com/v1"),
 						Headers: map[string]string{
@@ -372,7 +372,7 @@ func TestSessionStartWithOptionalParams(t *testing.T) {
 		option.WithModelAPIKey("My Model API Key"),
 	)
 	_, err := client.Sessions.Start(context.TODO(), stagehand.SessionStartParams{
-		ModelName:    "openai/gpt-4o",
+		ModelName:    "openai/gpt-5.4-mini",
 		ActTimeoutMs: stagehand.Float(0),
 		Browser: stagehand.SessionStartParamsBrowser{
 			CdpURL: stagehand.String("ws://localhost:9222"),
