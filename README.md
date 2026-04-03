@@ -455,7 +455,7 @@ To handle errors, we recommend that you use the `errors.As` pattern:
 
 ```go
 _, err := client.Sessions.Start(context.TODO(), stagehand.SessionStartParams{
-	ModelName: "anthropic/claude-sonnet-4-6",
+	ModelName: "openai/gpt-5.4-mini",
 })
 if err != nil {
 	var apierr *stagehand.Error
@@ -484,7 +484,7 @@ defer cancel()
 client.Sessions.Start(
 	ctx,
 	stagehand.SessionStartParams{
-		ModelName: "anthropic/claude-sonnet-4-6",
+		ModelName: "openai/gpt-5.4-mini",
 	},
 	// This sets the per-retry timeout
 	option.WithRequestTimeout(20*time.Second),
@@ -522,7 +522,7 @@ client := stagehand.NewClient(
 client.Sessions.Start(
 	context.TODO(),
 	stagehand.SessionStartParams{
-		ModelName: "anthropic/claude-sonnet-4-6",
+		ModelName: "openai/gpt-5.4-mini",
 	},
 	option.WithMaxRetries(5),
 )
@@ -539,7 +539,7 @@ var response *http.Response
 response, err := client.Sessions.Start(
 	context.TODO(),
 	stagehand.SessionStartParams{
-		ModelName: "anthropic/claude-sonnet-4-6",
+		ModelName: "openai/gpt-5.4-mini",
 	},
 	option.WithResponseInto(&response),
 )
