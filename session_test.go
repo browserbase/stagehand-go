@@ -39,13 +39,19 @@ func TestSessionActWithOptionalParams(t *testing.T) {
 			Options: stagehand.SessionActParamsOptions{
 				Model: stagehand.SessionActParamsOptionsModelUnion{
 					OfModelConfig: &stagehand.ModelConfigParam{
-						ModelName: "openai/gpt-5.4-mini",
+						ModelName: "openai/gpt-5-nano",
 						APIKey:    stagehand.String("sk-some-openai-api-key"),
 						BaseURL:   stagehand.String("https://api.openai.com/v1"),
 						Headers: map[string]string{
-							"foo": "string",
+							"X-Custom-Header": "value",
 						},
 						Provider: stagehand.ModelConfigProviderOpenAI,
+						ProviderOptions: stagehand.ModelConfigProviderOptionsUnionParam{
+							OfModelConfigProviderOptionsBedrockAPIKeyProviderOptions: &stagehand.ModelConfigProviderOptionsBedrockAPIKeyProviderOptionsParam{
+								Region: "us-east-1",
+							},
+						},
+						SkipAPIKeyFallback: stagehand.Bool(true),
 					},
 				},
 				Timeout: stagehand.Float(30000),
@@ -129,25 +135,37 @@ func TestSessionExecuteWithOptionalParams(t *testing.T) {
 				Cua: stagehand.Bool(true),
 				ExecutionModel: stagehand.SessionExecuteParamsAgentConfigExecutionModelUnion{
 					OfModelConfig: &stagehand.ModelConfigParam{
-						ModelName: "openai/gpt-5.4-mini",
+						ModelName: "openai/gpt-5-nano",
 						APIKey:    stagehand.String("sk-some-openai-api-key"),
 						BaseURL:   stagehand.String("https://api.openai.com/v1"),
 						Headers: map[string]string{
-							"foo": "string",
+							"X-Custom-Header": "value",
 						},
 						Provider: stagehand.ModelConfigProviderOpenAI,
+						ProviderOptions: stagehand.ModelConfigProviderOptionsUnionParam{
+							OfModelConfigProviderOptionsBedrockAPIKeyProviderOptions: &stagehand.ModelConfigProviderOptionsBedrockAPIKeyProviderOptionsParam{
+								Region: "us-east-1",
+							},
+						},
+						SkipAPIKeyFallback: stagehand.Bool(true),
 					},
 				},
 				Mode: "cua",
 				Model: stagehand.SessionExecuteParamsAgentConfigModelUnion{
 					OfModelConfig: &stagehand.ModelConfigParam{
-						ModelName: "openai/gpt-5.4-mini",
+						ModelName: "openai/gpt-5-nano",
 						APIKey:    stagehand.String("sk-some-openai-api-key"),
 						BaseURL:   stagehand.String("https://api.openai.com/v1"),
 						Headers: map[string]string{
-							"foo": "string",
+							"X-Custom-Header": "value",
 						},
 						Provider: stagehand.ModelConfigProviderOpenAI,
+						ProviderOptions: stagehand.ModelConfigProviderOptionsUnionParam{
+							OfModelConfigProviderOptionsBedrockAPIKeyProviderOptions: &stagehand.ModelConfigProviderOptionsBedrockAPIKeyProviderOptionsParam{
+								Region: "us-east-1",
+							},
+						},
+						SkipAPIKeyFallback: stagehand.Bool(true),
 					},
 				},
 				Provider:     "openai",
@@ -157,8 +175,6 @@ func TestSessionExecuteWithOptionalParams(t *testing.T) {
 				Instruction:     "Log in with username 'demo' and password 'test123', then navigate to settings",
 				HighlightCursor: stagehand.Bool(true),
 				MaxSteps:        stagehand.Float(20),
-				ToolTimeout:     stagehand.Float(30000),
-				UseSearch:       stagehand.Bool(true),
 			},
 			FrameID:         stagehand.String("frameId"),
 			ShouldCache:     stagehand.Bool(true),
@@ -198,13 +214,19 @@ func TestSessionExtractWithOptionalParams(t *testing.T) {
 			Options: stagehand.SessionExtractParamsOptions{
 				Model: stagehand.SessionExtractParamsOptionsModelUnion{
 					OfModelConfig: &stagehand.ModelConfigParam{
-						ModelName: "openai/gpt-5.4-mini",
+						ModelName: "openai/gpt-5-nano",
 						APIKey:    stagehand.String("sk-some-openai-api-key"),
 						BaseURL:   stagehand.String("https://api.openai.com/v1"),
 						Headers: map[string]string{
-							"foo": "string",
+							"X-Custom-Header": "value",
 						},
 						Provider: stagehand.ModelConfigProviderOpenAI,
+						ProviderOptions: stagehand.ModelConfigProviderOptionsUnionParam{
+							OfModelConfigProviderOptionsBedrockAPIKeyProviderOptions: &stagehand.ModelConfigProviderOptionsBedrockAPIKeyProviderOptionsParam{
+								Region: "us-east-1",
+							},
+						},
+						SkipAPIKeyFallback: stagehand.Bool(true),
 					},
 				},
 				Selector: stagehand.String("#main-content"),
@@ -288,13 +310,19 @@ func TestSessionObserveWithOptionalParams(t *testing.T) {
 			Options: stagehand.SessionObserveParamsOptions{
 				Model: stagehand.SessionObserveParamsOptionsModelUnion{
 					OfModelConfig: &stagehand.ModelConfigParam{
-						ModelName: "openai/gpt-5.4-mini",
+						ModelName: "openai/gpt-5-nano",
 						APIKey:    stagehand.String("sk-some-openai-api-key"),
 						BaseURL:   stagehand.String("https://api.openai.com/v1"),
 						Headers: map[string]string{
-							"foo": "string",
+							"X-Custom-Header": "value",
 						},
 						Provider: stagehand.ModelConfigProviderOpenAI,
+						ProviderOptions: stagehand.ModelConfigProviderOptionsUnionParam{
+							OfModelConfigProviderOptionsBedrockAPIKeyProviderOptions: &stagehand.ModelConfigProviderOptionsBedrockAPIKeyProviderOptionsParam{
+								Region: "us-east-1",
+							},
+						},
+						SkipAPIKeyFallback: stagehand.Bool(true),
 					},
 				},
 				Selector: stagehand.String("nav"),
@@ -457,6 +485,19 @@ func TestSessionStartWithOptionalParams(t *testing.T) {
 		BrowserbaseSessionID: stagehand.String("browserbaseSessionID"),
 		DomSettleTimeoutMs:   stagehand.Float(5000),
 		Experimental:         stagehand.Bool(true),
+		ModelClientOptions: stagehand.SessionStartParamsModelClientOptionsUnion{
+			OfSessionStartsModelClientOptionsBedrockAPIKeyModelClientOptions: &stagehand.SessionStartParamsModelClientOptionsBedrockAPIKeyModelClientOptions{
+				APIKey: "bedrock-short-term-api-key",
+				ProviderOptions: stagehand.SessionStartParamsModelClientOptionsBedrockAPIKeyModelClientOptionsProviderOptions{
+					Region: "us-east-1",
+				},
+				BaseURL: stagehand.String("https://api.openai.com/v1"),
+				Headers: map[string]string{
+					"X-Custom-Header": "value",
+				},
+				SkipAPIKeyFallback: stagehand.Bool(true),
+			},
+		},
 		SelfHeal:             stagehand.Bool(true),
 		SystemPrompt:         stagehand.String("systemPrompt"),
 		Verbose:              1,
