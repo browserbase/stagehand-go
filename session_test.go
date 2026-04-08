@@ -442,8 +442,10 @@ func TestSessionStartWithOptionalParams(t *testing.T) {
 		},
 		BrowserbaseSessionCreateParams: stagehand.SessionStartParamsBrowserbaseSessionCreateParams{
 			BrowserSettings: stagehand.SessionStartParamsBrowserbaseSessionCreateParamsBrowserSettings{
-				AdvancedStealth: stagehand.Bool(true),
-				BlockAds:        stagehand.Bool(true),
+				AdvancedStealth:      stagehand.Bool(true),
+				BlockAds:             stagehand.Bool(true),
+				CaptchaImageSelector: stagehand.String("captchaImageSelector"),
+				CaptchaInputSelector: stagehand.String("captchaInputSelector"),
 				Context: stagehand.SessionStartParamsBrowserbaseSessionCreateParamsBrowserSettingsContext{
 					ID:      "id",
 					Persist: stagehand.Bool(true),
@@ -463,8 +465,10 @@ func TestSessionStartWithOptionalParams(t *testing.T) {
 					},
 				},
 				LogSession:    stagehand.Bool(true),
+				Os:            "windows",
 				RecordSession: stagehand.Bool(true),
 				SolveCaptchas: stagehand.Bool(true),
+				Verified:      stagehand.Bool(true),
 				Viewport: stagehand.SessionStartParamsBrowserbaseSessionCreateParamsBrowserSettingsViewport{
 					Height: stagehand.Float(0),
 					Width:  stagehand.Float(0),
