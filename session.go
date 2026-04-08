@@ -1968,15 +1968,20 @@ func init() {
 }
 
 type SessionStartParamsBrowserbaseSessionCreateParamsBrowserSettings struct {
-	AdvancedStealth param.Opt[bool]                                                            `json:"advancedStealth,omitzero"`
-	BlockAds        param.Opt[bool]                                                            `json:"blockAds,omitzero"`
-	ExtensionID     param.Opt[string]                                                          `json:"extensionId,omitzero"`
-	LogSession      param.Opt[bool]                                                            `json:"logSession,omitzero"`
-	RecordSession   param.Opt[bool]                                                            `json:"recordSession,omitzero"`
-	SolveCaptchas   param.Opt[bool]                                                            `json:"solveCaptchas,omitzero"`
-	Context         SessionStartParamsBrowserbaseSessionCreateParamsBrowserSettingsContext     `json:"context,omitzero"`
-	Fingerprint     SessionStartParamsBrowserbaseSessionCreateParamsBrowserSettingsFingerprint `json:"fingerprint,omitzero"`
-	Viewport        SessionStartParamsBrowserbaseSessionCreateParamsBrowserSettingsViewport    `json:"viewport,omitzero"`
+	AdvancedStealth      param.Opt[bool]                                                            `json:"advancedStealth,omitzero"`
+	BlockAds             param.Opt[bool]                                                            `json:"blockAds,omitzero"`
+	CaptchaImageSelector param.Opt[string]                                                          `json:"captchaImageSelector,omitzero"`
+	CaptchaInputSelector param.Opt[string]                                                          `json:"captchaInputSelector,omitzero"`
+	ExtensionID          param.Opt[string]                                                          `json:"extensionId,omitzero"`
+	LogSession           param.Opt[bool]                                                            `json:"logSession,omitzero"`
+	RecordSession        param.Opt[bool]                                                            `json:"recordSession,omitzero"`
+	SolveCaptchas        param.Opt[bool]                                                            `json:"solveCaptchas,omitzero"`
+	Verified             param.Opt[bool]                                                            `json:"verified,omitzero"`
+	Context              SessionStartParamsBrowserbaseSessionCreateParamsBrowserSettingsContext     `json:"context,omitzero"`
+	Fingerprint          SessionStartParamsBrowserbaseSessionCreateParamsBrowserSettingsFingerprint `json:"fingerprint,omitzero"`
+	// Any of "windows", "mac", "linux", "mobile", "tablet".
+	Os       string                                                                  `json:"os,omitzero"`
+	Viewport SessionStartParamsBrowserbaseSessionCreateParamsBrowserSettingsViewport `json:"viewport,omitzero"`
 	paramObj
 }
 
@@ -1986,6 +1991,12 @@ func (r SessionStartParamsBrowserbaseSessionCreateParamsBrowserSettings) Marshal
 }
 func (r *SessionStartParamsBrowserbaseSessionCreateParamsBrowserSettings) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
+}
+
+func init() {
+	apijson.RegisterFieldValidator[SessionStartParamsBrowserbaseSessionCreateParamsBrowserSettings](
+		"os", "windows", "mac", "linux", "mobile", "tablet",
+	)
 }
 
 // The property ID is required.
