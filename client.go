@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"slices"
+	"strings"
 
 	"github.com/browserbase/stagehand-go/v3/internal/requestconfig"
 	"github.com/browserbase/stagehand-go/v3/option"
@@ -36,6 +37,14 @@ func DefaultClientOptions() []option.RequestOption {
 	}
 	if o, ok := os.LookupEnv("MODEL_API_KEY"); ok {
 		defaults = append(defaults, option.WithModelAPIKey(o))
+	}
+	if o, ok := os.LookupEnv("STAGEHAND_CUSTOM_HEADERS"); ok {
+		for _, line := range strings.Split(o, "\n") {
+			colon := strings.Index(line, ":")
+			if colon >= 0 {
+				defaults = append(defaults, option.WithHeader(strings.TrimSpace(line[:colon]), strings.TrimSpace(line[colon+1:])))
+			}
+		}
 	}
 	return defaults
 }
