@@ -24,7 +24,7 @@ type Client struct {
 // MODEL_API_KEY, BROWSERBASE_PROJECT_ID, STAGEHAND_BASE_URL). This should be used
 // to initialize new clients.
 func DefaultClientOptions() []option.RequestOption {
-	defaults := []option.RequestOption{option.WithEnvironmentProduction()}
+	defaults := []option.RequestOption{option.WithHTTPClient(defaultHTTPClient()), option.WithEnvironmentProduction()}
 	if o, ok := os.LookupEnv("STAGEHAND_BASE_URL"); ok {
 		defaults = append(defaults, option.WithBaseURL(o))
 	}
