@@ -54,10 +54,6 @@ func loadExampleEnv() {
 	if len(missing) > 0 {
 		panic("Missing required env vars: " + strings.Join(missing, ", ") + " (from examples/.env)")
 	}
-
-	if os.Getenv("STAGEHAND_BASE_URL") == "" {
-		os.Setenv("STAGEHAND_BASE_URL", os.Getenv("STAGEHAND_API_URL"))
-	}
 }
 
 func findEnvPath() (string, bool) {

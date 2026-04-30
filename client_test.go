@@ -7,7 +7,9 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 	"reflect"
+	"strings"
 	"testing"
 	"time"
 
@@ -46,6 +48,64 @@ func TestUserAgentHeader(t *testing.T) {
 	})
 	if userAgent != fmt.Sprintf("Stagehand/Go %s", internal.PackageVersion) {
 		t.Errorf("Expected User-Agent to be correct, but got: %#v", userAgent)
+	}
+}
+
+func TestBaseURLFromStagehandAPIURLEnv(t *testing.T) {
+	t.Setenv("STAGEHAND_API_URL", "http://localhost:5000/from-api-env")
+	t.Setenv("STAGEHAND_BASE_URL", "http://localhost:5000/from-base-env")
+
+	var requestURL string
+	client := stagehand.NewClient(
+		option.WithBrowserbaseAPIKey("My Browserbase API Key"),
+		option.WithBrowserbaseProjectID("My Browserbase Project ID"),
+		option.WithModelAPIKey("My Model API Key"),
+		option.WithHTTPClient(&http.Client{
+			Transport: &closureTransport{
+				fn: func(req *http.Request) (*http.Response, error) {
+					requestURL = req.URL.String()
+					return &http.Response{StatusCode: http.StatusOK, Body: io.NopCloser(strings.NewReader("{}"))}, nil
+				},
+			},
+		}),
+	)
+	_, _ = client.Sessions.Start(context.Background(), stagehand.SessionStartParams{
+		ModelName: "openai/gpt-5.4-mini",
+	})
+	if requestURL != "http://localhost:5000/from-api-env/v1/sessions/start" {
+		t.Errorf("Expected STAGEHAND_API_URL to take precedence, got: %s", requestURL)
+	}
+}
+
+func TestBaseURLFromLegacyStagehandBaseURLEnv(t *testing.T) {
+	oldAPIURL, hadAPIURL := os.LookupEnv("STAGEHAND_API_URL")
+	os.Unsetenv("STAGEHAND_API_URL")
+	t.Cleanup(func() {
+		if hadAPIURL {
+			os.Setenv("STAGEHAND_API_URL", oldAPIURL)
+		}
+	})
+	t.Setenv("STAGEHAND_BASE_URL", "http://localhost:5000/from-base-env")
+
+	var requestURL string
+	client := stagehand.NewClient(
+		option.WithBrowserbaseAPIKey("My Browserbase API Key"),
+		option.WithBrowserbaseProjectID("My Browserbase Project ID"),
+		option.WithModelAPIKey("My Model API Key"),
+		option.WithHTTPClient(&http.Client{
+			Transport: &closureTransport{
+				fn: func(req *http.Request) (*http.Response, error) {
+					requestURL = req.URL.String()
+					return &http.Response{StatusCode: http.StatusOK, Body: io.NopCloser(strings.NewReader("{}"))}, nil
+				},
+			},
+		}),
+	)
+	_, _ = client.Sessions.Start(context.Background(), stagehand.SessionStartParams{
+		ModelName: "openai/gpt-5.4-mini",
+	})
+	if requestURL != "http://localhost:5000/from-base-env/v1/sessions/start" {
+		t.Errorf("Expected STAGEHAND_BASE_URL fallback, got: %s", requestURL)
 	}
 }
 
