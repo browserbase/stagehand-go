@@ -159,6 +159,11 @@ func TestSessionExecuteWithOptionalParams(t *testing.T) {
 				MaxSteps:        stagehand.Float(20),
 				ToolTimeout:     stagehand.Float(30000),
 				UseSearch:       stagehand.Bool(true),
+				Variables: map[string]stagehand.SessionExecuteParamsExecuteOptionsVariableUnion{
+					"foo": {
+						OfString: stagehand.String("string"),
+					},
+				},
 			},
 			FrameID:         stagehand.String("frameId"),
 			ShouldCache:     stagehand.Bool(true),
