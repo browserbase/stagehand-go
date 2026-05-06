@@ -1,5 +1,26 @@
 # Changelog
 
+## 3.20.0 (2026-05-06)
+
+Full Changelog: [v3.19.3...v3.20.0](https://github.com/browserbase/stagehand-go/compare/v3.19.3...v3.20.0)
+
+### Features
+
+* [feat]: add `ignoreSelectors` to `extract()` ([5471190](https://github.com/browserbase/stagehand-go/commit/547119099d9201d53820f12345e44acd940cccc6))
+* [STG-1798] feat: support Browserbase verified sessions ([30133d3](https://github.com/browserbase/stagehand-go/commit/30133d320e2093815d9714e32a64ffe6242b94aa))
+* [STG-1808] Deprecate Browserbase project ID ([fa76f5f](https://github.com/browserbase/stagehand-go/commit/fa76f5f6c41e668a9d22a75d4a9ab92829a36f4e))
+* Bedrock auth passthrough ([b41e3cb](https://github.com/browserbase/stagehand-go/commit/b41e3cb38fe07e0d19f8204b106320e3dee9c50b))
+* **go:** add default http client with timeout ([a8bc1d5](https://github.com/browserbase/stagehand-go/commit/a8bc1d57f59c471301dce65cbbabffafeaa3ab6b))
+* remove experimental requirement on agent variables ([#2079](https://github.com/browserbase/stagehand-go/issues/2079)) ([9316089](https://github.com/browserbase/stagehand-go/commit/93160890e958a17d3159273abc12a33c5b1f9d57))
+* Revert "[STG-1573] Add providerOptions for extensible model auth ([#1822](https://github.com/browserbase/stagehand-go/issues/1822))" ([f56e93f](https://github.com/browserbase/stagehand-go/commit/f56e93ff49643c78a6a39da36b30a010dbf59b7d))
+* support setting headers via env ([661576d](https://github.com/browserbase/stagehand-go/commit/661576dfbbaba6e019e9f32e05f6484ec3f17c5b))
+
+
+### Chores
+
+* avoid embedding reflect.Type for dead code elimination ([f071757](https://github.com/browserbase/stagehand-go/commit/f0717577f5de09f968fac0178dacd8662ec40c44))
+* **internal:** more robust bootstrap script ([6fc0d10](https://github.com/browserbase/stagehand-go/commit/6fc0d10fc68841748a3f99cfbdc85930b18455d0))
+
 ## 3.19.3 (2026-04-03)
 
 Full Changelog: [v3.18.0...v3.19.3](https://github.com/browserbase/stagehand-go/compare/v3.18.0...v3.19.3)
