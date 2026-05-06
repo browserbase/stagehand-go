@@ -219,7 +219,6 @@ type RequestConfig struct {
 	HTTPClient           *http.Client
 	Middlewares          []middleware
 	BrowserbaseAPIKey    string
-	BrowserbaseProjectID string
 	ModelAPIKey          string
 	// If ResponseBodyInto not nil, then we will attempt to deserialize into
 	// ResponseBodyInto. If Destination is a []byte, then it will return the body as
@@ -595,7 +594,6 @@ func (cfg *RequestConfig) Clone(ctx context.Context) *RequestConfig {
 		HTTPClient:           cfg.HTTPClient,
 		Middlewares:          cfg.Middlewares,
 		BrowserbaseAPIKey:    cfg.BrowserbaseAPIKey,
-		BrowserbaseProjectID: cfg.BrowserbaseProjectID,
 		ModelAPIKey:          cfg.ModelAPIKey,
 	}
 

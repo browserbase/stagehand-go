@@ -9,10 +9,8 @@ import (
 )
 
 var requiredEnv = []string{
-	"STAGEHAND_API_URL",
 	"MODEL_API_KEY",
 	"BROWSERBASE_API_KEY",
-	"BROWSERBASE_PROJECT_ID",
 }
 
 func loadExampleEnv() {

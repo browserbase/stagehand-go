@@ -274,11 +274,10 @@ func WithBrowserbaseAPIKey(value string) RequestOption {
 	})
 }
 
-// WithBrowserbaseProjectID returns a RequestOption that sets the client setting "BROWSERBASE_PROJECT_ID".
+// WithBrowserbaseProjectID is deprecated and retained as a no-op for backwards compatibility.
 func WithBrowserbaseProjectID(value string) RequestOption {
 	return requestconfig.RequestOptionFunc(func(r *requestconfig.RequestConfig) error {
-		r.BrowserbaseProjectID = value
-		return r.Apply(WithHeader("x-bb-project-id", r.BrowserbaseProjectID))
+		return nil
 	})
 }
 
