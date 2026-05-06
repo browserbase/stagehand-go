@@ -1327,6 +1327,8 @@ type SessionExtractParamsOptions struct {
 	Selector param.Opt[string] `json:"selector,omitzero"`
 	// Timeout in ms for the extraction
 	Timeout param.Opt[float64] `json:"timeout,omitzero"`
+	// Selectors for elements and subtrees that should be excluded from extraction
+	IgnoreSelectors []string `json:"ignoreSelectors,omitzero"`
 	// Model configuration object or model name string (e.g., 'openai/gpt-5-nano')
 	Model SessionExtractParamsOptionsModelUnion `json:"model,omitzero"`
 	paramObj
