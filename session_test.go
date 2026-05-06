@@ -196,6 +196,7 @@ func TestSessionExtractWithOptionalParams(t *testing.T) {
 			FrameID:     stagehand.String("frameId"),
 			Instruction: stagehand.String("Extract all product names and prices from the page"),
 			Options: stagehand.SessionExtractParamsOptions{
+				IgnoreSelectors: []string{"nav", ".cookie-banner", "#sidebar-ads"},
 				Model: stagehand.SessionExtractParamsOptionsModelUnion{
 					OfModelConfig: &stagehand.ModelConfigParam{
 						ModelName: "openai/gpt-5.4-mini",
