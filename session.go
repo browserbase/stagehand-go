@@ -1280,6 +1280,8 @@ type SessionExecuteParamsExecuteOptions struct {
 	ToolTimeout param.Opt[float64] `json:"toolTimeout,omitzero"`
 	// Whether to enable the web search tool powered by Browserbase Search API
 	UseSearch param.Opt[bool] `json:"useSearch,omitzero"`
+	// Variables available to the agent via %variableName% syntax in supported tools
+	Variables map[string]SessionExecuteParamsExecuteOptionsVariableUnion `json:"variables,omitzero"`
 	paramObj
 }
 
@@ -1289,6 +1291,80 @@ func (r SessionExecuteParamsExecuteOptions) MarshalJSON() (data []byte, err erro
 }
 func (r *SessionExecuteParamsExecuteOptions) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
+}
+
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
+type SessionExecuteParamsExecuteOptionsVariableUnion struct {
+	OfString                                      param.Opt[string]                                 `json:",omitzero,inline"`
+	OfFloat                                       param.Opt[float64]                                `json:",omitzero,inline"`
+	OfBool                                        param.Opt[bool]                                   `json:",omitzero,inline"`
+	OfSessionExecutesExecuteOptionsVariableObject *SessionExecuteParamsExecuteOptionsVariableObject `json:",omitzero,inline"`
+	paramUnion
+}
+
+func (u SessionExecuteParamsExecuteOptionsVariableUnion) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion(u, u.OfString, u.OfFloat, u.OfBool, u.OfSessionExecutesExecuteOptionsVariableObject)
+}
+func (u *SessionExecuteParamsExecuteOptionsVariableUnion) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *SessionExecuteParamsExecuteOptionsVariableUnion) asAny() any {
+	if !param.IsOmitted(u.OfString) {
+		return &u.OfString.Value
+	} else if !param.IsOmitted(u.OfFloat) {
+		return &u.OfFloat.Value
+	} else if !param.IsOmitted(u.OfBool) {
+		return &u.OfBool.Value
+	} else if !param.IsOmitted(u.OfSessionExecutesExecuteOptionsVariableObject) {
+		return u.OfSessionExecutesExecuteOptionsVariableObject
+	}
+	return nil
+}
+
+// The property Value is required.
+type SessionExecuteParamsExecuteOptionsVariableObject struct {
+	Value       SessionExecuteParamsExecuteOptionsVariableObjectValueUnion `json:"value,omitzero" api:"required"`
+	Description param.Opt[string]                                          `json:"description,omitzero"`
+	paramObj
+}
+
+func (r SessionExecuteParamsExecuteOptionsVariableObject) MarshalJSON() (data []byte, err error) {
+	type shadow SessionExecuteParamsExecuteOptionsVariableObject
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionExecuteParamsExecuteOptionsVariableObject) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
+type SessionExecuteParamsExecuteOptionsVariableObjectValueUnion struct {
+	OfString param.Opt[string]  `json:",omitzero,inline"`
+	OfFloat  param.Opt[float64] `json:",omitzero,inline"`
+	OfBool   param.Opt[bool]    `json:",omitzero,inline"`
+	paramUnion
+}
+
+func (u SessionExecuteParamsExecuteOptionsVariableObjectValueUnion) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion(u, u.OfString, u.OfFloat, u.OfBool)
+}
+func (u *SessionExecuteParamsExecuteOptionsVariableObjectValueUnion) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *SessionExecuteParamsExecuteOptionsVariableObjectValueUnion) asAny() any {
+	if !param.IsOmitted(u.OfString) {
+		return &u.OfString.Value
+	} else if !param.IsOmitted(u.OfFloat) {
+		return &u.OfFloat.Value
+	} else if !param.IsOmitted(u.OfBool) {
+		return &u.OfBool.Value
+	}
+	return nil
 }
 
 // Whether to stream the response via SSE
