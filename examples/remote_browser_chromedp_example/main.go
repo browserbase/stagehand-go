@@ -2,7 +2,6 @@
 //
 // Prerequisites:
 //   - Set BROWSERBASE_API_KEY
-//   - Set BROWSERBASE_PROJECT_ID
 //   - Set MODEL_API_KEY
 //
 // Run:
@@ -32,7 +31,6 @@ func main() {
 	loadExampleEnv()
 	// Environment variables required (same as other examples):
 	// - BROWSERBASE_API_KEY
-	// - BROWSERBASE_PROJECT_ID
 	// - MODEL_API_KEY
 	client := stagehand.NewClient()
 

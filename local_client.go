@@ -25,11 +25,9 @@ func newLocalServerOption() *localServerOption {
 func (o *localServerOption) Apply(cfg *requestconfig.RequestConfig) error {
 	var modelAPIKey string
 	var browserbaseAPIKey string
-	var browserbaseProjectID string
 	if cfg != nil {
 		modelAPIKey = cfg.ModelAPIKey
 		browserbaseAPIKey = cfg.BrowserbaseAPIKey
-		browserbaseProjectID = cfg.BrowserbaseProjectID
 	}
 	if modelAPIKey == "" {
 		if key := os.Getenv("MODEL_API_KEY"); key != "" {
@@ -51,16 +49,6 @@ func (o *localServerOption) Apply(cfg *requestconfig.RequestConfig) error {
 			}
 		}
 	}
-	if browserbaseProjectID == "" {
-		if key := os.Getenv("BROWSERBASE_PROJECT_ID"); key != "" {
-			browserbaseProjectID = key
-			if cfg != nil {
-				if err := option.WithBrowserbaseProjectID(browserbaseProjectID).Apply(cfg); err != nil {
-					return err
-				}
-			}
-		}
-	}
 	if modelAPIKey == "" {
 		return fmt.Errorf("MODEL_API_KEY is required for local mode")
 	}
@@ -74,9 +62,6 @@ func (o *localServerOption) Apply(cfg *requestconfig.RequestConfig) error {
 	}
 	if browserbaseAPIKey != "" {
 		manager.SetBrowserbaseAPIKey(browserbaseAPIKey)
-	}
-	if browserbaseProjectID != "" {
-		manager.SetBrowserbaseProjectID(browserbaseProjectID)
 	}
 
 	ctx := cfg.Context

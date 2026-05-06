@@ -192,10 +192,10 @@ func main() {
 
 Set your environment variables (from `examples/.env.example`):
 
-- `STAGEHAND_API_URL`
 - `MODEL_API_KEY`
 - `BROWSERBASE_API_KEY`
-- `BROWSERBASE_PROJECT_ID`
+
+`STAGEHAND_API_URL` is optional and defaults to the hosted Stagehand API. `STAGEHAND_BASE_URL` remains supported as a deprecated fallback when `STAGEHAND_API_URL` is unset.
 
 ```bash
 cp examples/.env.example examples/.env

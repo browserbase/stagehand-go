@@ -109,6 +109,53 @@ func TestBaseURLFromLegacyStagehandBaseURLEnv(t *testing.T) {
 	}
 }
 
+func TestBrowserbaseProjectIDEnvIsIgnored(t *testing.T) {
+	t.Setenv("BROWSERBASE_PROJECT_ID", "My Browserbase Project ID")
+
+	var projectIDHeader string
+	client := stagehand.NewClient(
+		option.WithBrowserbaseAPIKey("My Browserbase API Key"),
+		option.WithModelAPIKey("My Model API Key"),
+		option.WithHTTPClient(&http.Client{
+			Transport: &closureTransport{
+				fn: func(req *http.Request) (*http.Response, error) {
+					projectIDHeader = req.Header.Get("x-bb-project-id")
+					return &http.Response{StatusCode: http.StatusOK, Body: io.NopCloser(strings.NewReader("{}"))}, nil
+				},
+			},
+		}),
+	)
+	_, _ = client.Sessions.Start(context.Background(), stagehand.SessionStartParams{
+		ModelName: "openai/gpt-5.4-mini",
+	})
+	if projectIDHeader != "" {
+		t.Errorf("Expected x-bb-project-id header to be omitted, got: %s", projectIDHeader)
+	}
+}
+
+func TestBrowserbaseProjectIDOptionIsNoOp(t *testing.T) {
+	var projectIDHeader string
+	client := stagehand.NewClient(
+		option.WithBrowserbaseAPIKey("My Browserbase API Key"),
+		option.WithModelAPIKey("My Model API Key"),
+		option.WithBrowserbaseProjectID("My Browserbase Project ID"),
+		option.WithHTTPClient(&http.Client{
+			Transport: &closureTransport{
+				fn: func(req *http.Request) (*http.Response, error) {
+					projectIDHeader = req.Header.Get("x-bb-project-id")
+					return &http.Response{StatusCode: http.StatusOK, Body: io.NopCloser(strings.NewReader("{}"))}, nil
+				},
+			},
+		}),
+	)
+	_, _ = client.Sessions.Start(context.Background(), stagehand.SessionStartParams{
+		ModelName: "openai/gpt-5.4-mini",
+	})
+	if projectIDHeader != "" {
+		t.Errorf("Expected x-bb-project-id header to be omitted, got: %s", projectIDHeader)
+	}
+}
+
 func TestRetryAfter(t *testing.T) {
 	retryCountHeaders := make([]string, 0)
 	client := stagehand.NewClient(

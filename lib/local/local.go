@@ -266,7 +266,6 @@ type ServerManager struct {
 	baseURL              string
 	modelAPIKey          string
 	browserbaseAPIKey    string
-	browserbaseProjectID string
 	mu                   sync.Mutex
 	started              bool
 }
@@ -328,14 +327,8 @@ func (m *ServerManager) SetBrowserbaseAPIKey(key string) {
 	m.browserbaseAPIKey = key
 }
 
-// SetBrowserbaseProjectID sets the Browserbase project ID used by local mode.
+// SetBrowserbaseProjectID is deprecated and retained as a no-op for backwards compatibility.
 func (m *ServerManager) SetBrowserbaseProjectID(projectID string) {
-	if projectID == "" {
-		return
-	}
-	m.mu.Lock()
-	defer m.mu.Unlock()
-	m.browserbaseProjectID = projectID
 }
 
 // startLocked starts local mode. Must be called with m.mu held.
@@ -350,8 +343,7 @@ func (m *ServerManager) startLocked(ctx context.Context) (string, error) {
 		return "", fmt.Errorf("failed to find free port: %w", err)
 	}
 
-	// Build environment
-	env := os.Environ()
+	env := append([]string{}, os.Environ()...)
 	env = append(env,
 		"NODE_ENV=production",
 		"BB_ENV=local",
@@ -364,9 +356,6 @@ func (m *ServerManager) startLocked(ctx context.Context) (string, error) {
 	}
 	if m.browserbaseAPIKey != "" {
 		env = append(env, fmt.Sprintf("BROWSERBASE_API_KEY=%s", m.browserbaseAPIKey))
-	}
-	if m.browserbaseProjectID != "" {
-		env = append(env, fmt.Sprintf("BROWSERBASE_PROJECT_ID=%s", m.browserbaseProjectID))
 	}
 
 	// Start the process

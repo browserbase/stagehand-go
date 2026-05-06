@@ -2,7 +2,6 @@
 //
 // Prerequisites:
 //   - Set BROWSERBASE_API_KEY
-//   - Set BROWSERBASE_PROJECT_ID
 //   - Set MODEL_API_KEY
 //
 // Run:
@@ -24,7 +23,7 @@ import (
 
 func main() {
 	loadExampleEnv()
-	client := stagehand.NewClient() // Uses env vars: BROWSERBASE_API_KEY, BROWSERBASE_PROJECT_ID, MODEL_API_KEY
+	client := stagehand.NewClient() // Uses env vars: BROWSERBASE_API_KEY and MODEL_API_KEY
 
 	startResponse, err := client.Sessions.Start(context.TODO(), stagehand.SessionStartParams{
 		ModelName: "anthropic/claude-sonnet-4-6",

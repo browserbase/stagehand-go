@@ -2,7 +2,6 @@
 //
 // Prerequisites:
 //   - Set BROWSERBASE_API_KEY
-//   - Set BROWSERBASE_PROJECT_ID
 //   - Set MODEL_API_KEY
 //
 // Run:
@@ -29,7 +28,7 @@ import (
 
 func main() {
 	loadExampleEnv()
-	requireEnv("BROWSERBASE_API_KEY", "BROWSERBASE_PROJECT_ID", "MODEL_API_KEY")
+	requireEnv("BROWSERBASE_API_KEY", "MODEL_API_KEY")
 
 	// Run the Stagehand driver locally (required for Browserbase regions other than us-west-2)
 	client := stagehand.NewClient(option.WithServer("local"))
