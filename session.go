@@ -1750,8 +1750,12 @@ func (r *SessionStartParamsBrowserLaunchOptionsViewport) UnmarshalJSON(data []by
 }
 
 type SessionStartParamsBrowserbaseSessionCreateParams struct {
-	ExtensionID     param.Opt[string]                                               `json:"extensionId,omitzero"`
-	KeepAlive       param.Opt[bool]                                                 `json:"keepAlive,omitzero"`
+	ExtensionID param.Opt[string] `json:"extensionId,omitzero"`
+	KeepAlive   param.Opt[bool]   `json:"keepAlive,omitzero"`
+	// Deprecated. Browserbase API keys are now project-scoped, so this field is no
+	// longer required.
+	//
+	// Deprecated: deprecated
 	ProjectID       param.Opt[string]                                               `json:"projectId,omitzero"`
 	Timeout         param.Opt[float64]                                              `json:"timeout,omitzero"`
 	BrowserSettings SessionStartParamsBrowserbaseSessionCreateParamsBrowserSettings `json:"browserSettings,omitzero"`
