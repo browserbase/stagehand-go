@@ -292,6 +292,7 @@ func TestSessionObserveWithOptionalParams(t *testing.T) {
 			FrameID:     stagehand.String("frameId"),
 			Instruction: stagehand.String("Find all clickable navigation links"),
 			Options: stagehand.SessionObserveParamsOptions{
+				IgnoreSelectors: []string{"nav", ".cookie-banner", "#sidebar-ads"},
 				Model: stagehand.SessionObserveParamsOptionsModelUnion{
 					OfModelConfig: &stagehand.ModelConfigParam{
 						ModelName: "openai/gpt-5.4-mini",
