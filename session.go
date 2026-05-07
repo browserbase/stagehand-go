@@ -1534,6 +1534,8 @@ type SessionObserveParamsOptions struct {
 	Selector param.Opt[string] `json:"selector,omitzero"`
 	// Timeout in ms for the observation
 	Timeout param.Opt[float64] `json:"timeout,omitzero"`
+	// Selectors for elements and subtrees that should be excluded from observation
+	IgnoreSelectors []string `json:"ignoreSelectors,omitzero"`
 	// Model configuration object or model name string (e.g., 'openai/gpt-5-nano')
 	Model SessionObserveParamsOptionsModelUnion `json:"model,omitzero"`
 	// Variables whose names are exposed to the model so observe() returns
