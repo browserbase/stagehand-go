@@ -1485,6 +1485,9 @@ func (r *SessionExtractParams) UnmarshalJSON(data []byte) error {
 }
 
 type SessionExtractParamsOptions struct {
+	// When true, include a screenshot of the current viewport in the extraction LLM
+	// call. Defaults to false.
+	Screenshot param.Opt[bool] `json:"screenshot,omitzero"`
 	// CSS selector to scope extraction to a specific element
 	Selector param.Opt[string] `json:"selector,omitzero"`
 	// Timeout in ms for the extraction
