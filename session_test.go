@@ -301,8 +301,9 @@ func TestSessionExtractWithOptionalParams(t *testing.T) {
 						Provider: stagehand.ModelConfigProviderOpenAI,
 					},
 				},
-				Selector: stagehand.String("#main-content"),
-				Timeout:  stagehand.Float(30000),
+				Screenshot: stagehand.Bool(false),
+				Selector:   stagehand.String("#main-content"),
+				Timeout:    stagehand.Float(30000),
 			},
 			Schema: map[string]any{
 				"foo": "bar",
