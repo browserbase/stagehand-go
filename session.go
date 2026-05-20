@@ -272,11 +272,17 @@ type ModelConfigParam struct {
 	APIKey param.Opt[string] `json:"apiKey,omitzero"`
 	// Base URL for the model provider
 	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
+	// Google Cloud location for Vertex AI models
+	Location param.Opt[string] `json:"location,omitzero"`
+	// Google Cloud project ID for Vertex AI models
+	Project param.Opt[string] `json:"project,omitzero"`
+	// google-auth-library options used to authenticate Vertex AI models
+	GoogleAuthOptions ModelConfigGoogleAuthOptionsParam `json:"googleAuthOptions,omitzero"`
 	// Custom headers sent with every request to the model provider
 	Headers map[string]string `json:"headers,omitzero"`
 	// AI provider for the model (or provide a baseURL endpoint instead)
 	//
-	// Any of "openai", "anthropic", "google", "microsoft", "bedrock".
+	// Any of "openai", "anthropic", "google", "microsoft", "bedrock", "vertex".
 	Provider ModelConfigProvider `json:"provider,omitzero"`
 	paramObj
 }
@@ -289,6 +295,85 @@ func (r *ModelConfigParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// google-auth-library options used to authenticate Vertex AI models
+type ModelConfigGoogleAuthOptionsParam struct {
+	// Google Cloud project ID used by google-auth-library
+	ProjectID param.Opt[string] `json:"projectId,omitzero"`
+	// Google Cloud universe domain
+	UniverseDomain param.Opt[string] `json:"universeDomain,omitzero"`
+	// Google Cloud service account credentials
+	Credentials ModelConfigGoogleAuthOptionsCredentialsParam `json:"credentials,omitzero"`
+	// Google auth scopes for the desired API request
+	Scopes ModelConfigGoogleAuthOptionsScopesUnionParam `json:"scopes,omitzero"`
+	paramObj
+}
+
+func (r ModelConfigGoogleAuthOptionsParam) MarshalJSON() (data []byte, err error) {
+	type shadow ModelConfigGoogleAuthOptionsParam
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *ModelConfigGoogleAuthOptionsParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Google Cloud service account credentials
+//
+// The properties ClientEmail, PrivateKey are required.
+type ModelConfigGoogleAuthOptionsCredentialsParam struct {
+	ClientEmail             string            `json:"client_email" api:"required"`
+	PrivateKey              string            `json:"private_key" api:"required"`
+	AuthProviderX509CertURL param.Opt[string] `json:"auth_provider_x509_cert_url,omitzero" format:"uri"`
+	AuthUri                 param.Opt[string] `json:"auth_uri,omitzero" format:"uri"`
+	ClientID                param.Opt[string] `json:"client_id,omitzero"`
+	ClientX509CertURL       param.Opt[string] `json:"client_x509_cert_url,omitzero" format:"uri"`
+	PrivateKeyID            param.Opt[string] `json:"private_key_id,omitzero"`
+	ProjectID               param.Opt[string] `json:"project_id,omitzero"`
+	TokenUri                param.Opt[string] `json:"token_uri,omitzero" format:"uri"`
+	UniverseDomain          param.Opt[string] `json:"universe_domain,omitzero"`
+	// Any of "service_account".
+	Type string `json:"type,omitzero"`
+	paramObj
+}
+
+func (r ModelConfigGoogleAuthOptionsCredentialsParam) MarshalJSON() (data []byte, err error) {
+	type shadow ModelConfigGoogleAuthOptionsCredentialsParam
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *ModelConfigGoogleAuthOptionsCredentialsParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func init() {
+	apijson.RegisterFieldValidator[ModelConfigGoogleAuthOptionsCredentialsParam](
+		"type", "service_account",
+	)
+}
+
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
+type ModelConfigGoogleAuthOptionsScopesUnionParam struct {
+	OfString      param.Opt[string] `json:",omitzero,inline"`
+	OfStringArray []string          `json:",omitzero,inline"`
+	paramUnion
+}
+
+func (u ModelConfigGoogleAuthOptionsScopesUnionParam) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion(u, u.OfString, u.OfStringArray)
+}
+func (u *ModelConfigGoogleAuthOptionsScopesUnionParam) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *ModelConfigGoogleAuthOptionsScopesUnionParam) asAny() any {
+	if !param.IsOmitted(u.OfString) {
+		return &u.OfString.Value
+	} else if !param.IsOmitted(u.OfStringArray) {
+		return &u.OfStringArray
+	}
+	return nil
+}
+
 // AI provider for the model (or provide a baseURL endpoint instead)
 type ModelConfigProvider string
 
@@ -298,6 +383,7 @@ const (
 	ModelConfigProviderGoogle    ModelConfigProvider = "google"
 	ModelConfigProviderMicrosoft ModelConfigProvider = "microsoft"
 	ModelConfigProviderBedrock   ModelConfigProvider = "bedrock"
+	ModelConfigProviderVertex    ModelConfigProvider = "vertex"
 )
 
 // Server-Sent Event emitted during streaming responses. Events are sent as
