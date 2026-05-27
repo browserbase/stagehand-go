@@ -264,128 +264,6 @@ func (r *ActionParam) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-// The property ModelName is required.
-type ModelConfigParam struct {
-	// Model name string with provider prefix (e.g., 'openai/gpt-5-nano')
-	ModelName string `json:"modelName" api:"required"`
-	// API key for the model provider
-	APIKey param.Opt[string] `json:"apiKey,omitzero"`
-	// Base URL for the model provider
-	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
-	// Google Cloud location for Vertex AI models
-	Location param.Opt[string] `json:"location,omitzero"`
-	// Google Cloud project ID for Vertex AI models
-	Project param.Opt[string] `json:"project,omitzero"`
-	// google-auth-library options used to authenticate Vertex AI models
-	GoogleAuthOptions ModelConfigGoogleAuthOptionsParam `json:"googleAuthOptions,omitzero"`
-	// Custom headers sent with every request to the model provider
-	Headers map[string]string `json:"headers,omitzero"`
-	// AI provider for the model (or provide a baseURL endpoint instead)
-	//
-	// Any of "openai", "anthropic", "google", "microsoft", "bedrock", "vertex".
-	Provider ModelConfigProvider `json:"provider,omitzero"`
-	paramObj
-}
-
-func (r ModelConfigParam) MarshalJSON() (data []byte, err error) {
-	type shadow ModelConfigParam
-	return param.MarshalObject(r, (*shadow)(&r))
-}
-func (r *ModelConfigParam) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// google-auth-library options used to authenticate Vertex AI models
-type ModelConfigGoogleAuthOptionsParam struct {
-	// Google Cloud project ID used by google-auth-library
-	ProjectID param.Opt[string] `json:"projectId,omitzero"`
-	// Google Cloud universe domain
-	UniverseDomain param.Opt[string] `json:"universeDomain,omitzero"`
-	// Google Cloud service account credentials
-	Credentials ModelConfigGoogleAuthOptionsCredentialsParam `json:"credentials,omitzero"`
-	// Google auth scopes for the desired API request
-	Scopes ModelConfigGoogleAuthOptionsScopesUnionParam `json:"scopes,omitzero"`
-	paramObj
-}
-
-func (r ModelConfigGoogleAuthOptionsParam) MarshalJSON() (data []byte, err error) {
-	type shadow ModelConfigGoogleAuthOptionsParam
-	return param.MarshalObject(r, (*shadow)(&r))
-}
-func (r *ModelConfigGoogleAuthOptionsParam) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// Google Cloud service account credentials
-//
-// The properties ClientEmail, PrivateKey are required.
-type ModelConfigGoogleAuthOptionsCredentialsParam struct {
-	ClientEmail             string            `json:"client_email" api:"required"`
-	PrivateKey              string            `json:"private_key" api:"required"`
-	AuthProviderX509CertURL param.Opt[string] `json:"auth_provider_x509_cert_url,omitzero" format:"uri"`
-	AuthUri                 param.Opt[string] `json:"auth_uri,omitzero" format:"uri"`
-	ClientID                param.Opt[string] `json:"client_id,omitzero"`
-	ClientX509CertURL       param.Opt[string] `json:"client_x509_cert_url,omitzero" format:"uri"`
-	PrivateKeyID            param.Opt[string] `json:"private_key_id,omitzero"`
-	ProjectID               param.Opt[string] `json:"project_id,omitzero"`
-	TokenUri                param.Opt[string] `json:"token_uri,omitzero" format:"uri"`
-	UniverseDomain          param.Opt[string] `json:"universe_domain,omitzero"`
-	// Any of "service_account".
-	Type string `json:"type,omitzero"`
-	paramObj
-}
-
-func (r ModelConfigGoogleAuthOptionsCredentialsParam) MarshalJSON() (data []byte, err error) {
-	type shadow ModelConfigGoogleAuthOptionsCredentialsParam
-	return param.MarshalObject(r, (*shadow)(&r))
-}
-func (r *ModelConfigGoogleAuthOptionsCredentialsParam) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func init() {
-	apijson.RegisterFieldValidator[ModelConfigGoogleAuthOptionsCredentialsParam](
-		"type", "service_account",
-	)
-}
-
-// Only one field can be non-zero.
-//
-// Use [param.IsOmitted] to confirm if a field is set.
-type ModelConfigGoogleAuthOptionsScopesUnionParam struct {
-	OfString      param.Opt[string] `json:",omitzero,inline"`
-	OfStringArray []string          `json:",omitzero,inline"`
-	paramUnion
-}
-
-func (u ModelConfigGoogleAuthOptionsScopesUnionParam) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion(u, u.OfString, u.OfStringArray)
-}
-func (u *ModelConfigGoogleAuthOptionsScopesUnionParam) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, u)
-}
-
-func (u *ModelConfigGoogleAuthOptionsScopesUnionParam) asAny() any {
-	if !param.IsOmitted(u.OfString) {
-		return &u.OfString.Value
-	} else if !param.IsOmitted(u.OfStringArray) {
-		return &u.OfStringArray
-	}
-	return nil
-}
-
-// AI provider for the model (or provide a baseURL endpoint instead)
-type ModelConfigProvider string
-
-const (
-	ModelConfigProviderOpenAI    ModelConfigProvider = "openai"
-	ModelConfigProviderAnthropic ModelConfigProvider = "anthropic"
-	ModelConfigProviderGoogle    ModelConfigProvider = "google"
-	ModelConfigProviderMicrosoft ModelConfigProvider = "microsoft"
-	ModelConfigProviderBedrock   ModelConfigProvider = "bedrock"
-	ModelConfigProviderVertex    ModelConfigProvider = "vertex"
-)
-
 // Server-Sent Event emitted during streaming responses. Events are sent as
 // `event: <status>\ndata: <JSON>\n\n`, where the JSON payload has the shape
 // `{ data, type, id }`.
@@ -1123,25 +1001,280 @@ func (r *SessionActParamsOptions) UnmarshalJSON(data []byte) error {
 //
 // Use [param.IsOmitted] to confirm if a field is set.
 type SessionActParamsOptionsModelUnion struct {
-	OfModelConfig *ModelConfigParam `json:",omitzero,inline"`
-	OfString      param.Opt[string] `json:",omitzero,inline"`
+	OfSessionActsOptionsModelVertexModelConfigObject  *SessionActParamsOptionsModelVertexModelConfigObject  `json:",omitzero,inline"`
+	OfSessionActsOptionsModelGenericModelConfigObject *SessionActParamsOptionsModelGenericModelConfigObject `json:",omitzero,inline"`
+	OfString                                          param.Opt[string]                                     `json:",omitzero,inline"`
 	paramUnion
 }
 
 func (u SessionActParamsOptionsModelUnion) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion(u, u.OfModelConfig, u.OfString)
+	return param.MarshalUnion(u, u.OfSessionActsOptionsModelVertexModelConfigObject, u.OfSessionActsOptionsModelGenericModelConfigObject, u.OfString)
 }
 func (u *SessionActParamsOptionsModelUnion) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
 }
 
 func (u *SessionActParamsOptionsModelUnion) asAny() any {
-	if !param.IsOmitted(u.OfModelConfig) {
-		return u.OfModelConfig
+	if !param.IsOmitted(u.OfSessionActsOptionsModelVertexModelConfigObject) {
+		return u.OfSessionActsOptionsModelVertexModelConfigObject
+	} else if !param.IsOmitted(u.OfSessionActsOptionsModelGenericModelConfigObject) {
+		return u.OfSessionActsOptionsModelGenericModelConfigObject
 	} else if !param.IsOmitted(u.OfString) {
 		return &u.OfString.Value
 	}
 	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SessionActParamsOptionsModelUnion) GetAuth() *SessionActParamsOptionsModelVertexModelConfigObjectAuth {
+	if vt := u.OfSessionActsOptionsModelVertexModelConfigObject; vt != nil {
+		return &vt.Auth
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SessionActParamsOptionsModelUnion) GetProviderOptions() *SessionActParamsOptionsModelVertexModelConfigObjectProviderOptions {
+	if vt := u.OfSessionActsOptionsModelVertexModelConfigObject; vt != nil {
+		return &vt.ProviderOptions
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SessionActParamsOptionsModelUnion) GetModelName() *string {
+	if vt := u.OfSessionActsOptionsModelVertexModelConfigObject; vt != nil {
+		return (*string)(&vt.ModelName)
+	} else if vt := u.OfSessionActsOptionsModelGenericModelConfigObject; vt != nil {
+		return (*string)(&vt.ModelName)
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SessionActParamsOptionsModelUnion) GetProvider() *string {
+	if vt := u.OfSessionActsOptionsModelVertexModelConfigObject; vt != nil {
+		return (*string)(&vt.Provider)
+	} else if vt := u.OfSessionActsOptionsModelGenericModelConfigObject; vt != nil {
+		return (*string)(&vt.Provider)
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SessionActParamsOptionsModelUnion) GetAPIKey() *string {
+	if vt := u.OfSessionActsOptionsModelVertexModelConfigObject; vt != nil && vt.APIKey.Valid() {
+		return &vt.APIKey.Value
+	} else if vt := u.OfSessionActsOptionsModelGenericModelConfigObject; vt != nil && vt.APIKey.Valid() {
+		return &vt.APIKey.Value
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SessionActParamsOptionsModelUnion) GetBaseURL() *string {
+	if vt := u.OfSessionActsOptionsModelVertexModelConfigObject; vt != nil && vt.BaseURL.Valid() {
+		return &vt.BaseURL.Value
+	} else if vt := u.OfSessionActsOptionsModelGenericModelConfigObject; vt != nil && vt.BaseURL.Valid() {
+		return &vt.BaseURL.Value
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's Headers property, if present.
+func (u SessionActParamsOptionsModelUnion) GetHeaders() map[string]string {
+	if vt := u.OfSessionActsOptionsModelVertexModelConfigObject; vt != nil {
+		return vt.Headers
+	} else if vt := u.OfSessionActsOptionsModelGenericModelConfigObject; vt != nil {
+		return vt.Headers
+	}
+	return nil
+}
+
+// The properties Auth, ModelName, Provider, ProviderOptions are required.
+type SessionActParamsOptionsModelVertexModelConfigObject struct {
+	// Vertex provider authentication configuration
+	Auth SessionActParamsOptionsModelVertexModelConfigObjectAuth `json:"auth,omitzero" api:"required"`
+	// Model name string with provider prefix (e.g., 'openai/gpt-5-nano')
+	ModelName string `json:"modelName" api:"required"`
+	// Vertex provider-specific model configuration
+	ProviderOptions SessionActParamsOptionsModelVertexModelConfigObjectProviderOptions `json:"providerOptions,omitzero" api:"required"`
+	// API key for the model provider
+	APIKey param.Opt[string] `json:"apiKey,omitzero"`
+	// Base URL for the model provider
+	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
+	// Custom headers sent with every request to the model provider
+	Headers map[string]string `json:"headers,omitzero"`
+	// Vertex AI model provider
+	//
+	// This field can be elided, and will marshal its zero value as "vertex".
+	Provider constant.Vertex `json:"provider" default:"vertex"`
+	paramObj
+}
+
+func (r SessionActParamsOptionsModelVertexModelConfigObject) MarshalJSON() (data []byte, err error) {
+	type shadow SessionActParamsOptionsModelVertexModelConfigObject
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionActParamsOptionsModelVertexModelConfigObject) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Vertex provider authentication configuration
+//
+// The properties Credentials, Type are required.
+type SessionActParamsOptionsModelVertexModelConfigObjectAuth struct {
+	// Google Cloud service account credentials
+	Credentials SessionActParamsOptionsModelVertexModelConfigObjectAuthCredentials `json:"credentials,omitzero" api:"required"`
+	// Google Cloud project ID used by google-auth-library
+	ProjectID param.Opt[string] `json:"projectId,omitzero"`
+	// Google Cloud universe domain
+	UniverseDomain param.Opt[string] `json:"universeDomain,omitzero"`
+	// Google auth scopes for the desired API request
+	Scopes SessionActParamsOptionsModelVertexModelConfigObjectAuthScopesUnion `json:"scopes,omitzero"`
+	// Use inline Google Cloud service account credentials for provider authentication
+	//
+	// This field can be elided, and will marshal its zero value as
+	// "googleServiceAccount".
+	Type constant.GoogleServiceAccount `json:"type" default:"googleServiceAccount"`
+	paramObj
+}
+
+func (r SessionActParamsOptionsModelVertexModelConfigObjectAuth) MarshalJSON() (data []byte, err error) {
+	type shadow SessionActParamsOptionsModelVertexModelConfigObjectAuth
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionActParamsOptionsModelVertexModelConfigObjectAuth) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Google Cloud service account credentials
+//
+// The properties ClientEmail, PrivateKey are required.
+type SessionActParamsOptionsModelVertexModelConfigObjectAuthCredentials struct {
+	ClientEmail             string            `json:"client_email" api:"required"`
+	PrivateKey              string            `json:"private_key" api:"required"`
+	AuthProviderX509CertURL param.Opt[string] `json:"auth_provider_x509_cert_url,omitzero" format:"uri"`
+	AuthUri                 param.Opt[string] `json:"auth_uri,omitzero" format:"uri"`
+	ClientID                param.Opt[string] `json:"client_id,omitzero"`
+	ClientX509CertURL       param.Opt[string] `json:"client_x509_cert_url,omitzero" format:"uri"`
+	PrivateKeyID            param.Opt[string] `json:"private_key_id,omitzero"`
+	ProjectID               param.Opt[string] `json:"project_id,omitzero"`
+	TokenUri                param.Opt[string] `json:"token_uri,omitzero" format:"uri"`
+	UniverseDomain          param.Opt[string] `json:"universe_domain,omitzero"`
+	// Any of "service_account".
+	Type string `json:"type,omitzero"`
+	paramObj
+}
+
+func (r SessionActParamsOptionsModelVertexModelConfigObjectAuthCredentials) MarshalJSON() (data []byte, err error) {
+	type shadow SessionActParamsOptionsModelVertexModelConfigObjectAuthCredentials
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionActParamsOptionsModelVertexModelConfigObjectAuthCredentials) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func init() {
+	apijson.RegisterFieldValidator[SessionActParamsOptionsModelVertexModelConfigObjectAuthCredentials](
+		"type", "service_account",
+	)
+}
+
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
+type SessionActParamsOptionsModelVertexModelConfigObjectAuthScopesUnion struct {
+	OfString      param.Opt[string] `json:",omitzero,inline"`
+	OfStringArray []string          `json:",omitzero,inline"`
+	paramUnion
+}
+
+func (u SessionActParamsOptionsModelVertexModelConfigObjectAuthScopesUnion) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion(u, u.OfString, u.OfStringArray)
+}
+func (u *SessionActParamsOptionsModelVertexModelConfigObjectAuthScopesUnion) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *SessionActParamsOptionsModelVertexModelConfigObjectAuthScopesUnion) asAny() any {
+	if !param.IsOmitted(u.OfString) {
+		return &u.OfString.Value
+	} else if !param.IsOmitted(u.OfStringArray) {
+		return &u.OfStringArray
+	}
+	return nil
+}
+
+// Vertex provider-specific model configuration
+//
+// The property Vertex is required.
+type SessionActParamsOptionsModelVertexModelConfigObjectProviderOptions struct {
+	// Vertex AI provider-specific settings
+	Vertex SessionActParamsOptionsModelVertexModelConfigObjectProviderOptionsVertex `json:"vertex,omitzero" api:"required"`
+	paramObj
+}
+
+func (r SessionActParamsOptionsModelVertexModelConfigObjectProviderOptions) MarshalJSON() (data []byte, err error) {
+	type shadow SessionActParamsOptionsModelVertexModelConfigObjectProviderOptions
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionActParamsOptionsModelVertexModelConfigObjectProviderOptions) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Vertex AI provider-specific settings
+//
+// The properties Location, Project are required.
+type SessionActParamsOptionsModelVertexModelConfigObjectProviderOptionsVertex struct {
+	// Google Cloud location for Vertex AI models
+	Location string `json:"location" api:"required"`
+	// Google Cloud project ID for Vertex AI models
+	Project string `json:"project" api:"required"`
+	// Base URL for the Vertex AI provider
+	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
+	// Custom headers sent with every request to the Vertex AI provider
+	Headers map[string]string `json:"headers,omitzero"`
+	paramObj
+}
+
+func (r SessionActParamsOptionsModelVertexModelConfigObjectProviderOptionsVertex) MarshalJSON() (data []byte, err error) {
+	type shadow SessionActParamsOptionsModelVertexModelConfigObjectProviderOptionsVertex
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionActParamsOptionsModelVertexModelConfigObjectProviderOptionsVertex) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// The property ModelName is required.
+type SessionActParamsOptionsModelGenericModelConfigObject struct {
+	// Model name string with provider prefix (e.g., 'openai/gpt-5-nano')
+	ModelName string `json:"modelName" api:"required"`
+	// API key for the model provider
+	APIKey param.Opt[string] `json:"apiKey,omitzero"`
+	// Base URL for the model provider
+	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
+	// Custom headers sent with every request to the model provider
+	Headers map[string]string `json:"headers,omitzero"`
+	// AI provider for the model (or provide a baseURL endpoint instead)
+	//
+	// Any of "openai", "anthropic", "google", "microsoft", "bedrock".
+	Provider string `json:"provider,omitzero"`
+	paramObj
+}
+
+func (r SessionActParamsOptionsModelGenericModelConfigObject) MarshalJSON() (data []byte, err error) {
+	type shadow SessionActParamsOptionsModelGenericModelConfigObject
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionActParamsOptionsModelGenericModelConfigObject) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func init() {
+	apijson.RegisterFieldValidator[SessionActParamsOptionsModelGenericModelConfigObject](
+		"provider", "openai", "anthropic", "google", "microsoft", "bedrock",
+	)
 }
 
 // Only one field can be non-zero.
@@ -1308,50 +1441,560 @@ func init() {
 //
 // Use [param.IsOmitted] to confirm if a field is set.
 type SessionExecuteParamsAgentConfigExecutionModelUnion struct {
-	OfModelConfig *ModelConfigParam `json:",omitzero,inline"`
-	OfString      param.Opt[string] `json:",omitzero,inline"`
+	OfSessionExecutesAgentConfigExecutionModelVertexModelConfigObject  *SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObject  `json:",omitzero,inline"`
+	OfSessionExecutesAgentConfigExecutionModelGenericModelConfigObject *SessionExecuteParamsAgentConfigExecutionModelGenericModelConfigObject `json:",omitzero,inline"`
+	OfString                                                           param.Opt[string]                                                      `json:",omitzero,inline"`
 	paramUnion
 }
 
 func (u SessionExecuteParamsAgentConfigExecutionModelUnion) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion(u, u.OfModelConfig, u.OfString)
+	return param.MarshalUnion(u, u.OfSessionExecutesAgentConfigExecutionModelVertexModelConfigObject, u.OfSessionExecutesAgentConfigExecutionModelGenericModelConfigObject, u.OfString)
 }
 func (u *SessionExecuteParamsAgentConfigExecutionModelUnion) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
 }
 
 func (u *SessionExecuteParamsAgentConfigExecutionModelUnion) asAny() any {
-	if !param.IsOmitted(u.OfModelConfig) {
-		return u.OfModelConfig
+	if !param.IsOmitted(u.OfSessionExecutesAgentConfigExecutionModelVertexModelConfigObject) {
+		return u.OfSessionExecutesAgentConfigExecutionModelVertexModelConfigObject
+	} else if !param.IsOmitted(u.OfSessionExecutesAgentConfigExecutionModelGenericModelConfigObject) {
+		return u.OfSessionExecutesAgentConfigExecutionModelGenericModelConfigObject
 	} else if !param.IsOmitted(u.OfString) {
 		return &u.OfString.Value
 	}
 	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SessionExecuteParamsAgentConfigExecutionModelUnion) GetAuth() *SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectAuth {
+	if vt := u.OfSessionExecutesAgentConfigExecutionModelVertexModelConfigObject; vt != nil {
+		return &vt.Auth
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SessionExecuteParamsAgentConfigExecutionModelUnion) GetProviderOptions() *SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectProviderOptions {
+	if vt := u.OfSessionExecutesAgentConfigExecutionModelVertexModelConfigObject; vt != nil {
+		return &vt.ProviderOptions
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SessionExecuteParamsAgentConfigExecutionModelUnion) GetModelName() *string {
+	if vt := u.OfSessionExecutesAgentConfigExecutionModelVertexModelConfigObject; vt != nil {
+		return (*string)(&vt.ModelName)
+	} else if vt := u.OfSessionExecutesAgentConfigExecutionModelGenericModelConfigObject; vt != nil {
+		return (*string)(&vt.ModelName)
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SessionExecuteParamsAgentConfigExecutionModelUnion) GetProvider() *string {
+	if vt := u.OfSessionExecutesAgentConfigExecutionModelVertexModelConfigObject; vt != nil {
+		return (*string)(&vt.Provider)
+	} else if vt := u.OfSessionExecutesAgentConfigExecutionModelGenericModelConfigObject; vt != nil {
+		return (*string)(&vt.Provider)
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SessionExecuteParamsAgentConfigExecutionModelUnion) GetAPIKey() *string {
+	if vt := u.OfSessionExecutesAgentConfigExecutionModelVertexModelConfigObject; vt != nil && vt.APIKey.Valid() {
+		return &vt.APIKey.Value
+	} else if vt := u.OfSessionExecutesAgentConfigExecutionModelGenericModelConfigObject; vt != nil && vt.APIKey.Valid() {
+		return &vt.APIKey.Value
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SessionExecuteParamsAgentConfigExecutionModelUnion) GetBaseURL() *string {
+	if vt := u.OfSessionExecutesAgentConfigExecutionModelVertexModelConfigObject; vt != nil && vt.BaseURL.Valid() {
+		return &vt.BaseURL.Value
+	} else if vt := u.OfSessionExecutesAgentConfigExecutionModelGenericModelConfigObject; vt != nil && vt.BaseURL.Valid() {
+		return &vt.BaseURL.Value
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's Headers property, if present.
+func (u SessionExecuteParamsAgentConfigExecutionModelUnion) GetHeaders() map[string]string {
+	if vt := u.OfSessionExecutesAgentConfigExecutionModelVertexModelConfigObject; vt != nil {
+		return vt.Headers
+	} else if vt := u.OfSessionExecutesAgentConfigExecutionModelGenericModelConfigObject; vt != nil {
+		return vt.Headers
+	}
+	return nil
+}
+
+// The properties Auth, ModelName, Provider, ProviderOptions are required.
+type SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObject struct {
+	// Vertex provider authentication configuration
+	Auth SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectAuth `json:"auth,omitzero" api:"required"`
+	// Model name string with provider prefix (e.g., 'openai/gpt-5-nano')
+	ModelName string `json:"modelName" api:"required"`
+	// Vertex provider-specific model configuration
+	ProviderOptions SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectProviderOptions `json:"providerOptions,omitzero" api:"required"`
+	// API key for the model provider
+	APIKey param.Opt[string] `json:"apiKey,omitzero"`
+	// Base URL for the model provider
+	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
+	// Custom headers sent with every request to the model provider
+	Headers map[string]string `json:"headers,omitzero"`
+	// Vertex AI model provider
+	//
+	// This field can be elided, and will marshal its zero value as "vertex".
+	Provider constant.Vertex `json:"provider" default:"vertex"`
+	paramObj
+}
+
+func (r SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObject) MarshalJSON() (data []byte, err error) {
+	type shadow SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObject
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObject) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Vertex provider authentication configuration
+//
+// The properties Credentials, Type are required.
+type SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectAuth struct {
+	// Google Cloud service account credentials
+	Credentials SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectAuthCredentials `json:"credentials,omitzero" api:"required"`
+	// Google Cloud project ID used by google-auth-library
+	ProjectID param.Opt[string] `json:"projectId,omitzero"`
+	// Google Cloud universe domain
+	UniverseDomain param.Opt[string] `json:"universeDomain,omitzero"`
+	// Google auth scopes for the desired API request
+	Scopes SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectAuthScopesUnion `json:"scopes,omitzero"`
+	// Use inline Google Cloud service account credentials for provider authentication
+	//
+	// This field can be elided, and will marshal its zero value as
+	// "googleServiceAccount".
+	Type constant.GoogleServiceAccount `json:"type" default:"googleServiceAccount"`
+	paramObj
+}
+
+func (r SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectAuth) MarshalJSON() (data []byte, err error) {
+	type shadow SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectAuth
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectAuth) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Google Cloud service account credentials
+//
+// The properties ClientEmail, PrivateKey are required.
+type SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectAuthCredentials struct {
+	ClientEmail             string            `json:"client_email" api:"required"`
+	PrivateKey              string            `json:"private_key" api:"required"`
+	AuthProviderX509CertURL param.Opt[string] `json:"auth_provider_x509_cert_url,omitzero" format:"uri"`
+	AuthUri                 param.Opt[string] `json:"auth_uri,omitzero" format:"uri"`
+	ClientID                param.Opt[string] `json:"client_id,omitzero"`
+	ClientX509CertURL       param.Opt[string] `json:"client_x509_cert_url,omitzero" format:"uri"`
+	PrivateKeyID            param.Opt[string] `json:"private_key_id,omitzero"`
+	ProjectID               param.Opt[string] `json:"project_id,omitzero"`
+	TokenUri                param.Opt[string] `json:"token_uri,omitzero" format:"uri"`
+	UniverseDomain          param.Opt[string] `json:"universe_domain,omitzero"`
+	// Any of "service_account".
+	Type string `json:"type,omitzero"`
+	paramObj
+}
+
+func (r SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectAuthCredentials) MarshalJSON() (data []byte, err error) {
+	type shadow SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectAuthCredentials
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectAuthCredentials) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func init() {
+	apijson.RegisterFieldValidator[SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectAuthCredentials](
+		"type", "service_account",
+	)
+}
+
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
+type SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectAuthScopesUnion struct {
+	OfString      param.Opt[string] `json:",omitzero,inline"`
+	OfStringArray []string          `json:",omitzero,inline"`
+	paramUnion
+}
+
+func (u SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectAuthScopesUnion) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion(u, u.OfString, u.OfStringArray)
+}
+func (u *SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectAuthScopesUnion) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectAuthScopesUnion) asAny() any {
+	if !param.IsOmitted(u.OfString) {
+		return &u.OfString.Value
+	} else if !param.IsOmitted(u.OfStringArray) {
+		return &u.OfStringArray
+	}
+	return nil
+}
+
+// Vertex provider-specific model configuration
+//
+// The property Vertex is required.
+type SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectProviderOptions struct {
+	// Vertex AI provider-specific settings
+	Vertex SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectProviderOptionsVertex `json:"vertex,omitzero" api:"required"`
+	paramObj
+}
+
+func (r SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectProviderOptions) MarshalJSON() (data []byte, err error) {
+	type shadow SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectProviderOptions
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectProviderOptions) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Vertex AI provider-specific settings
+//
+// The properties Location, Project are required.
+type SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectProviderOptionsVertex struct {
+	// Google Cloud location for Vertex AI models
+	Location string `json:"location" api:"required"`
+	// Google Cloud project ID for Vertex AI models
+	Project string `json:"project" api:"required"`
+	// Base URL for the Vertex AI provider
+	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
+	// Custom headers sent with every request to the Vertex AI provider
+	Headers map[string]string `json:"headers,omitzero"`
+	paramObj
+}
+
+func (r SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectProviderOptionsVertex) MarshalJSON() (data []byte, err error) {
+	type shadow SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectProviderOptionsVertex
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectProviderOptionsVertex) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// The property ModelName is required.
+type SessionExecuteParamsAgentConfigExecutionModelGenericModelConfigObject struct {
+	// Model name string with provider prefix (e.g., 'openai/gpt-5-nano')
+	ModelName string `json:"modelName" api:"required"`
+	// API key for the model provider
+	APIKey param.Opt[string] `json:"apiKey,omitzero"`
+	// Base URL for the model provider
+	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
+	// Custom headers sent with every request to the model provider
+	Headers map[string]string `json:"headers,omitzero"`
+	// AI provider for the model (or provide a baseURL endpoint instead)
+	//
+	// Any of "openai", "anthropic", "google", "microsoft", "bedrock".
+	Provider string `json:"provider,omitzero"`
+	paramObj
+}
+
+func (r SessionExecuteParamsAgentConfigExecutionModelGenericModelConfigObject) MarshalJSON() (data []byte, err error) {
+	type shadow SessionExecuteParamsAgentConfigExecutionModelGenericModelConfigObject
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionExecuteParamsAgentConfigExecutionModelGenericModelConfigObject) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func init() {
+	apijson.RegisterFieldValidator[SessionExecuteParamsAgentConfigExecutionModelGenericModelConfigObject](
+		"provider", "openai", "anthropic", "google", "microsoft", "bedrock",
+	)
 }
 
 // Only one field can be non-zero.
 //
 // Use [param.IsOmitted] to confirm if a field is set.
 type SessionExecuteParamsAgentConfigModelUnion struct {
-	OfModelConfig *ModelConfigParam `json:",omitzero,inline"`
-	OfString      param.Opt[string] `json:",omitzero,inline"`
+	OfSessionExecutesAgentConfigModelVertexModelConfigObject  *SessionExecuteParamsAgentConfigModelVertexModelConfigObject  `json:",omitzero,inline"`
+	OfSessionExecutesAgentConfigModelGenericModelConfigObject *SessionExecuteParamsAgentConfigModelGenericModelConfigObject `json:",omitzero,inline"`
+	OfString                                                  param.Opt[string]                                             `json:",omitzero,inline"`
 	paramUnion
 }
 
 func (u SessionExecuteParamsAgentConfigModelUnion) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion(u, u.OfModelConfig, u.OfString)
+	return param.MarshalUnion(u, u.OfSessionExecutesAgentConfigModelVertexModelConfigObject, u.OfSessionExecutesAgentConfigModelGenericModelConfigObject, u.OfString)
 }
 func (u *SessionExecuteParamsAgentConfigModelUnion) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
 }
 
 func (u *SessionExecuteParamsAgentConfigModelUnion) asAny() any {
-	if !param.IsOmitted(u.OfModelConfig) {
-		return u.OfModelConfig
+	if !param.IsOmitted(u.OfSessionExecutesAgentConfigModelVertexModelConfigObject) {
+		return u.OfSessionExecutesAgentConfigModelVertexModelConfigObject
+	} else if !param.IsOmitted(u.OfSessionExecutesAgentConfigModelGenericModelConfigObject) {
+		return u.OfSessionExecutesAgentConfigModelGenericModelConfigObject
 	} else if !param.IsOmitted(u.OfString) {
 		return &u.OfString.Value
 	}
 	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SessionExecuteParamsAgentConfigModelUnion) GetAuth() *SessionExecuteParamsAgentConfigModelVertexModelConfigObjectAuth {
+	if vt := u.OfSessionExecutesAgentConfigModelVertexModelConfigObject; vt != nil {
+		return &vt.Auth
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SessionExecuteParamsAgentConfigModelUnion) GetProviderOptions() *SessionExecuteParamsAgentConfigModelVertexModelConfigObjectProviderOptions {
+	if vt := u.OfSessionExecutesAgentConfigModelVertexModelConfigObject; vt != nil {
+		return &vt.ProviderOptions
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SessionExecuteParamsAgentConfigModelUnion) GetModelName() *string {
+	if vt := u.OfSessionExecutesAgentConfigModelVertexModelConfigObject; vt != nil {
+		return (*string)(&vt.ModelName)
+	} else if vt := u.OfSessionExecutesAgentConfigModelGenericModelConfigObject; vt != nil {
+		return (*string)(&vt.ModelName)
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SessionExecuteParamsAgentConfigModelUnion) GetProvider() *string {
+	if vt := u.OfSessionExecutesAgentConfigModelVertexModelConfigObject; vt != nil {
+		return (*string)(&vt.Provider)
+	} else if vt := u.OfSessionExecutesAgentConfigModelGenericModelConfigObject; vt != nil {
+		return (*string)(&vt.Provider)
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SessionExecuteParamsAgentConfigModelUnion) GetAPIKey() *string {
+	if vt := u.OfSessionExecutesAgentConfigModelVertexModelConfigObject; vt != nil && vt.APIKey.Valid() {
+		return &vt.APIKey.Value
+	} else if vt := u.OfSessionExecutesAgentConfigModelGenericModelConfigObject; vt != nil && vt.APIKey.Valid() {
+		return &vt.APIKey.Value
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SessionExecuteParamsAgentConfigModelUnion) GetBaseURL() *string {
+	if vt := u.OfSessionExecutesAgentConfigModelVertexModelConfigObject; vt != nil && vt.BaseURL.Valid() {
+		return &vt.BaseURL.Value
+	} else if vt := u.OfSessionExecutesAgentConfigModelGenericModelConfigObject; vt != nil && vt.BaseURL.Valid() {
+		return &vt.BaseURL.Value
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's Headers property, if present.
+func (u SessionExecuteParamsAgentConfigModelUnion) GetHeaders() map[string]string {
+	if vt := u.OfSessionExecutesAgentConfigModelVertexModelConfigObject; vt != nil {
+		return vt.Headers
+	} else if vt := u.OfSessionExecutesAgentConfigModelGenericModelConfigObject; vt != nil {
+		return vt.Headers
+	}
+	return nil
+}
+
+// The properties Auth, ModelName, Provider, ProviderOptions are required.
+type SessionExecuteParamsAgentConfigModelVertexModelConfigObject struct {
+	// Vertex provider authentication configuration
+	Auth SessionExecuteParamsAgentConfigModelVertexModelConfigObjectAuth `json:"auth,omitzero" api:"required"`
+	// Model name string with provider prefix (e.g., 'openai/gpt-5-nano')
+	ModelName string `json:"modelName" api:"required"`
+	// Vertex provider-specific model configuration
+	ProviderOptions SessionExecuteParamsAgentConfigModelVertexModelConfigObjectProviderOptions `json:"providerOptions,omitzero" api:"required"`
+	// API key for the model provider
+	APIKey param.Opt[string] `json:"apiKey,omitzero"`
+	// Base URL for the model provider
+	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
+	// Custom headers sent with every request to the model provider
+	Headers map[string]string `json:"headers,omitzero"`
+	// Vertex AI model provider
+	//
+	// This field can be elided, and will marshal its zero value as "vertex".
+	Provider constant.Vertex `json:"provider" default:"vertex"`
+	paramObj
+}
+
+func (r SessionExecuteParamsAgentConfigModelVertexModelConfigObject) MarshalJSON() (data []byte, err error) {
+	type shadow SessionExecuteParamsAgentConfigModelVertexModelConfigObject
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionExecuteParamsAgentConfigModelVertexModelConfigObject) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Vertex provider authentication configuration
+//
+// The properties Credentials, Type are required.
+type SessionExecuteParamsAgentConfigModelVertexModelConfigObjectAuth struct {
+	// Google Cloud service account credentials
+	Credentials SessionExecuteParamsAgentConfigModelVertexModelConfigObjectAuthCredentials `json:"credentials,omitzero" api:"required"`
+	// Google Cloud project ID used by google-auth-library
+	ProjectID param.Opt[string] `json:"projectId,omitzero"`
+	// Google Cloud universe domain
+	UniverseDomain param.Opt[string] `json:"universeDomain,omitzero"`
+	// Google auth scopes for the desired API request
+	Scopes SessionExecuteParamsAgentConfigModelVertexModelConfigObjectAuthScopesUnion `json:"scopes,omitzero"`
+	// Use inline Google Cloud service account credentials for provider authentication
+	//
+	// This field can be elided, and will marshal its zero value as
+	// "googleServiceAccount".
+	Type constant.GoogleServiceAccount `json:"type" default:"googleServiceAccount"`
+	paramObj
+}
+
+func (r SessionExecuteParamsAgentConfigModelVertexModelConfigObjectAuth) MarshalJSON() (data []byte, err error) {
+	type shadow SessionExecuteParamsAgentConfigModelVertexModelConfigObjectAuth
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionExecuteParamsAgentConfigModelVertexModelConfigObjectAuth) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Google Cloud service account credentials
+//
+// The properties ClientEmail, PrivateKey are required.
+type SessionExecuteParamsAgentConfigModelVertexModelConfigObjectAuthCredentials struct {
+	ClientEmail             string            `json:"client_email" api:"required"`
+	PrivateKey              string            `json:"private_key" api:"required"`
+	AuthProviderX509CertURL param.Opt[string] `json:"auth_provider_x509_cert_url,omitzero" format:"uri"`
+	AuthUri                 param.Opt[string] `json:"auth_uri,omitzero" format:"uri"`
+	ClientID                param.Opt[string] `json:"client_id,omitzero"`
+	ClientX509CertURL       param.Opt[string] `json:"client_x509_cert_url,omitzero" format:"uri"`
+	PrivateKeyID            param.Opt[string] `json:"private_key_id,omitzero"`
+	ProjectID               param.Opt[string] `json:"project_id,omitzero"`
+	TokenUri                param.Opt[string] `json:"token_uri,omitzero" format:"uri"`
+	UniverseDomain          param.Opt[string] `json:"universe_domain,omitzero"`
+	// Any of "service_account".
+	Type string `json:"type,omitzero"`
+	paramObj
+}
+
+func (r SessionExecuteParamsAgentConfigModelVertexModelConfigObjectAuthCredentials) MarshalJSON() (data []byte, err error) {
+	type shadow SessionExecuteParamsAgentConfigModelVertexModelConfigObjectAuthCredentials
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionExecuteParamsAgentConfigModelVertexModelConfigObjectAuthCredentials) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func init() {
+	apijson.RegisterFieldValidator[SessionExecuteParamsAgentConfigModelVertexModelConfigObjectAuthCredentials](
+		"type", "service_account",
+	)
+}
+
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
+type SessionExecuteParamsAgentConfigModelVertexModelConfigObjectAuthScopesUnion struct {
+	OfString      param.Opt[string] `json:",omitzero,inline"`
+	OfStringArray []string          `json:",omitzero,inline"`
+	paramUnion
+}
+
+func (u SessionExecuteParamsAgentConfigModelVertexModelConfigObjectAuthScopesUnion) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion(u, u.OfString, u.OfStringArray)
+}
+func (u *SessionExecuteParamsAgentConfigModelVertexModelConfigObjectAuthScopesUnion) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *SessionExecuteParamsAgentConfigModelVertexModelConfigObjectAuthScopesUnion) asAny() any {
+	if !param.IsOmitted(u.OfString) {
+		return &u.OfString.Value
+	} else if !param.IsOmitted(u.OfStringArray) {
+		return &u.OfStringArray
+	}
+	return nil
+}
+
+// Vertex provider-specific model configuration
+//
+// The property Vertex is required.
+type SessionExecuteParamsAgentConfigModelVertexModelConfigObjectProviderOptions struct {
+	// Vertex AI provider-specific settings
+	Vertex SessionExecuteParamsAgentConfigModelVertexModelConfigObjectProviderOptionsVertex `json:"vertex,omitzero" api:"required"`
+	paramObj
+}
+
+func (r SessionExecuteParamsAgentConfigModelVertexModelConfigObjectProviderOptions) MarshalJSON() (data []byte, err error) {
+	type shadow SessionExecuteParamsAgentConfigModelVertexModelConfigObjectProviderOptions
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionExecuteParamsAgentConfigModelVertexModelConfigObjectProviderOptions) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Vertex AI provider-specific settings
+//
+// The properties Location, Project are required.
+type SessionExecuteParamsAgentConfigModelVertexModelConfigObjectProviderOptionsVertex struct {
+	// Google Cloud location for Vertex AI models
+	Location string `json:"location" api:"required"`
+	// Google Cloud project ID for Vertex AI models
+	Project string `json:"project" api:"required"`
+	// Base URL for the Vertex AI provider
+	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
+	// Custom headers sent with every request to the Vertex AI provider
+	Headers map[string]string `json:"headers,omitzero"`
+	paramObj
+}
+
+func (r SessionExecuteParamsAgentConfigModelVertexModelConfigObjectProviderOptionsVertex) MarshalJSON() (data []byte, err error) {
+	type shadow SessionExecuteParamsAgentConfigModelVertexModelConfigObjectProviderOptionsVertex
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionExecuteParamsAgentConfigModelVertexModelConfigObjectProviderOptionsVertex) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// The property ModelName is required.
+type SessionExecuteParamsAgentConfigModelGenericModelConfigObject struct {
+	// Model name string with provider prefix (e.g., 'openai/gpt-5-nano')
+	ModelName string `json:"modelName" api:"required"`
+	// API key for the model provider
+	APIKey param.Opt[string] `json:"apiKey,omitzero"`
+	// Base URL for the model provider
+	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
+	// Custom headers sent with every request to the model provider
+	Headers map[string]string `json:"headers,omitzero"`
+	// AI provider for the model (or provide a baseURL endpoint instead)
+	//
+	// Any of "openai", "anthropic", "google", "microsoft", "bedrock".
+	Provider string `json:"provider,omitzero"`
+	paramObj
+}
+
+func (r SessionExecuteParamsAgentConfigModelGenericModelConfigObject) MarshalJSON() (data []byte, err error) {
+	type shadow SessionExecuteParamsAgentConfigModelGenericModelConfigObject
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionExecuteParamsAgentConfigModelGenericModelConfigObject) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func init() {
+	apijson.RegisterFieldValidator[SessionExecuteParamsAgentConfigModelGenericModelConfigObject](
+		"provider", "openai", "anthropic", "google", "microsoft", "bedrock",
+	)
 }
 
 // The property Instruction is required.
@@ -1511,25 +2154,280 @@ func (r *SessionExtractParamsOptions) UnmarshalJSON(data []byte) error {
 //
 // Use [param.IsOmitted] to confirm if a field is set.
 type SessionExtractParamsOptionsModelUnion struct {
-	OfModelConfig *ModelConfigParam `json:",omitzero,inline"`
-	OfString      param.Opt[string] `json:",omitzero,inline"`
+	OfSessionExtractsOptionsModelVertexModelConfigObject  *SessionExtractParamsOptionsModelVertexModelConfigObject  `json:",omitzero,inline"`
+	OfSessionExtractsOptionsModelGenericModelConfigObject *SessionExtractParamsOptionsModelGenericModelConfigObject `json:",omitzero,inline"`
+	OfString                                              param.Opt[string]                                         `json:",omitzero,inline"`
 	paramUnion
 }
 
 func (u SessionExtractParamsOptionsModelUnion) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion(u, u.OfModelConfig, u.OfString)
+	return param.MarshalUnion(u, u.OfSessionExtractsOptionsModelVertexModelConfigObject, u.OfSessionExtractsOptionsModelGenericModelConfigObject, u.OfString)
 }
 func (u *SessionExtractParamsOptionsModelUnion) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
 }
 
 func (u *SessionExtractParamsOptionsModelUnion) asAny() any {
-	if !param.IsOmitted(u.OfModelConfig) {
-		return u.OfModelConfig
+	if !param.IsOmitted(u.OfSessionExtractsOptionsModelVertexModelConfigObject) {
+		return u.OfSessionExtractsOptionsModelVertexModelConfigObject
+	} else if !param.IsOmitted(u.OfSessionExtractsOptionsModelGenericModelConfigObject) {
+		return u.OfSessionExtractsOptionsModelGenericModelConfigObject
 	} else if !param.IsOmitted(u.OfString) {
 		return &u.OfString.Value
 	}
 	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SessionExtractParamsOptionsModelUnion) GetAuth() *SessionExtractParamsOptionsModelVertexModelConfigObjectAuth {
+	if vt := u.OfSessionExtractsOptionsModelVertexModelConfigObject; vt != nil {
+		return &vt.Auth
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SessionExtractParamsOptionsModelUnion) GetProviderOptions() *SessionExtractParamsOptionsModelVertexModelConfigObjectProviderOptions {
+	if vt := u.OfSessionExtractsOptionsModelVertexModelConfigObject; vt != nil {
+		return &vt.ProviderOptions
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SessionExtractParamsOptionsModelUnion) GetModelName() *string {
+	if vt := u.OfSessionExtractsOptionsModelVertexModelConfigObject; vt != nil {
+		return (*string)(&vt.ModelName)
+	} else if vt := u.OfSessionExtractsOptionsModelGenericModelConfigObject; vt != nil {
+		return (*string)(&vt.ModelName)
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SessionExtractParamsOptionsModelUnion) GetProvider() *string {
+	if vt := u.OfSessionExtractsOptionsModelVertexModelConfigObject; vt != nil {
+		return (*string)(&vt.Provider)
+	} else if vt := u.OfSessionExtractsOptionsModelGenericModelConfigObject; vt != nil {
+		return (*string)(&vt.Provider)
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SessionExtractParamsOptionsModelUnion) GetAPIKey() *string {
+	if vt := u.OfSessionExtractsOptionsModelVertexModelConfigObject; vt != nil && vt.APIKey.Valid() {
+		return &vt.APIKey.Value
+	} else if vt := u.OfSessionExtractsOptionsModelGenericModelConfigObject; vt != nil && vt.APIKey.Valid() {
+		return &vt.APIKey.Value
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SessionExtractParamsOptionsModelUnion) GetBaseURL() *string {
+	if vt := u.OfSessionExtractsOptionsModelVertexModelConfigObject; vt != nil && vt.BaseURL.Valid() {
+		return &vt.BaseURL.Value
+	} else if vt := u.OfSessionExtractsOptionsModelGenericModelConfigObject; vt != nil && vt.BaseURL.Valid() {
+		return &vt.BaseURL.Value
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's Headers property, if present.
+func (u SessionExtractParamsOptionsModelUnion) GetHeaders() map[string]string {
+	if vt := u.OfSessionExtractsOptionsModelVertexModelConfigObject; vt != nil {
+		return vt.Headers
+	} else if vt := u.OfSessionExtractsOptionsModelGenericModelConfigObject; vt != nil {
+		return vt.Headers
+	}
+	return nil
+}
+
+// The properties Auth, ModelName, Provider, ProviderOptions are required.
+type SessionExtractParamsOptionsModelVertexModelConfigObject struct {
+	// Vertex provider authentication configuration
+	Auth SessionExtractParamsOptionsModelVertexModelConfigObjectAuth `json:"auth,omitzero" api:"required"`
+	// Model name string with provider prefix (e.g., 'openai/gpt-5-nano')
+	ModelName string `json:"modelName" api:"required"`
+	// Vertex provider-specific model configuration
+	ProviderOptions SessionExtractParamsOptionsModelVertexModelConfigObjectProviderOptions `json:"providerOptions,omitzero" api:"required"`
+	// API key for the model provider
+	APIKey param.Opt[string] `json:"apiKey,omitzero"`
+	// Base URL for the model provider
+	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
+	// Custom headers sent with every request to the model provider
+	Headers map[string]string `json:"headers,omitzero"`
+	// Vertex AI model provider
+	//
+	// This field can be elided, and will marshal its zero value as "vertex".
+	Provider constant.Vertex `json:"provider" default:"vertex"`
+	paramObj
+}
+
+func (r SessionExtractParamsOptionsModelVertexModelConfigObject) MarshalJSON() (data []byte, err error) {
+	type shadow SessionExtractParamsOptionsModelVertexModelConfigObject
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionExtractParamsOptionsModelVertexModelConfigObject) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Vertex provider authentication configuration
+//
+// The properties Credentials, Type are required.
+type SessionExtractParamsOptionsModelVertexModelConfigObjectAuth struct {
+	// Google Cloud service account credentials
+	Credentials SessionExtractParamsOptionsModelVertexModelConfigObjectAuthCredentials `json:"credentials,omitzero" api:"required"`
+	// Google Cloud project ID used by google-auth-library
+	ProjectID param.Opt[string] `json:"projectId,omitzero"`
+	// Google Cloud universe domain
+	UniverseDomain param.Opt[string] `json:"universeDomain,omitzero"`
+	// Google auth scopes for the desired API request
+	Scopes SessionExtractParamsOptionsModelVertexModelConfigObjectAuthScopesUnion `json:"scopes,omitzero"`
+	// Use inline Google Cloud service account credentials for provider authentication
+	//
+	// This field can be elided, and will marshal its zero value as
+	// "googleServiceAccount".
+	Type constant.GoogleServiceAccount `json:"type" default:"googleServiceAccount"`
+	paramObj
+}
+
+func (r SessionExtractParamsOptionsModelVertexModelConfigObjectAuth) MarshalJSON() (data []byte, err error) {
+	type shadow SessionExtractParamsOptionsModelVertexModelConfigObjectAuth
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionExtractParamsOptionsModelVertexModelConfigObjectAuth) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Google Cloud service account credentials
+//
+// The properties ClientEmail, PrivateKey are required.
+type SessionExtractParamsOptionsModelVertexModelConfigObjectAuthCredentials struct {
+	ClientEmail             string            `json:"client_email" api:"required"`
+	PrivateKey              string            `json:"private_key" api:"required"`
+	AuthProviderX509CertURL param.Opt[string] `json:"auth_provider_x509_cert_url,omitzero" format:"uri"`
+	AuthUri                 param.Opt[string] `json:"auth_uri,omitzero" format:"uri"`
+	ClientID                param.Opt[string] `json:"client_id,omitzero"`
+	ClientX509CertURL       param.Opt[string] `json:"client_x509_cert_url,omitzero" format:"uri"`
+	PrivateKeyID            param.Opt[string] `json:"private_key_id,omitzero"`
+	ProjectID               param.Opt[string] `json:"project_id,omitzero"`
+	TokenUri                param.Opt[string] `json:"token_uri,omitzero" format:"uri"`
+	UniverseDomain          param.Opt[string] `json:"universe_domain,omitzero"`
+	// Any of "service_account".
+	Type string `json:"type,omitzero"`
+	paramObj
+}
+
+func (r SessionExtractParamsOptionsModelVertexModelConfigObjectAuthCredentials) MarshalJSON() (data []byte, err error) {
+	type shadow SessionExtractParamsOptionsModelVertexModelConfigObjectAuthCredentials
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionExtractParamsOptionsModelVertexModelConfigObjectAuthCredentials) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func init() {
+	apijson.RegisterFieldValidator[SessionExtractParamsOptionsModelVertexModelConfigObjectAuthCredentials](
+		"type", "service_account",
+	)
+}
+
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
+type SessionExtractParamsOptionsModelVertexModelConfigObjectAuthScopesUnion struct {
+	OfString      param.Opt[string] `json:",omitzero,inline"`
+	OfStringArray []string          `json:",omitzero,inline"`
+	paramUnion
+}
+
+func (u SessionExtractParamsOptionsModelVertexModelConfigObjectAuthScopesUnion) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion(u, u.OfString, u.OfStringArray)
+}
+func (u *SessionExtractParamsOptionsModelVertexModelConfigObjectAuthScopesUnion) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *SessionExtractParamsOptionsModelVertexModelConfigObjectAuthScopesUnion) asAny() any {
+	if !param.IsOmitted(u.OfString) {
+		return &u.OfString.Value
+	} else if !param.IsOmitted(u.OfStringArray) {
+		return &u.OfStringArray
+	}
+	return nil
+}
+
+// Vertex provider-specific model configuration
+//
+// The property Vertex is required.
+type SessionExtractParamsOptionsModelVertexModelConfigObjectProviderOptions struct {
+	// Vertex AI provider-specific settings
+	Vertex SessionExtractParamsOptionsModelVertexModelConfigObjectProviderOptionsVertex `json:"vertex,omitzero" api:"required"`
+	paramObj
+}
+
+func (r SessionExtractParamsOptionsModelVertexModelConfigObjectProviderOptions) MarshalJSON() (data []byte, err error) {
+	type shadow SessionExtractParamsOptionsModelVertexModelConfigObjectProviderOptions
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionExtractParamsOptionsModelVertexModelConfigObjectProviderOptions) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Vertex AI provider-specific settings
+//
+// The properties Location, Project are required.
+type SessionExtractParamsOptionsModelVertexModelConfigObjectProviderOptionsVertex struct {
+	// Google Cloud location for Vertex AI models
+	Location string `json:"location" api:"required"`
+	// Google Cloud project ID for Vertex AI models
+	Project string `json:"project" api:"required"`
+	// Base URL for the Vertex AI provider
+	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
+	// Custom headers sent with every request to the Vertex AI provider
+	Headers map[string]string `json:"headers,omitzero"`
+	paramObj
+}
+
+func (r SessionExtractParamsOptionsModelVertexModelConfigObjectProviderOptionsVertex) MarshalJSON() (data []byte, err error) {
+	type shadow SessionExtractParamsOptionsModelVertexModelConfigObjectProviderOptionsVertex
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionExtractParamsOptionsModelVertexModelConfigObjectProviderOptionsVertex) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// The property ModelName is required.
+type SessionExtractParamsOptionsModelGenericModelConfigObject struct {
+	// Model name string with provider prefix (e.g., 'openai/gpt-5-nano')
+	ModelName string `json:"modelName" api:"required"`
+	// API key for the model provider
+	APIKey param.Opt[string] `json:"apiKey,omitzero"`
+	// Base URL for the model provider
+	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
+	// Custom headers sent with every request to the model provider
+	Headers map[string]string `json:"headers,omitzero"`
+	// AI provider for the model (or provide a baseURL endpoint instead)
+	//
+	// Any of "openai", "anthropic", "google", "microsoft", "bedrock".
+	Provider string `json:"provider,omitzero"`
+	paramObj
+}
+
+func (r SessionExtractParamsOptionsModelGenericModelConfigObject) MarshalJSON() (data []byte, err error) {
+	type shadow SessionExtractParamsOptionsModelGenericModelConfigObject
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionExtractParamsOptionsModelGenericModelConfigObject) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func init() {
+	apijson.RegisterFieldValidator[SessionExtractParamsOptionsModelGenericModelConfigObject](
+		"provider", "openai", "anthropic", "google", "microsoft", "bedrock",
+	)
 }
 
 // Whether to stream the response via SSE
@@ -1646,25 +2544,280 @@ func (r *SessionObserveParamsOptions) UnmarshalJSON(data []byte) error {
 //
 // Use [param.IsOmitted] to confirm if a field is set.
 type SessionObserveParamsOptionsModelUnion struct {
-	OfModelConfig *ModelConfigParam `json:",omitzero,inline"`
-	OfString      param.Opt[string] `json:",omitzero,inline"`
+	OfSessionObservesOptionsModelVertexModelConfigObject  *SessionObserveParamsOptionsModelVertexModelConfigObject  `json:",omitzero,inline"`
+	OfSessionObservesOptionsModelGenericModelConfigObject *SessionObserveParamsOptionsModelGenericModelConfigObject `json:",omitzero,inline"`
+	OfString                                              param.Opt[string]                                         `json:",omitzero,inline"`
 	paramUnion
 }
 
 func (u SessionObserveParamsOptionsModelUnion) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion(u, u.OfModelConfig, u.OfString)
+	return param.MarshalUnion(u, u.OfSessionObservesOptionsModelVertexModelConfigObject, u.OfSessionObservesOptionsModelGenericModelConfigObject, u.OfString)
 }
 func (u *SessionObserveParamsOptionsModelUnion) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
 }
 
 func (u *SessionObserveParamsOptionsModelUnion) asAny() any {
-	if !param.IsOmitted(u.OfModelConfig) {
-		return u.OfModelConfig
+	if !param.IsOmitted(u.OfSessionObservesOptionsModelVertexModelConfigObject) {
+		return u.OfSessionObservesOptionsModelVertexModelConfigObject
+	} else if !param.IsOmitted(u.OfSessionObservesOptionsModelGenericModelConfigObject) {
+		return u.OfSessionObservesOptionsModelGenericModelConfigObject
 	} else if !param.IsOmitted(u.OfString) {
 		return &u.OfString.Value
 	}
 	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SessionObserveParamsOptionsModelUnion) GetAuth() *SessionObserveParamsOptionsModelVertexModelConfigObjectAuth {
+	if vt := u.OfSessionObservesOptionsModelVertexModelConfigObject; vt != nil {
+		return &vt.Auth
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SessionObserveParamsOptionsModelUnion) GetProviderOptions() *SessionObserveParamsOptionsModelVertexModelConfigObjectProviderOptions {
+	if vt := u.OfSessionObservesOptionsModelVertexModelConfigObject; vt != nil {
+		return &vt.ProviderOptions
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SessionObserveParamsOptionsModelUnion) GetModelName() *string {
+	if vt := u.OfSessionObservesOptionsModelVertexModelConfigObject; vt != nil {
+		return (*string)(&vt.ModelName)
+	} else if vt := u.OfSessionObservesOptionsModelGenericModelConfigObject; vt != nil {
+		return (*string)(&vt.ModelName)
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SessionObserveParamsOptionsModelUnion) GetProvider() *string {
+	if vt := u.OfSessionObservesOptionsModelVertexModelConfigObject; vt != nil {
+		return (*string)(&vt.Provider)
+	} else if vt := u.OfSessionObservesOptionsModelGenericModelConfigObject; vt != nil {
+		return (*string)(&vt.Provider)
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SessionObserveParamsOptionsModelUnion) GetAPIKey() *string {
+	if vt := u.OfSessionObservesOptionsModelVertexModelConfigObject; vt != nil && vt.APIKey.Valid() {
+		return &vt.APIKey.Value
+	} else if vt := u.OfSessionObservesOptionsModelGenericModelConfigObject; vt != nil && vt.APIKey.Valid() {
+		return &vt.APIKey.Value
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SessionObserveParamsOptionsModelUnion) GetBaseURL() *string {
+	if vt := u.OfSessionObservesOptionsModelVertexModelConfigObject; vt != nil && vt.BaseURL.Valid() {
+		return &vt.BaseURL.Value
+	} else if vt := u.OfSessionObservesOptionsModelGenericModelConfigObject; vt != nil && vt.BaseURL.Valid() {
+		return &vt.BaseURL.Value
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's Headers property, if present.
+func (u SessionObserveParamsOptionsModelUnion) GetHeaders() map[string]string {
+	if vt := u.OfSessionObservesOptionsModelVertexModelConfigObject; vt != nil {
+		return vt.Headers
+	} else if vt := u.OfSessionObservesOptionsModelGenericModelConfigObject; vt != nil {
+		return vt.Headers
+	}
+	return nil
+}
+
+// The properties Auth, ModelName, Provider, ProviderOptions are required.
+type SessionObserveParamsOptionsModelVertexModelConfigObject struct {
+	// Vertex provider authentication configuration
+	Auth SessionObserveParamsOptionsModelVertexModelConfigObjectAuth `json:"auth,omitzero" api:"required"`
+	// Model name string with provider prefix (e.g., 'openai/gpt-5-nano')
+	ModelName string `json:"modelName" api:"required"`
+	// Vertex provider-specific model configuration
+	ProviderOptions SessionObserveParamsOptionsModelVertexModelConfigObjectProviderOptions `json:"providerOptions,omitzero" api:"required"`
+	// API key for the model provider
+	APIKey param.Opt[string] `json:"apiKey,omitzero"`
+	// Base URL for the model provider
+	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
+	// Custom headers sent with every request to the model provider
+	Headers map[string]string `json:"headers,omitzero"`
+	// Vertex AI model provider
+	//
+	// This field can be elided, and will marshal its zero value as "vertex".
+	Provider constant.Vertex `json:"provider" default:"vertex"`
+	paramObj
+}
+
+func (r SessionObserveParamsOptionsModelVertexModelConfigObject) MarshalJSON() (data []byte, err error) {
+	type shadow SessionObserveParamsOptionsModelVertexModelConfigObject
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionObserveParamsOptionsModelVertexModelConfigObject) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Vertex provider authentication configuration
+//
+// The properties Credentials, Type are required.
+type SessionObserveParamsOptionsModelVertexModelConfigObjectAuth struct {
+	// Google Cloud service account credentials
+	Credentials SessionObserveParamsOptionsModelVertexModelConfigObjectAuthCredentials `json:"credentials,omitzero" api:"required"`
+	// Google Cloud project ID used by google-auth-library
+	ProjectID param.Opt[string] `json:"projectId,omitzero"`
+	// Google Cloud universe domain
+	UniverseDomain param.Opt[string] `json:"universeDomain,omitzero"`
+	// Google auth scopes for the desired API request
+	Scopes SessionObserveParamsOptionsModelVertexModelConfigObjectAuthScopesUnion `json:"scopes,omitzero"`
+	// Use inline Google Cloud service account credentials for provider authentication
+	//
+	// This field can be elided, and will marshal its zero value as
+	// "googleServiceAccount".
+	Type constant.GoogleServiceAccount `json:"type" default:"googleServiceAccount"`
+	paramObj
+}
+
+func (r SessionObserveParamsOptionsModelVertexModelConfigObjectAuth) MarshalJSON() (data []byte, err error) {
+	type shadow SessionObserveParamsOptionsModelVertexModelConfigObjectAuth
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionObserveParamsOptionsModelVertexModelConfigObjectAuth) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Google Cloud service account credentials
+//
+// The properties ClientEmail, PrivateKey are required.
+type SessionObserveParamsOptionsModelVertexModelConfigObjectAuthCredentials struct {
+	ClientEmail             string            `json:"client_email" api:"required"`
+	PrivateKey              string            `json:"private_key" api:"required"`
+	AuthProviderX509CertURL param.Opt[string] `json:"auth_provider_x509_cert_url,omitzero" format:"uri"`
+	AuthUri                 param.Opt[string] `json:"auth_uri,omitzero" format:"uri"`
+	ClientID                param.Opt[string] `json:"client_id,omitzero"`
+	ClientX509CertURL       param.Opt[string] `json:"client_x509_cert_url,omitzero" format:"uri"`
+	PrivateKeyID            param.Opt[string] `json:"private_key_id,omitzero"`
+	ProjectID               param.Opt[string] `json:"project_id,omitzero"`
+	TokenUri                param.Opt[string] `json:"token_uri,omitzero" format:"uri"`
+	UniverseDomain          param.Opt[string] `json:"universe_domain,omitzero"`
+	// Any of "service_account".
+	Type string `json:"type,omitzero"`
+	paramObj
+}
+
+func (r SessionObserveParamsOptionsModelVertexModelConfigObjectAuthCredentials) MarshalJSON() (data []byte, err error) {
+	type shadow SessionObserveParamsOptionsModelVertexModelConfigObjectAuthCredentials
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionObserveParamsOptionsModelVertexModelConfigObjectAuthCredentials) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func init() {
+	apijson.RegisterFieldValidator[SessionObserveParamsOptionsModelVertexModelConfigObjectAuthCredentials](
+		"type", "service_account",
+	)
+}
+
+// Only one field can be non-zero.
+//
+// Use [param.IsOmitted] to confirm if a field is set.
+type SessionObserveParamsOptionsModelVertexModelConfigObjectAuthScopesUnion struct {
+	OfString      param.Opt[string] `json:",omitzero,inline"`
+	OfStringArray []string          `json:",omitzero,inline"`
+	paramUnion
+}
+
+func (u SessionObserveParamsOptionsModelVertexModelConfigObjectAuthScopesUnion) MarshalJSON() ([]byte, error) {
+	return param.MarshalUnion(u, u.OfString, u.OfStringArray)
+}
+func (u *SessionObserveParamsOptionsModelVertexModelConfigObjectAuthScopesUnion) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, u)
+}
+
+func (u *SessionObserveParamsOptionsModelVertexModelConfigObjectAuthScopesUnion) asAny() any {
+	if !param.IsOmitted(u.OfString) {
+		return &u.OfString.Value
+	} else if !param.IsOmitted(u.OfStringArray) {
+		return &u.OfStringArray
+	}
+	return nil
+}
+
+// Vertex provider-specific model configuration
+//
+// The property Vertex is required.
+type SessionObserveParamsOptionsModelVertexModelConfigObjectProviderOptions struct {
+	// Vertex AI provider-specific settings
+	Vertex SessionObserveParamsOptionsModelVertexModelConfigObjectProviderOptionsVertex `json:"vertex,omitzero" api:"required"`
+	paramObj
+}
+
+func (r SessionObserveParamsOptionsModelVertexModelConfigObjectProviderOptions) MarshalJSON() (data []byte, err error) {
+	type shadow SessionObserveParamsOptionsModelVertexModelConfigObjectProviderOptions
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionObserveParamsOptionsModelVertexModelConfigObjectProviderOptions) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Vertex AI provider-specific settings
+//
+// The properties Location, Project are required.
+type SessionObserveParamsOptionsModelVertexModelConfigObjectProviderOptionsVertex struct {
+	// Google Cloud location for Vertex AI models
+	Location string `json:"location" api:"required"`
+	// Google Cloud project ID for Vertex AI models
+	Project string `json:"project" api:"required"`
+	// Base URL for the Vertex AI provider
+	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
+	// Custom headers sent with every request to the Vertex AI provider
+	Headers map[string]string `json:"headers,omitzero"`
+	paramObj
+}
+
+func (r SessionObserveParamsOptionsModelVertexModelConfigObjectProviderOptionsVertex) MarshalJSON() (data []byte, err error) {
+	type shadow SessionObserveParamsOptionsModelVertexModelConfigObjectProviderOptionsVertex
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionObserveParamsOptionsModelVertexModelConfigObjectProviderOptionsVertex) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// The property ModelName is required.
+type SessionObserveParamsOptionsModelGenericModelConfigObject struct {
+	// Model name string with provider prefix (e.g., 'openai/gpt-5-nano')
+	ModelName string `json:"modelName" api:"required"`
+	// API key for the model provider
+	APIKey param.Opt[string] `json:"apiKey,omitzero"`
+	// Base URL for the model provider
+	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
+	// Custom headers sent with every request to the model provider
+	Headers map[string]string `json:"headers,omitzero"`
+	// AI provider for the model (or provide a baseURL endpoint instead)
+	//
+	// Any of "openai", "anthropic", "google", "microsoft", "bedrock".
+	Provider string `json:"provider,omitzero"`
+	paramObj
+}
+
+func (r SessionObserveParamsOptionsModelGenericModelConfigObject) MarshalJSON() (data []byte, err error) {
+	type shadow SessionObserveParamsOptionsModelGenericModelConfigObject
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionObserveParamsOptionsModelGenericModelConfigObject) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func init() {
+	apijson.RegisterFieldValidator[SessionObserveParamsOptionsModelGenericModelConfigObject](
+		"provider", "openai", "anthropic", "google", "microsoft", "bedrock",
+	)
 }
 
 // Only one field can be non-zero.

@@ -38,12 +38,9 @@ func TestSessionActWithOptionalParams(t *testing.T) {
 			FrameID: stagehand.String("frameId"),
 			Options: stagehand.SessionActParamsOptions{
 				Model: stagehand.SessionActParamsOptionsModelUnion{
-					OfModelConfig: &stagehand.ModelConfigParam{
-						ModelName: "openai/gpt-5.4-mini",
-						APIKey:    stagehand.String("sk-some-openai-api-key"),
-						BaseURL:   stagehand.String("https://api.openai.com/v1"),
-						GoogleAuthOptions: stagehand.ModelConfigGoogleAuthOptionsParam{
-							Credentials: stagehand.ModelConfigGoogleAuthOptionsCredentialsParam{
+					OfSessionActsOptionsModelVertexModelConfigObject: &stagehand.SessionActParamsOptionsModelVertexModelConfigObject{
+						Auth: stagehand.SessionActParamsOptionsModelVertexModelConfigObjectAuth{
+							Credentials: stagehand.SessionActParamsOptionsModelVertexModelConfigObjectAuthCredentials{
 								ClientEmail:             "client_email",
 								PrivateKey:              "private_key",
 								AuthProviderX509CertURL: stagehand.String("https://example.com"),
@@ -57,17 +54,27 @@ func TestSessionActWithOptionalParams(t *testing.T) {
 								UniverseDomain:          stagehand.String("universe_domain"),
 							},
 							ProjectID: stagehand.String("projectId"),
-							Scopes: stagehand.ModelConfigGoogleAuthOptionsScopesUnionParam{
+							Scopes: stagehand.SessionActParamsOptionsModelVertexModelConfigObjectAuthScopesUnion{
 								OfString: stagehand.String("string"),
 							},
 							UniverseDomain: stagehand.String("universeDomain"),
 						},
+						ModelName: "openai/gpt-5.4-mini",
+						ProviderOptions: stagehand.SessionActParamsOptionsModelVertexModelConfigObjectProviderOptions{
+							Vertex: stagehand.SessionActParamsOptionsModelVertexModelConfigObjectProviderOptionsVertex{
+								Location: "us-central1",
+								Project:  "my-gcp-project",
+								BaseURL:  stagehand.String("https://example.com"),
+								Headers: map[string]string{
+									"foo": "string",
+								},
+							},
+						},
+						APIKey:  stagehand.String("sk-some-openai-api-key"),
+						BaseURL: stagehand.String("https://api.openai.com/v1"),
 						Headers: map[string]string{
 							"foo": "string",
 						},
-						Location: stagehand.String("us-central1"),
-						Project:  stagehand.String("my-gcp-project"),
-						Provider: stagehand.ModelConfigProviderOpenAI,
 					},
 				},
 				Timeout: stagehand.Float(30000),
@@ -150,12 +157,9 @@ func TestSessionExecuteWithOptionalParams(t *testing.T) {
 			AgentConfig: stagehand.SessionExecuteParamsAgentConfig{
 				Cua: stagehand.Bool(true),
 				ExecutionModel: stagehand.SessionExecuteParamsAgentConfigExecutionModelUnion{
-					OfModelConfig: &stagehand.ModelConfigParam{
-						ModelName: "openai/gpt-5.4-mini",
-						APIKey:    stagehand.String("sk-some-openai-api-key"),
-						BaseURL:   stagehand.String("https://api.openai.com/v1"),
-						GoogleAuthOptions: stagehand.ModelConfigGoogleAuthOptionsParam{
-							Credentials: stagehand.ModelConfigGoogleAuthOptionsCredentialsParam{
+					OfSessionExecutesAgentConfigExecutionModelVertexModelConfigObject: &stagehand.SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObject{
+						Auth: stagehand.SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectAuth{
+							Credentials: stagehand.SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectAuthCredentials{
 								ClientEmail:             "client_email",
 								PrivateKey:              "private_key",
 								AuthProviderX509CertURL: stagehand.String("https://example.com"),
@@ -169,27 +173,34 @@ func TestSessionExecuteWithOptionalParams(t *testing.T) {
 								UniverseDomain:          stagehand.String("universe_domain"),
 							},
 							ProjectID: stagehand.String("projectId"),
-							Scopes: stagehand.ModelConfigGoogleAuthOptionsScopesUnionParam{
+							Scopes: stagehand.SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectAuthScopesUnion{
 								OfString: stagehand.String("string"),
 							},
 							UniverseDomain: stagehand.String("universeDomain"),
 						},
+						ModelName: "openai/gpt-5.4-mini",
+						ProviderOptions: stagehand.SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectProviderOptions{
+							Vertex: stagehand.SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectProviderOptionsVertex{
+								Location: "us-central1",
+								Project:  "my-gcp-project",
+								BaseURL:  stagehand.String("https://example.com"),
+								Headers: map[string]string{
+									"foo": "string",
+								},
+							},
+						},
+						APIKey:  stagehand.String("sk-some-openai-api-key"),
+						BaseURL: stagehand.String("https://api.openai.com/v1"),
 						Headers: map[string]string{
 							"foo": "string",
 						},
-						Location: stagehand.String("us-central1"),
-						Project:  stagehand.String("my-gcp-project"),
-						Provider: stagehand.ModelConfigProviderOpenAI,
 					},
 				},
 				Mode: "cua",
 				Model: stagehand.SessionExecuteParamsAgentConfigModelUnion{
-					OfModelConfig: &stagehand.ModelConfigParam{
-						ModelName: "openai/gpt-5.4-mini",
-						APIKey:    stagehand.String("sk-some-openai-api-key"),
-						BaseURL:   stagehand.String("https://api.openai.com/v1"),
-						GoogleAuthOptions: stagehand.ModelConfigGoogleAuthOptionsParam{
-							Credentials: stagehand.ModelConfigGoogleAuthOptionsCredentialsParam{
+					OfSessionExecutesAgentConfigModelVertexModelConfigObject: &stagehand.SessionExecuteParamsAgentConfigModelVertexModelConfigObject{
+						Auth: stagehand.SessionExecuteParamsAgentConfigModelVertexModelConfigObjectAuth{
+							Credentials: stagehand.SessionExecuteParamsAgentConfigModelVertexModelConfigObjectAuthCredentials{
 								ClientEmail:             "client_email",
 								PrivateKey:              "private_key",
 								AuthProviderX509CertURL: stagehand.String("https://example.com"),
@@ -203,17 +214,27 @@ func TestSessionExecuteWithOptionalParams(t *testing.T) {
 								UniverseDomain:          stagehand.String("universe_domain"),
 							},
 							ProjectID: stagehand.String("projectId"),
-							Scopes: stagehand.ModelConfigGoogleAuthOptionsScopesUnionParam{
+							Scopes: stagehand.SessionExecuteParamsAgentConfigModelVertexModelConfigObjectAuthScopesUnion{
 								OfString: stagehand.String("string"),
 							},
 							UniverseDomain: stagehand.String("universeDomain"),
 						},
+						ModelName: "openai/gpt-5.4-mini",
+						ProviderOptions: stagehand.SessionExecuteParamsAgentConfigModelVertexModelConfigObjectProviderOptions{
+							Vertex: stagehand.SessionExecuteParamsAgentConfigModelVertexModelConfigObjectProviderOptionsVertex{
+								Location: "us-central1",
+								Project:  "my-gcp-project",
+								BaseURL:  stagehand.String("https://example.com"),
+								Headers: map[string]string{
+									"foo": "string",
+								},
+							},
+						},
+						APIKey:  stagehand.String("sk-some-openai-api-key"),
+						BaseURL: stagehand.String("https://api.openai.com/v1"),
 						Headers: map[string]string{
 							"foo": "string",
 						},
-						Location: stagehand.String("us-central1"),
-						Project:  stagehand.String("my-gcp-project"),
-						Provider: stagehand.ModelConfigProviderOpenAI,
 					},
 				},
 				Provider:     "openai",
@@ -269,12 +290,9 @@ func TestSessionExtractWithOptionalParams(t *testing.T) {
 			Options: stagehand.SessionExtractParamsOptions{
 				IgnoreSelectors: []string{"nav", ".cookie-banner", "#sidebar-ads"},
 				Model: stagehand.SessionExtractParamsOptionsModelUnion{
-					OfModelConfig: &stagehand.ModelConfigParam{
-						ModelName: "openai/gpt-5.4-mini",
-						APIKey:    stagehand.String("sk-some-openai-api-key"),
-						BaseURL:   stagehand.String("https://api.openai.com/v1"),
-						GoogleAuthOptions: stagehand.ModelConfigGoogleAuthOptionsParam{
-							Credentials: stagehand.ModelConfigGoogleAuthOptionsCredentialsParam{
+					OfSessionExtractsOptionsModelVertexModelConfigObject: &stagehand.SessionExtractParamsOptionsModelVertexModelConfigObject{
+						Auth: stagehand.SessionExtractParamsOptionsModelVertexModelConfigObjectAuth{
+							Credentials: stagehand.SessionExtractParamsOptionsModelVertexModelConfigObjectAuthCredentials{
 								ClientEmail:             "client_email",
 								PrivateKey:              "private_key",
 								AuthProviderX509CertURL: stagehand.String("https://example.com"),
@@ -288,17 +306,27 @@ func TestSessionExtractWithOptionalParams(t *testing.T) {
 								UniverseDomain:          stagehand.String("universe_domain"),
 							},
 							ProjectID: stagehand.String("projectId"),
-							Scopes: stagehand.ModelConfigGoogleAuthOptionsScopesUnionParam{
+							Scopes: stagehand.SessionExtractParamsOptionsModelVertexModelConfigObjectAuthScopesUnion{
 								OfString: stagehand.String("string"),
 							},
 							UniverseDomain: stagehand.String("universeDomain"),
 						},
+						ModelName: "openai/gpt-5.4-mini",
+						ProviderOptions: stagehand.SessionExtractParamsOptionsModelVertexModelConfigObjectProviderOptions{
+							Vertex: stagehand.SessionExtractParamsOptionsModelVertexModelConfigObjectProviderOptionsVertex{
+								Location: "us-central1",
+								Project:  "my-gcp-project",
+								BaseURL:  stagehand.String("https://example.com"),
+								Headers: map[string]string{
+									"foo": "string",
+								},
+							},
+						},
+						APIKey:  stagehand.String("sk-some-openai-api-key"),
+						BaseURL: stagehand.String("https://api.openai.com/v1"),
 						Headers: map[string]string{
 							"foo": "string",
 						},
-						Location: stagehand.String("us-central1"),
-						Project:  stagehand.String("my-gcp-project"),
-						Provider: stagehand.ModelConfigProviderOpenAI,
 					},
 				},
 				Screenshot: stagehand.Bool(false),
@@ -383,12 +411,9 @@ func TestSessionObserveWithOptionalParams(t *testing.T) {
 			Options: stagehand.SessionObserveParamsOptions{
 				IgnoreSelectors: []string{"nav", ".cookie-banner", "#sidebar-ads"},
 				Model: stagehand.SessionObserveParamsOptionsModelUnion{
-					OfModelConfig: &stagehand.ModelConfigParam{
-						ModelName: "openai/gpt-5.4-mini",
-						APIKey:    stagehand.String("sk-some-openai-api-key"),
-						BaseURL:   stagehand.String("https://api.openai.com/v1"),
-						GoogleAuthOptions: stagehand.ModelConfigGoogleAuthOptionsParam{
-							Credentials: stagehand.ModelConfigGoogleAuthOptionsCredentialsParam{
+					OfSessionObservesOptionsModelVertexModelConfigObject: &stagehand.SessionObserveParamsOptionsModelVertexModelConfigObject{
+						Auth: stagehand.SessionObserveParamsOptionsModelVertexModelConfigObjectAuth{
+							Credentials: stagehand.SessionObserveParamsOptionsModelVertexModelConfigObjectAuthCredentials{
 								ClientEmail:             "client_email",
 								PrivateKey:              "private_key",
 								AuthProviderX509CertURL: stagehand.String("https://example.com"),
@@ -402,17 +427,27 @@ func TestSessionObserveWithOptionalParams(t *testing.T) {
 								UniverseDomain:          stagehand.String("universe_domain"),
 							},
 							ProjectID: stagehand.String("projectId"),
-							Scopes: stagehand.ModelConfigGoogleAuthOptionsScopesUnionParam{
+							Scopes: stagehand.SessionObserveParamsOptionsModelVertexModelConfigObjectAuthScopesUnion{
 								OfString: stagehand.String("string"),
 							},
 							UniverseDomain: stagehand.String("universeDomain"),
 						},
+						ModelName: "openai/gpt-5.4-mini",
+						ProviderOptions: stagehand.SessionObserveParamsOptionsModelVertexModelConfigObjectProviderOptions{
+							Vertex: stagehand.SessionObserveParamsOptionsModelVertexModelConfigObjectProviderOptionsVertex{
+								Location: "us-central1",
+								Project:  "my-gcp-project",
+								BaseURL:  stagehand.String("https://example.com"),
+								Headers: map[string]string{
+									"foo": "string",
+								},
+							},
+						},
+						APIKey:  stagehand.String("sk-some-openai-api-key"),
+						BaseURL: stagehand.String("https://api.openai.com/v1"),
 						Headers: map[string]string{
 							"foo": "string",
 						},
-						Location: stagehand.String("us-central1"),
-						Project:  stagehand.String("my-gcp-project"),
-						Provider: stagehand.ModelConfigProviderOpenAI,
 					},
 				},
 				Selector: stagehand.String("nav"),
