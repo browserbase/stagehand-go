@@ -18,17 +18,23 @@ func ValueOf[T Constant[T]]() T {
 	return t.Default()
 }
 
-type Browserbase string // Always "browserbase"
-type External string    // Always "external"
-type Running string     // Always "running"
+type Browserbase string          // Always "browserbase"
+type External string             // Always "external"
+type GoogleServiceAccount string // Always "googleServiceAccount"
+type Running string              // Always "running"
+type Vertex string               // Always "vertex"
 
-func (c Browserbase) Default() Browserbase { return "browserbase" }
-func (c External) Default() External       { return "external" }
-func (c Running) Default() Running         { return "running" }
+func (c Browserbase) Default() Browserbase                   { return "browserbase" }
+func (c External) Default() External                         { return "external" }
+func (c GoogleServiceAccount) Default() GoogleServiceAccount { return "googleServiceAccount" }
+func (c Running) Default() Running                           { return "running" }
+func (c Vertex) Default() Vertex                             { return "vertex" }
 
-func (c Browserbase) MarshalJSON() ([]byte, error) { return marshalString(c) }
-func (c External) MarshalJSON() ([]byte, error)    { return marshalString(c) }
-func (c Running) MarshalJSON() ([]byte, error)     { return marshalString(c) }
+func (c Browserbase) MarshalJSON() ([]byte, error)          { return marshalString(c) }
+func (c External) MarshalJSON() ([]byte, error)             { return marshalString(c) }
+func (c GoogleServiceAccount) MarshalJSON() ([]byte, error) { return marshalString(c) }
+func (c Running) MarshalJSON() ([]byte, error)              { return marshalString(c) }
+func (c Vertex) MarshalJSON() ([]byte, error)               { return marshalString(c) }
 
 type constant[T any] interface {
 	Constant[T]
