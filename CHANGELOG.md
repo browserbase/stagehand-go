@@ -1,5 +1,27 @@
 # Changelog
 
+## 3.21.0 (2026-05-27)
+
+Full Changelog: [v3.20.0...v3.21.0](https://github.com/browserbase/stagehand-go/compare/v3.20.0...v3.21.0)
+
+### Features
+
+* [feat]: add `ignoreSelectors` to `observe()` ([501d30b](https://github.com/browserbase/stagehand-go/commit/501d30b5aa52a72eed5a25b064609b5c7c84d733))
+* [STG-1756] forward Vertex model config ([e707c1c](https://github.com/browserbase/stagehand-go/commit/e707c1ca0b01fa7babe4ee081789766695e7d48e))
+* Add `screenshot` option to Extract ([ba29e1e](https://github.com/browserbase/stagehand-go/commit/ba29e1e97d4744a504adf2990fa4cc1eeabf9bba))
+* **client:** optimize json encoder for internal types ([539a65e](https://github.com/browserbase/stagehand-go/commit/539a65e84dfdd9a1330c6142d229ea47b2575376))
+* STG-1756 add Vertex auth params to Stagehand spec ([b381980](https://github.com/browserbase/stagehand-go/commit/b381980c635b1d7968a2022709fa91921e77556e))
+
+
+### Bug Fixes
+
+* **go:** avoid panic when http.DefaultTransport is wrapped ([cea79d5](https://github.com/browserbase/stagehand-go/commit/cea79d5e25d6f072af7b2dde01d34be71106cb4b))
+
+
+### Chores
+
+* redact api-key headers in debug logs ([6378688](https://github.com/browserbase/stagehand-go/commit/637868870522a96e2e1d585949926a6116cb1e01))
+
 ## 3.20.0 (2026-05-06)
 
 Full Changelog: [v3.19.3...v3.20.0](https://github.com/browserbase/stagehand-go/compare/v3.19.3...v3.20.0)
