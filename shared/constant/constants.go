@@ -18,18 +18,24 @@ func ValueOf[T Constant[T]]() T {
 	return t.Default()
 }
 
+type Azure string                // Always "azure"
+type AzureEntraID string         // Always "azureEntraId"
 type Browserbase string          // Always "browserbase"
 type External string             // Always "external"
 type GoogleServiceAccount string // Always "googleServiceAccount"
 type Running string              // Always "running"
 type Vertex string               // Always "vertex"
 
+func (c Azure) Default() Azure                               { return "azure" }
+func (c AzureEntraID) Default() AzureEntraID                 { return "azureEntraId" }
 func (c Browserbase) Default() Browserbase                   { return "browserbase" }
 func (c External) Default() External                         { return "external" }
 func (c GoogleServiceAccount) Default() GoogleServiceAccount { return "googleServiceAccount" }
 func (c Running) Default() Running                           { return "running" }
 func (c Vertex) Default() Vertex                             { return "vertex" }
 
+func (c Azure) MarshalJSON() ([]byte, error)                { return marshalString(c) }
+func (c AzureEntraID) MarshalJSON() ([]byte, error)         { return marshalString(c) }
 func (c Browserbase) MarshalJSON() ([]byte, error)          { return marshalString(c) }
 func (c External) MarshalJSON() ([]byte, error)             { return marshalString(c) }
 func (c GoogleServiceAccount) MarshalJSON() ([]byte, error) { return marshalString(c) }
