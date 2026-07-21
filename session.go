@@ -1037,6 +1037,14 @@ func (u *SessionActParamsOptionsModelUnion) asAny() any {
 }
 
 // Returns a pointer to the underlying variant's property, if present.
+func (u SessionActParamsOptionsModelUnion) GetOpenAIEndpointFormat() *string {
+	if vt := u.OfSessionActsOptionsModelGenericModelConfigObject; vt != nil {
+		return &vt.OpenAIEndpointFormat
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
 func (u SessionActParamsOptionsModelUnion) GetModelName() *string {
 	if vt := u.OfSessionActsOptionsModelVertexModelConfigObject; vt != nil {
 		return (*string)(&vt.ModelName)
@@ -1630,6 +1638,11 @@ type SessionActParamsOptionsModelGenericModelConfigObject struct {
 	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
 	// Custom headers sent with every request to the model provider
 	Headers map[string]string `json:"headers,omitzero"`
+	// Wire format used by an OpenAI-compatible endpoint. Defaults to the Responses
+	// API; use chat for Chat Completions-only endpoints.
+	//
+	// Any of "responses", "chat".
+	OpenAIEndpointFormat string `json:"openaiEndpointFormat,omitzero"`
 	// AI provider for the model (or provide a baseURL endpoint instead)
 	//
 	// Any of "openai", "anthropic", "google", "microsoft", "bedrock".
@@ -1646,6 +1659,9 @@ func (r *SessionActParamsOptionsModelGenericModelConfigObject) UnmarshalJSON(dat
 }
 
 func init() {
+	apijson.RegisterFieldValidator[SessionActParamsOptionsModelGenericModelConfigObject](
+		"openaiEndpointFormat", "responses", "chat",
+	)
 	apijson.RegisterFieldValidator[SessionActParamsOptionsModelGenericModelConfigObject](
 		"provider", "openai", "anthropic", "google", "microsoft", "bedrock",
 	)
@@ -1845,6 +1861,14 @@ func (u *SessionExecuteParamsAgentConfigExecutionModelUnion) asAny() any {
 		return u.OfSessionExecutesAgentConfigExecutionModelGenericModelConfigObject
 	} else if !param.IsOmitted(u.OfString) {
 		return &u.OfString.Value
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SessionExecuteParamsAgentConfigExecutionModelUnion) GetOpenAIEndpointFormat() *string {
+	if vt := u.OfSessionExecutesAgentConfigExecutionModelGenericModelConfigObject; vt != nil {
+		return &vt.OpenAIEndpointFormat
 	}
 	return nil
 }
@@ -2445,6 +2469,11 @@ type SessionExecuteParamsAgentConfigExecutionModelGenericModelConfigObject struc
 	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
 	// Custom headers sent with every request to the model provider
 	Headers map[string]string `json:"headers,omitzero"`
+	// Wire format used by an OpenAI-compatible endpoint. Defaults to the Responses
+	// API; use chat for Chat Completions-only endpoints.
+	//
+	// Any of "responses", "chat".
+	OpenAIEndpointFormat string `json:"openaiEndpointFormat,omitzero"`
 	// AI provider for the model (or provide a baseURL endpoint instead)
 	//
 	// Any of "openai", "anthropic", "google", "microsoft", "bedrock".
@@ -2461,6 +2490,9 @@ func (r *SessionExecuteParamsAgentConfigExecutionModelGenericModelConfigObject) 
 }
 
 func init() {
+	apijson.RegisterFieldValidator[SessionExecuteParamsAgentConfigExecutionModelGenericModelConfigObject](
+		"openaiEndpointFormat", "responses", "chat",
+	)
 	apijson.RegisterFieldValidator[SessionExecuteParamsAgentConfigExecutionModelGenericModelConfigObject](
 		"provider", "openai", "anthropic", "google", "microsoft", "bedrock",
 	)
@@ -2500,6 +2532,14 @@ func (u *SessionExecuteParamsAgentConfigModelUnion) asAny() any {
 		return u.OfSessionExecutesAgentConfigModelGenericModelConfigObject
 	} else if !param.IsOmitted(u.OfString) {
 		return &u.OfString.Value
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SessionExecuteParamsAgentConfigModelUnion) GetOpenAIEndpointFormat() *string {
+	if vt := u.OfSessionExecutesAgentConfigModelGenericModelConfigObject; vt != nil {
+		return &vt.OpenAIEndpointFormat
 	}
 	return nil
 }
@@ -3098,6 +3138,11 @@ type SessionExecuteParamsAgentConfigModelGenericModelConfigObject struct {
 	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
 	// Custom headers sent with every request to the model provider
 	Headers map[string]string `json:"headers,omitzero"`
+	// Wire format used by an OpenAI-compatible endpoint. Defaults to the Responses
+	// API; use chat for Chat Completions-only endpoints.
+	//
+	// Any of "responses", "chat".
+	OpenAIEndpointFormat string `json:"openaiEndpointFormat,omitzero"`
 	// AI provider for the model (or provide a baseURL endpoint instead)
 	//
 	// Any of "openai", "anthropic", "google", "microsoft", "bedrock".
@@ -3114,6 +3159,9 @@ func (r *SessionExecuteParamsAgentConfigModelGenericModelConfigObject) Unmarshal
 }
 
 func init() {
+	apijson.RegisterFieldValidator[SessionExecuteParamsAgentConfigModelGenericModelConfigObject](
+		"openaiEndpointFormat", "responses", "chat",
+	)
 	apijson.RegisterFieldValidator[SessionExecuteParamsAgentConfigModelGenericModelConfigObject](
 		"provider", "openai", "anthropic", "google", "microsoft", "bedrock",
 	)
@@ -3306,6 +3354,14 @@ func (u *SessionExtractParamsOptionsModelUnion) asAny() any {
 		return u.OfSessionExtractsOptionsModelGenericModelConfigObject
 	} else if !param.IsOmitted(u.OfString) {
 		return &u.OfString.Value
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SessionExtractParamsOptionsModelUnion) GetOpenAIEndpointFormat() *string {
+	if vt := u.OfSessionExtractsOptionsModelGenericModelConfigObject; vt != nil {
+		return &vt.OpenAIEndpointFormat
 	}
 	return nil
 }
@@ -3904,6 +3960,11 @@ type SessionExtractParamsOptionsModelGenericModelConfigObject struct {
 	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
 	// Custom headers sent with every request to the model provider
 	Headers map[string]string `json:"headers,omitzero"`
+	// Wire format used by an OpenAI-compatible endpoint. Defaults to the Responses
+	// API; use chat for Chat Completions-only endpoints.
+	//
+	// Any of "responses", "chat".
+	OpenAIEndpointFormat string `json:"openaiEndpointFormat,omitzero"`
 	// AI provider for the model (or provide a baseURL endpoint instead)
 	//
 	// Any of "openai", "anthropic", "google", "microsoft", "bedrock".
@@ -3920,6 +3981,9 @@ func (r *SessionExtractParamsOptionsModelGenericModelConfigObject) UnmarshalJSON
 }
 
 func init() {
+	apijson.RegisterFieldValidator[SessionExtractParamsOptionsModelGenericModelConfigObject](
+		"openaiEndpointFormat", "responses", "chat",
+	)
 	apijson.RegisterFieldValidator[SessionExtractParamsOptionsModelGenericModelConfigObject](
 		"provider", "openai", "anthropic", "google", "microsoft", "bedrock",
 	)
@@ -4069,6 +4133,14 @@ func (u *SessionObserveParamsOptionsModelUnion) asAny() any {
 		return u.OfSessionObservesOptionsModelGenericModelConfigObject
 	} else if !param.IsOmitted(u.OfString) {
 		return &u.OfString.Value
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u SessionObserveParamsOptionsModelUnion) GetOpenAIEndpointFormat() *string {
+	if vt := u.OfSessionObservesOptionsModelGenericModelConfigObject; vt != nil {
+		return &vt.OpenAIEndpointFormat
 	}
 	return nil
 }
@@ -4667,6 +4739,11 @@ type SessionObserveParamsOptionsModelGenericModelConfigObject struct {
 	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
 	// Custom headers sent with every request to the model provider
 	Headers map[string]string `json:"headers,omitzero"`
+	// Wire format used by an OpenAI-compatible endpoint. Defaults to the Responses
+	// API; use chat for Chat Completions-only endpoints.
+	//
+	// Any of "responses", "chat".
+	OpenAIEndpointFormat string `json:"openaiEndpointFormat,omitzero"`
 	// AI provider for the model (or provide a baseURL endpoint instead)
 	//
 	// Any of "openai", "anthropic", "google", "microsoft", "bedrock".
@@ -4683,6 +4760,9 @@ func (r *SessionObserveParamsOptionsModelGenericModelConfigObject) UnmarshalJSON
 }
 
 func init() {
+	apijson.RegisterFieldValidator[SessionObserveParamsOptionsModelGenericModelConfigObject](
+		"openaiEndpointFormat", "responses", "chat",
+	)
 	apijson.RegisterFieldValidator[SessionObserveParamsOptionsModelGenericModelConfigObject](
 		"provider", "openai", "anthropic", "google", "microsoft", "bedrock",
 	)
