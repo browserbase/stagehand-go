@@ -1,5 +1,15 @@
 # Changelog
 
+## 3.22.0 (2026-07-21)
+
+Full Changelog: [v3.21.0...v3.22.0](https://github.com/browserbase/stagehand-go/compare/v3.21.0...v3.22.0)
+
+### Features
+
+* [STG-2090] Add Azure Entra model auth support ([ed24ee3](https://github.com/browserbase/stagehand-go/commit/ed24ee36d34f373257bbf5095338251e1fb6b53e))
+* **server-v3:** expose OpenAI endpoint format ([8e7365a](https://github.com/browserbase/stagehand-go/commit/8e7365aa573bf3491660ebb8d7b476e734485db7))
+* **stlc:** configurable CI runner and private-production-repo support in workflow templates ([867a6f2](https://github.com/browserbase/stagehand-go/commit/867a6f2c57cc9c66e22f30019073ffff5604afed))
+
 ## 3.21.0 (2026-05-27)
 
 Full Changelog: [v3.20.0...v3.21.0](https://github.com/browserbase/stagehand-go/compare/v3.20.0...v3.21.0)
