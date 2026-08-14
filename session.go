@@ -11,6 +11,7 @@ import (
 	"slices"
 
 	"github.com/browserbase/stagehand-go/v3/internal/apijson"
+	"github.com/browserbase/stagehand-go/v3/internal/paramutil"
 	"github.com/browserbase/stagehand-go/v3/internal/requestconfig"
 	"github.com/browserbase/stagehand-go/v3/option"
 	"github.com/browserbase/stagehand-go/v3/packages/param"
@@ -1001,14 +1002,20 @@ func (r *SessionActParamsOptions) UnmarshalJSON(data []byte) error {
 //
 // Use [param.IsOmitted] to confirm if a field is set.
 type SessionActParamsOptionsModelUnion struct {
-	OfSessionActsOptionsModelVertexModelConfigObject  *SessionActParamsOptionsModelVertexModelConfigObject  `json:",omitzero,inline"`
-	OfSessionActsOptionsModelGenericModelConfigObject *SessionActParamsOptionsModelGenericModelConfigObject `json:",omitzero,inline"`
-	OfString                                          param.Opt[string]                                     `json:",omitzero,inline"`
+	OfSessionActsOptionsModelVertexModelConfigObject      *SessionActParamsOptionsModelVertexModelConfigObject      `json:",omitzero,inline"`
+	OfSessionActsOptionsModelAzureEntraModelConfigObject  *SessionActParamsOptionsModelAzureEntraModelConfigObject  `json:",omitzero,inline"`
+	OfSessionActsOptionsModelAzureAPIKeyModelConfigObject *SessionActParamsOptionsModelAzureAPIKeyModelConfigObject `json:",omitzero,inline"`
+	OfSessionActsOptionsModelGenericModelConfigObject     *SessionActParamsOptionsModelGenericModelConfigObject     `json:",omitzero,inline"`
+	OfString                                              param.Opt[string]                                         `json:",omitzero,inline"`
 	paramUnion
 }
 
 func (u SessionActParamsOptionsModelUnion) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion(u, u.OfSessionActsOptionsModelVertexModelConfigObject, u.OfSessionActsOptionsModelGenericModelConfigObject, u.OfString)
+	return param.MarshalUnion(u, u.OfSessionActsOptionsModelVertexModelConfigObject,
+		u.OfSessionActsOptionsModelAzureEntraModelConfigObject,
+		u.OfSessionActsOptionsModelAzureAPIKeyModelConfigObject,
+		u.OfSessionActsOptionsModelGenericModelConfigObject,
+		u.OfString)
 }
 func (u *SessionActParamsOptionsModelUnion) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
@@ -1017,6 +1024,10 @@ func (u *SessionActParamsOptionsModelUnion) UnmarshalJSON(data []byte) error {
 func (u *SessionActParamsOptionsModelUnion) asAny() any {
 	if !param.IsOmitted(u.OfSessionActsOptionsModelVertexModelConfigObject) {
 		return u.OfSessionActsOptionsModelVertexModelConfigObject
+	} else if !param.IsOmitted(u.OfSessionActsOptionsModelAzureEntraModelConfigObject) {
+		return u.OfSessionActsOptionsModelAzureEntraModelConfigObject
+	} else if !param.IsOmitted(u.OfSessionActsOptionsModelAzureAPIKeyModelConfigObject) {
+		return u.OfSessionActsOptionsModelAzureAPIKeyModelConfigObject
 	} else if !param.IsOmitted(u.OfSessionActsOptionsModelGenericModelConfigObject) {
 		return u.OfSessionActsOptionsModelGenericModelConfigObject
 	} else if !param.IsOmitted(u.OfString) {
@@ -1026,17 +1037,9 @@ func (u *SessionActParamsOptionsModelUnion) asAny() any {
 }
 
 // Returns a pointer to the underlying variant's property, if present.
-func (u SessionActParamsOptionsModelUnion) GetAuth() *SessionActParamsOptionsModelVertexModelConfigObjectAuth {
-	if vt := u.OfSessionActsOptionsModelVertexModelConfigObject; vt != nil {
-		return &vt.Auth
-	}
-	return nil
-}
-
-// Returns a pointer to the underlying variant's property, if present.
-func (u SessionActParamsOptionsModelUnion) GetProviderOptions() *SessionActParamsOptionsModelVertexModelConfigObjectProviderOptions {
-	if vt := u.OfSessionActsOptionsModelVertexModelConfigObject; vt != nil {
-		return &vt.ProviderOptions
+func (u SessionActParamsOptionsModelUnion) GetOpenAIEndpointFormat() *string {
+	if vt := u.OfSessionActsOptionsModelGenericModelConfigObject; vt != nil {
+		return &vt.OpenAIEndpointFormat
 	}
 	return nil
 }
@@ -1044,6 +1047,10 @@ func (u SessionActParamsOptionsModelUnion) GetProviderOptions() *SessionActParam
 // Returns a pointer to the underlying variant's property, if present.
 func (u SessionActParamsOptionsModelUnion) GetModelName() *string {
 	if vt := u.OfSessionActsOptionsModelVertexModelConfigObject; vt != nil {
+		return (*string)(&vt.ModelName)
+	} else if vt := u.OfSessionActsOptionsModelAzureEntraModelConfigObject; vt != nil {
+		return (*string)(&vt.ModelName)
+	} else if vt := u.OfSessionActsOptionsModelAzureAPIKeyModelConfigObject; vt != nil {
 		return (*string)(&vt.ModelName)
 	} else if vt := u.OfSessionActsOptionsModelGenericModelConfigObject; vt != nil {
 		return (*string)(&vt.ModelName)
@@ -1055,6 +1062,10 @@ func (u SessionActParamsOptionsModelUnion) GetModelName() *string {
 func (u SessionActParamsOptionsModelUnion) GetProvider() *string {
 	if vt := u.OfSessionActsOptionsModelVertexModelConfigObject; vt != nil {
 		return (*string)(&vt.Provider)
+	} else if vt := u.OfSessionActsOptionsModelAzureEntraModelConfigObject; vt != nil {
+		return (*string)(&vt.Provider)
+	} else if vt := u.OfSessionActsOptionsModelAzureAPIKeyModelConfigObject; vt != nil {
+		return (*string)(&vt.Provider)
 	} else if vt := u.OfSessionActsOptionsModelGenericModelConfigObject; vt != nil {
 		return (*string)(&vt.Provider)
 	}
@@ -1064,6 +1075,8 @@ func (u SessionActParamsOptionsModelUnion) GetProvider() *string {
 // Returns a pointer to the underlying variant's property, if present.
 func (u SessionActParamsOptionsModelUnion) GetAPIKey() *string {
 	if vt := u.OfSessionActsOptionsModelVertexModelConfigObject; vt != nil && vt.APIKey.Valid() {
+		return &vt.APIKey.Value
+	} else if vt := u.OfSessionActsOptionsModelAzureAPIKeyModelConfigObject; vt != nil && vt.APIKey.Valid() {
 		return &vt.APIKey.Value
 	} else if vt := u.OfSessionActsOptionsModelGenericModelConfigObject; vt != nil && vt.APIKey.Valid() {
 		return &vt.APIKey.Value
@@ -1075,8 +1088,218 @@ func (u SessionActParamsOptionsModelUnion) GetAPIKey() *string {
 func (u SessionActParamsOptionsModelUnion) GetBaseURL() *string {
 	if vt := u.OfSessionActsOptionsModelVertexModelConfigObject; vt != nil && vt.BaseURL.Valid() {
 		return &vt.BaseURL.Value
+	} else if vt := u.OfSessionActsOptionsModelAzureEntraModelConfigObject; vt != nil && vt.BaseURL.Valid() {
+		return &vt.BaseURL.Value
+	} else if vt := u.OfSessionActsOptionsModelAzureAPIKeyModelConfigObject; vt != nil && vt.BaseURL.Valid() {
+		return &vt.BaseURL.Value
 	} else if vt := u.OfSessionActsOptionsModelGenericModelConfigObject; vt != nil && vt.BaseURL.Valid() {
 		return &vt.BaseURL.Value
+	}
+	return nil
+}
+
+// Returns a subunion which exports methods to access subproperties
+//
+// Or use AsAny() to get the underlying value
+func (u SessionActParamsOptionsModelUnion) GetAuth() (res sessionActParamsOptionsModelUnionAuth) {
+	if vt := u.OfSessionActsOptionsModelVertexModelConfigObject; vt != nil {
+		res.any = &vt.Auth
+	} else if vt := u.OfSessionActsOptionsModelAzureEntraModelConfigObject; vt != nil {
+		res.any = &vt.Auth
+	}
+	return
+}
+
+// Can have the runtime types
+// [*SessionActParamsOptionsModelVertexModelConfigObjectAuth],
+// [*SessionActParamsOptionsModelAzureEntraModelConfigObjectAuth]
+type sessionActParamsOptionsModelUnionAuth struct{ any }
+
+// Use the following switch statement to get the type of the union:
+//
+//	switch u.AsAny().(type) {
+//	case *stagehand.SessionActParamsOptionsModelVertexModelConfigObjectAuth:
+//	case *stagehand.SessionActParamsOptionsModelAzureEntraModelConfigObjectAuth:
+//	default:
+//	    fmt.Errorf("not present")
+//	}
+func (u sessionActParamsOptionsModelUnionAuth) AsAny() any { return u.any }
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionActParamsOptionsModelUnionAuth) GetCredentials() *SessionActParamsOptionsModelVertexModelConfigObjectAuthCredentials {
+	switch vt := u.any.(type) {
+	case *SessionActParamsOptionsModelVertexModelConfigObjectAuth:
+		return &vt.Credentials
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionActParamsOptionsModelUnionAuth) GetProjectID() *string {
+	switch vt := u.any.(type) {
+	case *SessionActParamsOptionsModelVertexModelConfigObjectAuth:
+		return paramutil.AddrIfPresent(vt.ProjectID)
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionActParamsOptionsModelUnionAuth) GetScopes() *SessionActParamsOptionsModelVertexModelConfigObjectAuthScopesUnion {
+	switch vt := u.any.(type) {
+	case *SessionActParamsOptionsModelVertexModelConfigObjectAuth:
+		return &vt.Scopes
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionActParamsOptionsModelUnionAuth) GetUniverseDomain() *string {
+	switch vt := u.any.(type) {
+	case *SessionActParamsOptionsModelVertexModelConfigObjectAuth:
+		return paramutil.AddrIfPresent(vt.UniverseDomain)
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionActParamsOptionsModelUnionAuth) GetToken() *string {
+	switch vt := u.any.(type) {
+	case *SessionActParamsOptionsModelAzureEntraModelConfigObjectAuth:
+		return &vt.Token
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionActParamsOptionsModelUnionAuth) GetType() *string {
+	switch vt := u.any.(type) {
+	case *SessionActParamsOptionsModelVertexModelConfigObjectAuth:
+		return (*string)(&vt.Type)
+	case *SessionActParamsOptionsModelAzureEntraModelConfigObjectAuth:
+		return (*string)(&vt.Type)
+	}
+	return nil
+}
+
+// Returns a subunion which exports methods to access subproperties
+//
+// Or use AsAny() to get the underlying value
+func (u SessionActParamsOptionsModelUnion) GetProviderOptions() (res sessionActParamsOptionsModelUnionProviderOptions) {
+	if vt := u.OfSessionActsOptionsModelVertexModelConfigObject; vt != nil {
+		res.any = &vt.ProviderOptions
+	} else if vt := u.OfSessionActsOptionsModelAzureEntraModelConfigObject; vt != nil {
+		res.any = &vt.ProviderOptions
+	} else if vt := u.OfSessionActsOptionsModelAzureAPIKeyModelConfigObject; vt != nil {
+		res.any = &vt.ProviderOptions
+	}
+	return
+}
+
+// Can have the runtime types
+// [*SessionActParamsOptionsModelVertexModelConfigObjectProviderOptions],
+// [*SessionActParamsOptionsModelAzureEntraModelConfigObjectProviderOptions],
+// [*SessionActParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptions]
+type sessionActParamsOptionsModelUnionProviderOptions struct{ any }
+
+// Use the following switch statement to get the type of the union:
+//
+//	switch u.AsAny().(type) {
+//	case *stagehand.SessionActParamsOptionsModelVertexModelConfigObjectProviderOptions:
+//	case *stagehand.SessionActParamsOptionsModelAzureEntraModelConfigObjectProviderOptions:
+//	case *stagehand.SessionActParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptions:
+//	default:
+//	    fmt.Errorf("not present")
+//	}
+func (u sessionActParamsOptionsModelUnionProviderOptions) AsAny() any { return u.any }
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionActParamsOptionsModelUnionProviderOptions) GetVertex() *SessionActParamsOptionsModelVertexModelConfigObjectProviderOptionsVertex {
+	switch vt := u.any.(type) {
+	case *SessionActParamsOptionsModelVertexModelConfigObjectProviderOptions:
+		return &vt.Vertex
+	}
+	return nil
+}
+
+// Returns a subunion which exports methods to access subproperties
+//
+// Or use AsAny() to get the underlying value
+func (u sessionActParamsOptionsModelUnionProviderOptions) GetAzure() (res sessionActParamsOptionsModelUnionProviderOptionsAzure) {
+	switch vt := u.any.(type) {
+	case *SessionActParamsOptionsModelAzureEntraModelConfigObjectProviderOptions:
+		res.any = &vt.Azure
+	case *SessionActParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptions:
+		res.any = &vt.Azure
+	}
+	return res
+}
+
+// Can have the runtime types
+// [*SessionActParamsOptionsModelAzureEntraModelConfigObjectProviderOptionsAzure],
+// [*SessionActParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptionsAzure]
+type sessionActParamsOptionsModelUnionProviderOptionsAzure struct{ any }
+
+// Use the following switch statement to get the type of the union:
+//
+//	switch u.AsAny().(type) {
+//	case *stagehand.SessionActParamsOptionsModelAzureEntraModelConfigObjectProviderOptionsAzure:
+//	case *stagehand.SessionActParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptionsAzure:
+//	default:
+//	    fmt.Errorf("not present")
+//	}
+func (u sessionActParamsOptionsModelUnionProviderOptionsAzure) AsAny() any { return u.any }
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionActParamsOptionsModelUnionProviderOptionsAzure) GetAPIVersion() *string {
+	switch vt := u.any.(type) {
+	case *SessionActParamsOptionsModelAzureEntraModelConfigObjectProviderOptionsAzure:
+		return paramutil.AddrIfPresent(vt.APIVersion)
+	case *SessionActParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptionsAzure:
+		return paramutil.AddrIfPresent(vt.APIVersion)
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionActParamsOptionsModelUnionProviderOptionsAzure) GetBaseURL() *string {
+	switch vt := u.any.(type) {
+	case *SessionActParamsOptionsModelAzureEntraModelConfigObjectProviderOptionsAzure:
+		return paramutil.AddrIfPresent(vt.BaseURL)
+	case *SessionActParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptionsAzure:
+		return paramutil.AddrIfPresent(vt.BaseURL)
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionActParamsOptionsModelUnionProviderOptionsAzure) GetResourceName() *string {
+	switch vt := u.any.(type) {
+	case *SessionActParamsOptionsModelAzureEntraModelConfigObjectProviderOptionsAzure:
+		return paramutil.AddrIfPresent(vt.ResourceName)
+	case *SessionActParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptionsAzure:
+		return paramutil.AddrIfPresent(vt.ResourceName)
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionActParamsOptionsModelUnionProviderOptionsAzure) GetUseDeploymentBasedURLs() *bool {
+	switch vt := u.any.(type) {
+	case *SessionActParamsOptionsModelAzureEntraModelConfigObjectProviderOptionsAzure:
+		return paramutil.AddrIfPresent(vt.UseDeploymentBasedURLs)
+	case *SessionActParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptionsAzure:
+		return paramutil.AddrIfPresent(vt.UseDeploymentBasedURLs)
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's Headers property, if present.
+func (u sessionActParamsOptionsModelUnionProviderOptionsAzure) GetHeaders() map[string]string {
+	switch vt := u.any.(type) {
+	case *SessionActParamsOptionsModelAzureEntraModelConfigObjectProviderOptionsAzure:
+		return vt.Headers
+	case *SessionActParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptionsAzure:
+		return vt.Headers
 	}
 	return nil
 }
@@ -1084,6 +1307,10 @@ func (u SessionActParamsOptionsModelUnion) GetBaseURL() *string {
 // Returns a pointer to the underlying variant's Headers property, if present.
 func (u SessionActParamsOptionsModelUnion) GetHeaders() map[string]string {
 	if vt := u.OfSessionActsOptionsModelVertexModelConfigObject; vt != nil {
+		return vt.Headers
+	} else if vt := u.OfSessionActsOptionsModelAzureEntraModelConfigObject; vt != nil {
+		return vt.Headers
+	} else if vt := u.OfSessionActsOptionsModelAzureAPIKeyModelConfigObject; vt != nil {
 		return vt.Headers
 	} else if vt := u.OfSessionActsOptionsModelGenericModelConfigObject; vt != nil {
 		return vt.Headers
@@ -1246,6 +1473,161 @@ func (r *SessionActParamsOptionsModelVertexModelConfigObjectProviderOptionsVerte
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// The properties Auth, ModelName, Provider, ProviderOptions are required.
+type SessionActParamsOptionsModelAzureEntraModelConfigObject struct {
+	// Azure provider authentication configuration
+	Auth SessionActParamsOptionsModelAzureEntraModelConfigObjectAuth `json:"auth,omitzero" api:"required"`
+	// Model name string with provider prefix (e.g., 'openai/gpt-5-nano')
+	ModelName string `json:"modelName" api:"required"`
+	// Azure provider-specific model configuration
+	ProviderOptions SessionActParamsOptionsModelAzureEntraModelConfigObjectProviderOptions `json:"providerOptions,omitzero" api:"required"`
+	// Base URL for the model provider
+	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
+	// Custom headers sent with every request to the model provider
+	Headers map[string]string `json:"headers,omitzero"`
+	// Azure OpenAI model provider
+	//
+	// This field can be elided, and will marshal its zero value as "azure".
+	Provider constant.Azure `json:"provider" default:"azure"`
+	paramObj
+}
+
+func (r SessionActParamsOptionsModelAzureEntraModelConfigObject) MarshalJSON() (data []byte, err error) {
+	type shadow SessionActParamsOptionsModelAzureEntraModelConfigObject
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionActParamsOptionsModelAzureEntraModelConfigObject) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Azure provider authentication configuration
+//
+// The properties Token, Type are required.
+type SessionActParamsOptionsModelAzureEntraModelConfigObjectAuth struct {
+	// Microsoft Entra ID bearer token for Azure OpenAI
+	Token string `json:"token" api:"required"`
+	// Use a Microsoft Entra ID bearer token for authentication
+	//
+	// This field can be elided, and will marshal its zero value as "azureEntraId".
+	Type constant.AzureEntraID `json:"type" default:"azureEntraId"`
+	paramObj
+}
+
+func (r SessionActParamsOptionsModelAzureEntraModelConfigObjectAuth) MarshalJSON() (data []byte, err error) {
+	type shadow SessionActParamsOptionsModelAzureEntraModelConfigObjectAuth
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionActParamsOptionsModelAzureEntraModelConfigObjectAuth) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Azure provider-specific model configuration
+//
+// The property Azure is required.
+type SessionActParamsOptionsModelAzureEntraModelConfigObjectProviderOptions struct {
+	// Azure OpenAI provider-specific settings
+	Azure SessionActParamsOptionsModelAzureEntraModelConfigObjectProviderOptionsAzure `json:"azure,omitzero" api:"required"`
+	paramObj
+}
+
+func (r SessionActParamsOptionsModelAzureEntraModelConfigObjectProviderOptions) MarshalJSON() (data []byte, err error) {
+	type shadow SessionActParamsOptionsModelAzureEntraModelConfigObjectProviderOptions
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionActParamsOptionsModelAzureEntraModelConfigObjectProviderOptions) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Azure OpenAI provider-specific settings
+type SessionActParamsOptionsModelAzureEntraModelConfigObjectProviderOptionsAzure struct {
+	// Azure OpenAI API version
+	APIVersion param.Opt[string] `json:"apiVersion,omitzero"`
+	// Base URL for the Azure OpenAI provider
+	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
+	// Azure OpenAI resource name
+	ResourceName param.Opt[string] `json:"resourceName,omitzero"`
+	// Whether to use deployment-based Azure OpenAI URLs
+	UseDeploymentBasedURLs param.Opt[bool] `json:"useDeploymentBasedUrls,omitzero"`
+	// Custom headers sent with every request to the Azure OpenAI provider
+	Headers map[string]string `json:"headers,omitzero"`
+	paramObj
+}
+
+func (r SessionActParamsOptionsModelAzureEntraModelConfigObjectProviderOptionsAzure) MarshalJSON() (data []byte, err error) {
+	type shadow SessionActParamsOptionsModelAzureEntraModelConfigObjectProviderOptionsAzure
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionActParamsOptionsModelAzureEntraModelConfigObjectProviderOptionsAzure) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// The properties ModelName, Provider, ProviderOptions are required.
+type SessionActParamsOptionsModelAzureAPIKeyModelConfigObject struct {
+	// Model name string with provider prefix (e.g., 'openai/gpt-5-nano')
+	ModelName string `json:"modelName" api:"required"`
+	// Azure provider-specific model configuration
+	ProviderOptions SessionActParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptions `json:"providerOptions,omitzero" api:"required"`
+	// API key for the model provider
+	APIKey param.Opt[string] `json:"apiKey,omitzero"`
+	// Base URL for the model provider
+	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
+	// Custom headers sent with every request to the model provider
+	Headers map[string]string `json:"headers,omitzero"`
+	// Azure OpenAI model provider
+	//
+	// This field can be elided, and will marshal its zero value as "azure".
+	Provider constant.Azure `json:"provider" default:"azure"`
+	paramObj
+}
+
+func (r SessionActParamsOptionsModelAzureAPIKeyModelConfigObject) MarshalJSON() (data []byte, err error) {
+	type shadow SessionActParamsOptionsModelAzureAPIKeyModelConfigObject
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionActParamsOptionsModelAzureAPIKeyModelConfigObject) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Azure provider-specific model configuration
+//
+// The property Azure is required.
+type SessionActParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptions struct {
+	// Azure OpenAI provider-specific settings
+	Azure SessionActParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptionsAzure `json:"azure,omitzero" api:"required"`
+	paramObj
+}
+
+func (r SessionActParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptions) MarshalJSON() (data []byte, err error) {
+	type shadow SessionActParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptions
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionActParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptions) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Azure OpenAI provider-specific settings
+type SessionActParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptionsAzure struct {
+	// Azure OpenAI API version
+	APIVersion param.Opt[string] `json:"apiVersion,omitzero"`
+	// Base URL for the Azure OpenAI provider
+	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
+	// Azure OpenAI resource name
+	ResourceName param.Opt[string] `json:"resourceName,omitzero"`
+	// Whether to use deployment-based Azure OpenAI URLs
+	UseDeploymentBasedURLs param.Opt[bool] `json:"useDeploymentBasedUrls,omitzero"`
+	// Custom headers sent with every request to the Azure OpenAI provider
+	Headers map[string]string `json:"headers,omitzero"`
+	paramObj
+}
+
+func (r SessionActParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptionsAzure) MarshalJSON() (data []byte, err error) {
+	type shadow SessionActParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptionsAzure
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionActParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptionsAzure) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // The property ModelName is required.
 type SessionActParamsOptionsModelGenericModelConfigObject struct {
 	// Model name string with provider prefix (e.g., 'openai/gpt-5-nano')
@@ -1256,6 +1638,11 @@ type SessionActParamsOptionsModelGenericModelConfigObject struct {
 	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
 	// Custom headers sent with every request to the model provider
 	Headers map[string]string `json:"headers,omitzero"`
+	// Wire format used by an OpenAI-compatible endpoint. Defaults to the Responses
+	// API; use chat for Chat Completions-only endpoints.
+	//
+	// Any of "responses", "chat".
+	OpenAIEndpointFormat string `json:"openaiEndpointFormat,omitzero"`
 	// AI provider for the model (or provide a baseURL endpoint instead)
 	//
 	// Any of "openai", "anthropic", "google", "microsoft", "bedrock".
@@ -1272,6 +1659,9 @@ func (r *SessionActParamsOptionsModelGenericModelConfigObject) UnmarshalJSON(dat
 }
 
 func init() {
+	apijson.RegisterFieldValidator[SessionActParamsOptionsModelGenericModelConfigObject](
+		"openaiEndpointFormat", "responses", "chat",
+	)
 	apijson.RegisterFieldValidator[SessionActParamsOptionsModelGenericModelConfigObject](
 		"provider", "openai", "anthropic", "google", "microsoft", "bedrock",
 	)
@@ -1441,14 +1831,20 @@ func init() {
 //
 // Use [param.IsOmitted] to confirm if a field is set.
 type SessionExecuteParamsAgentConfigExecutionModelUnion struct {
-	OfSessionExecutesAgentConfigExecutionModelVertexModelConfigObject  *SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObject  `json:",omitzero,inline"`
-	OfSessionExecutesAgentConfigExecutionModelGenericModelConfigObject *SessionExecuteParamsAgentConfigExecutionModelGenericModelConfigObject `json:",omitzero,inline"`
-	OfString                                                           param.Opt[string]                                                      `json:",omitzero,inline"`
+	OfSessionExecutesAgentConfigExecutionModelVertexModelConfigObject      *SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObject      `json:",omitzero,inline"`
+	OfSessionExecutesAgentConfigExecutionModelAzureEntraModelConfigObject  *SessionExecuteParamsAgentConfigExecutionModelAzureEntraModelConfigObject  `json:",omitzero,inline"`
+	OfSessionExecutesAgentConfigExecutionModelAzureAPIKeyModelConfigObject *SessionExecuteParamsAgentConfigExecutionModelAzureAPIKeyModelConfigObject `json:",omitzero,inline"`
+	OfSessionExecutesAgentConfigExecutionModelGenericModelConfigObject     *SessionExecuteParamsAgentConfigExecutionModelGenericModelConfigObject     `json:",omitzero,inline"`
+	OfString                                                               param.Opt[string]                                                          `json:",omitzero,inline"`
 	paramUnion
 }
 
 func (u SessionExecuteParamsAgentConfigExecutionModelUnion) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion(u, u.OfSessionExecutesAgentConfigExecutionModelVertexModelConfigObject, u.OfSessionExecutesAgentConfigExecutionModelGenericModelConfigObject, u.OfString)
+	return param.MarshalUnion(u, u.OfSessionExecutesAgentConfigExecutionModelVertexModelConfigObject,
+		u.OfSessionExecutesAgentConfigExecutionModelAzureEntraModelConfigObject,
+		u.OfSessionExecutesAgentConfigExecutionModelAzureAPIKeyModelConfigObject,
+		u.OfSessionExecutesAgentConfigExecutionModelGenericModelConfigObject,
+		u.OfString)
 }
 func (u *SessionExecuteParamsAgentConfigExecutionModelUnion) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
@@ -1457,6 +1853,10 @@ func (u *SessionExecuteParamsAgentConfigExecutionModelUnion) UnmarshalJSON(data 
 func (u *SessionExecuteParamsAgentConfigExecutionModelUnion) asAny() any {
 	if !param.IsOmitted(u.OfSessionExecutesAgentConfigExecutionModelVertexModelConfigObject) {
 		return u.OfSessionExecutesAgentConfigExecutionModelVertexModelConfigObject
+	} else if !param.IsOmitted(u.OfSessionExecutesAgentConfigExecutionModelAzureEntraModelConfigObject) {
+		return u.OfSessionExecutesAgentConfigExecutionModelAzureEntraModelConfigObject
+	} else if !param.IsOmitted(u.OfSessionExecutesAgentConfigExecutionModelAzureAPIKeyModelConfigObject) {
+		return u.OfSessionExecutesAgentConfigExecutionModelAzureAPIKeyModelConfigObject
 	} else if !param.IsOmitted(u.OfSessionExecutesAgentConfigExecutionModelGenericModelConfigObject) {
 		return u.OfSessionExecutesAgentConfigExecutionModelGenericModelConfigObject
 	} else if !param.IsOmitted(u.OfString) {
@@ -1466,17 +1866,9 @@ func (u *SessionExecuteParamsAgentConfigExecutionModelUnion) asAny() any {
 }
 
 // Returns a pointer to the underlying variant's property, if present.
-func (u SessionExecuteParamsAgentConfigExecutionModelUnion) GetAuth() *SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectAuth {
-	if vt := u.OfSessionExecutesAgentConfigExecutionModelVertexModelConfigObject; vt != nil {
-		return &vt.Auth
-	}
-	return nil
-}
-
-// Returns a pointer to the underlying variant's property, if present.
-func (u SessionExecuteParamsAgentConfigExecutionModelUnion) GetProviderOptions() *SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectProviderOptions {
-	if vt := u.OfSessionExecutesAgentConfigExecutionModelVertexModelConfigObject; vt != nil {
-		return &vt.ProviderOptions
+func (u SessionExecuteParamsAgentConfigExecutionModelUnion) GetOpenAIEndpointFormat() *string {
+	if vt := u.OfSessionExecutesAgentConfigExecutionModelGenericModelConfigObject; vt != nil {
+		return &vt.OpenAIEndpointFormat
 	}
 	return nil
 }
@@ -1484,6 +1876,10 @@ func (u SessionExecuteParamsAgentConfigExecutionModelUnion) GetProviderOptions()
 // Returns a pointer to the underlying variant's property, if present.
 func (u SessionExecuteParamsAgentConfigExecutionModelUnion) GetModelName() *string {
 	if vt := u.OfSessionExecutesAgentConfigExecutionModelVertexModelConfigObject; vt != nil {
+		return (*string)(&vt.ModelName)
+	} else if vt := u.OfSessionExecutesAgentConfigExecutionModelAzureEntraModelConfigObject; vt != nil {
+		return (*string)(&vt.ModelName)
+	} else if vt := u.OfSessionExecutesAgentConfigExecutionModelAzureAPIKeyModelConfigObject; vt != nil {
 		return (*string)(&vt.ModelName)
 	} else if vt := u.OfSessionExecutesAgentConfigExecutionModelGenericModelConfigObject; vt != nil {
 		return (*string)(&vt.ModelName)
@@ -1495,6 +1891,10 @@ func (u SessionExecuteParamsAgentConfigExecutionModelUnion) GetModelName() *stri
 func (u SessionExecuteParamsAgentConfigExecutionModelUnion) GetProvider() *string {
 	if vt := u.OfSessionExecutesAgentConfigExecutionModelVertexModelConfigObject; vt != nil {
 		return (*string)(&vt.Provider)
+	} else if vt := u.OfSessionExecutesAgentConfigExecutionModelAzureEntraModelConfigObject; vt != nil {
+		return (*string)(&vt.Provider)
+	} else if vt := u.OfSessionExecutesAgentConfigExecutionModelAzureAPIKeyModelConfigObject; vt != nil {
+		return (*string)(&vt.Provider)
 	} else if vt := u.OfSessionExecutesAgentConfigExecutionModelGenericModelConfigObject; vt != nil {
 		return (*string)(&vt.Provider)
 	}
@@ -1504,6 +1904,8 @@ func (u SessionExecuteParamsAgentConfigExecutionModelUnion) GetProvider() *strin
 // Returns a pointer to the underlying variant's property, if present.
 func (u SessionExecuteParamsAgentConfigExecutionModelUnion) GetAPIKey() *string {
 	if vt := u.OfSessionExecutesAgentConfigExecutionModelVertexModelConfigObject; vt != nil && vt.APIKey.Valid() {
+		return &vt.APIKey.Value
+	} else if vt := u.OfSessionExecutesAgentConfigExecutionModelAzureAPIKeyModelConfigObject; vt != nil && vt.APIKey.Valid() {
 		return &vt.APIKey.Value
 	} else if vt := u.OfSessionExecutesAgentConfigExecutionModelGenericModelConfigObject; vt != nil && vt.APIKey.Valid() {
 		return &vt.APIKey.Value
@@ -1515,8 +1917,220 @@ func (u SessionExecuteParamsAgentConfigExecutionModelUnion) GetAPIKey() *string 
 func (u SessionExecuteParamsAgentConfigExecutionModelUnion) GetBaseURL() *string {
 	if vt := u.OfSessionExecutesAgentConfigExecutionModelVertexModelConfigObject; vt != nil && vt.BaseURL.Valid() {
 		return &vt.BaseURL.Value
+	} else if vt := u.OfSessionExecutesAgentConfigExecutionModelAzureEntraModelConfigObject; vt != nil && vt.BaseURL.Valid() {
+		return &vt.BaseURL.Value
+	} else if vt := u.OfSessionExecutesAgentConfigExecutionModelAzureAPIKeyModelConfigObject; vt != nil && vt.BaseURL.Valid() {
+		return &vt.BaseURL.Value
 	} else if vt := u.OfSessionExecutesAgentConfigExecutionModelGenericModelConfigObject; vt != nil && vt.BaseURL.Valid() {
 		return &vt.BaseURL.Value
+	}
+	return nil
+}
+
+// Returns a subunion which exports methods to access subproperties
+//
+// Or use AsAny() to get the underlying value
+func (u SessionExecuteParamsAgentConfigExecutionModelUnion) GetAuth() (res sessionExecuteParamsAgentConfigExecutionModelUnionAuth) {
+	if vt := u.OfSessionExecutesAgentConfigExecutionModelVertexModelConfigObject; vt != nil {
+		res.any = &vt.Auth
+	} else if vt := u.OfSessionExecutesAgentConfigExecutionModelAzureEntraModelConfigObject; vt != nil {
+		res.any = &vt.Auth
+	}
+	return
+}
+
+// Can have the runtime types
+// [*SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectAuth],
+// [*SessionExecuteParamsAgentConfigExecutionModelAzureEntraModelConfigObjectAuth]
+type sessionExecuteParamsAgentConfigExecutionModelUnionAuth struct{ any }
+
+// Use the following switch statement to get the type of the union:
+//
+//	switch u.AsAny().(type) {
+//	case *stagehand.SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectAuth:
+//	case *stagehand.SessionExecuteParamsAgentConfigExecutionModelAzureEntraModelConfigObjectAuth:
+//	default:
+//	    fmt.Errorf("not present")
+//	}
+func (u sessionExecuteParamsAgentConfigExecutionModelUnionAuth) AsAny() any { return u.any }
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionExecuteParamsAgentConfigExecutionModelUnionAuth) GetCredentials() *SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectAuthCredentials {
+	switch vt := u.any.(type) {
+	case *SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectAuth:
+		return &vt.Credentials
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionExecuteParamsAgentConfigExecutionModelUnionAuth) GetProjectID() *string {
+	switch vt := u.any.(type) {
+	case *SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectAuth:
+		return paramutil.AddrIfPresent(vt.ProjectID)
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionExecuteParamsAgentConfigExecutionModelUnionAuth) GetScopes() *SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectAuthScopesUnion {
+	switch vt := u.any.(type) {
+	case *SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectAuth:
+		return &vt.Scopes
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionExecuteParamsAgentConfigExecutionModelUnionAuth) GetUniverseDomain() *string {
+	switch vt := u.any.(type) {
+	case *SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectAuth:
+		return paramutil.AddrIfPresent(vt.UniverseDomain)
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionExecuteParamsAgentConfigExecutionModelUnionAuth) GetToken() *string {
+	switch vt := u.any.(type) {
+	case *SessionExecuteParamsAgentConfigExecutionModelAzureEntraModelConfigObjectAuth:
+		return &vt.Token
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionExecuteParamsAgentConfigExecutionModelUnionAuth) GetType() *string {
+	switch vt := u.any.(type) {
+	case *SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectAuth:
+		return (*string)(&vt.Type)
+	case *SessionExecuteParamsAgentConfigExecutionModelAzureEntraModelConfigObjectAuth:
+		return (*string)(&vt.Type)
+	}
+	return nil
+}
+
+// Returns a subunion which exports methods to access subproperties
+//
+// Or use AsAny() to get the underlying value
+func (u SessionExecuteParamsAgentConfigExecutionModelUnion) GetProviderOptions() (res sessionExecuteParamsAgentConfigExecutionModelUnionProviderOptions) {
+	if vt := u.OfSessionExecutesAgentConfigExecutionModelVertexModelConfigObject; vt != nil {
+		res.any = &vt.ProviderOptions
+	} else if vt := u.OfSessionExecutesAgentConfigExecutionModelAzureEntraModelConfigObject; vt != nil {
+		res.any = &vt.ProviderOptions
+	} else if vt := u.OfSessionExecutesAgentConfigExecutionModelAzureAPIKeyModelConfigObject; vt != nil {
+		res.any = &vt.ProviderOptions
+	}
+	return
+}
+
+// Can have the runtime types
+// [*SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectProviderOptions],
+// [*SessionExecuteParamsAgentConfigExecutionModelAzureEntraModelConfigObjectProviderOptions],
+// [*SessionExecuteParamsAgentConfigExecutionModelAzureAPIKeyModelConfigObjectProviderOptions]
+type sessionExecuteParamsAgentConfigExecutionModelUnionProviderOptions struct{ any }
+
+// Use the following switch statement to get the type of the union:
+//
+//	switch u.AsAny().(type) {
+//	case *stagehand.SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectProviderOptions:
+//	case *stagehand.SessionExecuteParamsAgentConfigExecutionModelAzureEntraModelConfigObjectProviderOptions:
+//	case *stagehand.SessionExecuteParamsAgentConfigExecutionModelAzureAPIKeyModelConfigObjectProviderOptions:
+//	default:
+//	    fmt.Errorf("not present")
+//	}
+func (u sessionExecuteParamsAgentConfigExecutionModelUnionProviderOptions) AsAny() any { return u.any }
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionExecuteParamsAgentConfigExecutionModelUnionProviderOptions) GetVertex() *SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectProviderOptionsVertex {
+	switch vt := u.any.(type) {
+	case *SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectProviderOptions:
+		return &vt.Vertex
+	}
+	return nil
+}
+
+// Returns a subunion which exports methods to access subproperties
+//
+// Or use AsAny() to get the underlying value
+func (u sessionExecuteParamsAgentConfigExecutionModelUnionProviderOptions) GetAzure() (res sessionExecuteParamsAgentConfigExecutionModelUnionProviderOptionsAzure) {
+	switch vt := u.any.(type) {
+	case *SessionExecuteParamsAgentConfigExecutionModelAzureEntraModelConfigObjectProviderOptions:
+		res.any = &vt.Azure
+	case *SessionExecuteParamsAgentConfigExecutionModelAzureAPIKeyModelConfigObjectProviderOptions:
+		res.any = &vt.Azure
+	}
+	return res
+}
+
+// Can have the runtime types
+// [*SessionExecuteParamsAgentConfigExecutionModelAzureEntraModelConfigObjectProviderOptionsAzure],
+// [*SessionExecuteParamsAgentConfigExecutionModelAzureAPIKeyModelConfigObjectProviderOptionsAzure]
+type sessionExecuteParamsAgentConfigExecutionModelUnionProviderOptionsAzure struct{ any }
+
+// Use the following switch statement to get the type of the union:
+//
+//	switch u.AsAny().(type) {
+//	case *stagehand.SessionExecuteParamsAgentConfigExecutionModelAzureEntraModelConfigObjectProviderOptionsAzure:
+//	case *stagehand.SessionExecuteParamsAgentConfigExecutionModelAzureAPIKeyModelConfigObjectProviderOptionsAzure:
+//	default:
+//	    fmt.Errorf("not present")
+//	}
+func (u sessionExecuteParamsAgentConfigExecutionModelUnionProviderOptionsAzure) AsAny() any {
+	return u.any
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionExecuteParamsAgentConfigExecutionModelUnionProviderOptionsAzure) GetAPIVersion() *string {
+	switch vt := u.any.(type) {
+	case *SessionExecuteParamsAgentConfigExecutionModelAzureEntraModelConfigObjectProviderOptionsAzure:
+		return paramutil.AddrIfPresent(vt.APIVersion)
+	case *SessionExecuteParamsAgentConfigExecutionModelAzureAPIKeyModelConfigObjectProviderOptionsAzure:
+		return paramutil.AddrIfPresent(vt.APIVersion)
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionExecuteParamsAgentConfigExecutionModelUnionProviderOptionsAzure) GetBaseURL() *string {
+	switch vt := u.any.(type) {
+	case *SessionExecuteParamsAgentConfigExecutionModelAzureEntraModelConfigObjectProviderOptionsAzure:
+		return paramutil.AddrIfPresent(vt.BaseURL)
+	case *SessionExecuteParamsAgentConfigExecutionModelAzureAPIKeyModelConfigObjectProviderOptionsAzure:
+		return paramutil.AddrIfPresent(vt.BaseURL)
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionExecuteParamsAgentConfigExecutionModelUnionProviderOptionsAzure) GetResourceName() *string {
+	switch vt := u.any.(type) {
+	case *SessionExecuteParamsAgentConfigExecutionModelAzureEntraModelConfigObjectProviderOptionsAzure:
+		return paramutil.AddrIfPresent(vt.ResourceName)
+	case *SessionExecuteParamsAgentConfigExecutionModelAzureAPIKeyModelConfigObjectProviderOptionsAzure:
+		return paramutil.AddrIfPresent(vt.ResourceName)
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionExecuteParamsAgentConfigExecutionModelUnionProviderOptionsAzure) GetUseDeploymentBasedURLs() *bool {
+	switch vt := u.any.(type) {
+	case *SessionExecuteParamsAgentConfigExecutionModelAzureEntraModelConfigObjectProviderOptionsAzure:
+		return paramutil.AddrIfPresent(vt.UseDeploymentBasedURLs)
+	case *SessionExecuteParamsAgentConfigExecutionModelAzureAPIKeyModelConfigObjectProviderOptionsAzure:
+		return paramutil.AddrIfPresent(vt.UseDeploymentBasedURLs)
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's Headers property, if present.
+func (u sessionExecuteParamsAgentConfigExecutionModelUnionProviderOptionsAzure) GetHeaders() map[string]string {
+	switch vt := u.any.(type) {
+	case *SessionExecuteParamsAgentConfigExecutionModelAzureEntraModelConfigObjectProviderOptionsAzure:
+		return vt.Headers
+	case *SessionExecuteParamsAgentConfigExecutionModelAzureAPIKeyModelConfigObjectProviderOptionsAzure:
+		return vt.Headers
 	}
 	return nil
 }
@@ -1524,6 +2138,10 @@ func (u SessionExecuteParamsAgentConfigExecutionModelUnion) GetBaseURL() *string
 // Returns a pointer to the underlying variant's Headers property, if present.
 func (u SessionExecuteParamsAgentConfigExecutionModelUnion) GetHeaders() map[string]string {
 	if vt := u.OfSessionExecutesAgentConfigExecutionModelVertexModelConfigObject; vt != nil {
+		return vt.Headers
+	} else if vt := u.OfSessionExecutesAgentConfigExecutionModelAzureEntraModelConfigObject; vt != nil {
+		return vt.Headers
+	} else if vt := u.OfSessionExecutesAgentConfigExecutionModelAzureAPIKeyModelConfigObject; vt != nil {
 		return vt.Headers
 	} else if vt := u.OfSessionExecutesAgentConfigExecutionModelGenericModelConfigObject; vt != nil {
 		return vt.Headers
@@ -1686,6 +2304,161 @@ func (r *SessionExecuteParamsAgentConfigExecutionModelVertexModelConfigObjectPro
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// The properties Auth, ModelName, Provider, ProviderOptions are required.
+type SessionExecuteParamsAgentConfigExecutionModelAzureEntraModelConfigObject struct {
+	// Azure provider authentication configuration
+	Auth SessionExecuteParamsAgentConfigExecutionModelAzureEntraModelConfigObjectAuth `json:"auth,omitzero" api:"required"`
+	// Model name string with provider prefix (e.g., 'openai/gpt-5-nano')
+	ModelName string `json:"modelName" api:"required"`
+	// Azure provider-specific model configuration
+	ProviderOptions SessionExecuteParamsAgentConfigExecutionModelAzureEntraModelConfigObjectProviderOptions `json:"providerOptions,omitzero" api:"required"`
+	// Base URL for the model provider
+	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
+	// Custom headers sent with every request to the model provider
+	Headers map[string]string `json:"headers,omitzero"`
+	// Azure OpenAI model provider
+	//
+	// This field can be elided, and will marshal its zero value as "azure".
+	Provider constant.Azure `json:"provider" default:"azure"`
+	paramObj
+}
+
+func (r SessionExecuteParamsAgentConfigExecutionModelAzureEntraModelConfigObject) MarshalJSON() (data []byte, err error) {
+	type shadow SessionExecuteParamsAgentConfigExecutionModelAzureEntraModelConfigObject
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionExecuteParamsAgentConfigExecutionModelAzureEntraModelConfigObject) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Azure provider authentication configuration
+//
+// The properties Token, Type are required.
+type SessionExecuteParamsAgentConfigExecutionModelAzureEntraModelConfigObjectAuth struct {
+	// Microsoft Entra ID bearer token for Azure OpenAI
+	Token string `json:"token" api:"required"`
+	// Use a Microsoft Entra ID bearer token for authentication
+	//
+	// This field can be elided, and will marshal its zero value as "azureEntraId".
+	Type constant.AzureEntraID `json:"type" default:"azureEntraId"`
+	paramObj
+}
+
+func (r SessionExecuteParamsAgentConfigExecutionModelAzureEntraModelConfigObjectAuth) MarshalJSON() (data []byte, err error) {
+	type shadow SessionExecuteParamsAgentConfigExecutionModelAzureEntraModelConfigObjectAuth
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionExecuteParamsAgentConfigExecutionModelAzureEntraModelConfigObjectAuth) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Azure provider-specific model configuration
+//
+// The property Azure is required.
+type SessionExecuteParamsAgentConfigExecutionModelAzureEntraModelConfigObjectProviderOptions struct {
+	// Azure OpenAI provider-specific settings
+	Azure SessionExecuteParamsAgentConfigExecutionModelAzureEntraModelConfigObjectProviderOptionsAzure `json:"azure,omitzero" api:"required"`
+	paramObj
+}
+
+func (r SessionExecuteParamsAgentConfigExecutionModelAzureEntraModelConfigObjectProviderOptions) MarshalJSON() (data []byte, err error) {
+	type shadow SessionExecuteParamsAgentConfigExecutionModelAzureEntraModelConfigObjectProviderOptions
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionExecuteParamsAgentConfigExecutionModelAzureEntraModelConfigObjectProviderOptions) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Azure OpenAI provider-specific settings
+type SessionExecuteParamsAgentConfigExecutionModelAzureEntraModelConfigObjectProviderOptionsAzure struct {
+	// Azure OpenAI API version
+	APIVersion param.Opt[string] `json:"apiVersion,omitzero"`
+	// Base URL for the Azure OpenAI provider
+	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
+	// Azure OpenAI resource name
+	ResourceName param.Opt[string] `json:"resourceName,omitzero"`
+	// Whether to use deployment-based Azure OpenAI URLs
+	UseDeploymentBasedURLs param.Opt[bool] `json:"useDeploymentBasedUrls,omitzero"`
+	// Custom headers sent with every request to the Azure OpenAI provider
+	Headers map[string]string `json:"headers,omitzero"`
+	paramObj
+}
+
+func (r SessionExecuteParamsAgentConfigExecutionModelAzureEntraModelConfigObjectProviderOptionsAzure) MarshalJSON() (data []byte, err error) {
+	type shadow SessionExecuteParamsAgentConfigExecutionModelAzureEntraModelConfigObjectProviderOptionsAzure
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionExecuteParamsAgentConfigExecutionModelAzureEntraModelConfigObjectProviderOptionsAzure) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// The properties ModelName, Provider, ProviderOptions are required.
+type SessionExecuteParamsAgentConfigExecutionModelAzureAPIKeyModelConfigObject struct {
+	// Model name string with provider prefix (e.g., 'openai/gpt-5-nano')
+	ModelName string `json:"modelName" api:"required"`
+	// Azure provider-specific model configuration
+	ProviderOptions SessionExecuteParamsAgentConfigExecutionModelAzureAPIKeyModelConfigObjectProviderOptions `json:"providerOptions,omitzero" api:"required"`
+	// API key for the model provider
+	APIKey param.Opt[string] `json:"apiKey,omitzero"`
+	// Base URL for the model provider
+	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
+	// Custom headers sent with every request to the model provider
+	Headers map[string]string `json:"headers,omitzero"`
+	// Azure OpenAI model provider
+	//
+	// This field can be elided, and will marshal its zero value as "azure".
+	Provider constant.Azure `json:"provider" default:"azure"`
+	paramObj
+}
+
+func (r SessionExecuteParamsAgentConfigExecutionModelAzureAPIKeyModelConfigObject) MarshalJSON() (data []byte, err error) {
+	type shadow SessionExecuteParamsAgentConfigExecutionModelAzureAPIKeyModelConfigObject
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionExecuteParamsAgentConfigExecutionModelAzureAPIKeyModelConfigObject) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Azure provider-specific model configuration
+//
+// The property Azure is required.
+type SessionExecuteParamsAgentConfigExecutionModelAzureAPIKeyModelConfigObjectProviderOptions struct {
+	// Azure OpenAI provider-specific settings
+	Azure SessionExecuteParamsAgentConfigExecutionModelAzureAPIKeyModelConfigObjectProviderOptionsAzure `json:"azure,omitzero" api:"required"`
+	paramObj
+}
+
+func (r SessionExecuteParamsAgentConfigExecutionModelAzureAPIKeyModelConfigObjectProviderOptions) MarshalJSON() (data []byte, err error) {
+	type shadow SessionExecuteParamsAgentConfigExecutionModelAzureAPIKeyModelConfigObjectProviderOptions
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionExecuteParamsAgentConfigExecutionModelAzureAPIKeyModelConfigObjectProviderOptions) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Azure OpenAI provider-specific settings
+type SessionExecuteParamsAgentConfigExecutionModelAzureAPIKeyModelConfigObjectProviderOptionsAzure struct {
+	// Azure OpenAI API version
+	APIVersion param.Opt[string] `json:"apiVersion,omitzero"`
+	// Base URL for the Azure OpenAI provider
+	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
+	// Azure OpenAI resource name
+	ResourceName param.Opt[string] `json:"resourceName,omitzero"`
+	// Whether to use deployment-based Azure OpenAI URLs
+	UseDeploymentBasedURLs param.Opt[bool] `json:"useDeploymentBasedUrls,omitzero"`
+	// Custom headers sent with every request to the Azure OpenAI provider
+	Headers map[string]string `json:"headers,omitzero"`
+	paramObj
+}
+
+func (r SessionExecuteParamsAgentConfigExecutionModelAzureAPIKeyModelConfigObjectProviderOptionsAzure) MarshalJSON() (data []byte, err error) {
+	type shadow SessionExecuteParamsAgentConfigExecutionModelAzureAPIKeyModelConfigObjectProviderOptionsAzure
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionExecuteParamsAgentConfigExecutionModelAzureAPIKeyModelConfigObjectProviderOptionsAzure) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // The property ModelName is required.
 type SessionExecuteParamsAgentConfigExecutionModelGenericModelConfigObject struct {
 	// Model name string with provider prefix (e.g., 'openai/gpt-5-nano')
@@ -1696,6 +2469,11 @@ type SessionExecuteParamsAgentConfigExecutionModelGenericModelConfigObject struc
 	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
 	// Custom headers sent with every request to the model provider
 	Headers map[string]string `json:"headers,omitzero"`
+	// Wire format used by an OpenAI-compatible endpoint. Defaults to the Responses
+	// API; use chat for Chat Completions-only endpoints.
+	//
+	// Any of "responses", "chat".
+	OpenAIEndpointFormat string `json:"openaiEndpointFormat,omitzero"`
 	// AI provider for the model (or provide a baseURL endpoint instead)
 	//
 	// Any of "openai", "anthropic", "google", "microsoft", "bedrock".
@@ -1713,6 +2491,9 @@ func (r *SessionExecuteParamsAgentConfigExecutionModelGenericModelConfigObject) 
 
 func init() {
 	apijson.RegisterFieldValidator[SessionExecuteParamsAgentConfigExecutionModelGenericModelConfigObject](
+		"openaiEndpointFormat", "responses", "chat",
+	)
+	apijson.RegisterFieldValidator[SessionExecuteParamsAgentConfigExecutionModelGenericModelConfigObject](
 		"provider", "openai", "anthropic", "google", "microsoft", "bedrock",
 	)
 }
@@ -1721,14 +2502,20 @@ func init() {
 //
 // Use [param.IsOmitted] to confirm if a field is set.
 type SessionExecuteParamsAgentConfigModelUnion struct {
-	OfSessionExecutesAgentConfigModelVertexModelConfigObject  *SessionExecuteParamsAgentConfigModelVertexModelConfigObject  `json:",omitzero,inline"`
-	OfSessionExecutesAgentConfigModelGenericModelConfigObject *SessionExecuteParamsAgentConfigModelGenericModelConfigObject `json:",omitzero,inline"`
-	OfString                                                  param.Opt[string]                                             `json:",omitzero,inline"`
+	OfSessionExecutesAgentConfigModelVertexModelConfigObject      *SessionExecuteParamsAgentConfigModelVertexModelConfigObject      `json:",omitzero,inline"`
+	OfSessionExecutesAgentConfigModelAzureEntraModelConfigObject  *SessionExecuteParamsAgentConfigModelAzureEntraModelConfigObject  `json:",omitzero,inline"`
+	OfSessionExecutesAgentConfigModelAzureAPIKeyModelConfigObject *SessionExecuteParamsAgentConfigModelAzureAPIKeyModelConfigObject `json:",omitzero,inline"`
+	OfSessionExecutesAgentConfigModelGenericModelConfigObject     *SessionExecuteParamsAgentConfigModelGenericModelConfigObject     `json:",omitzero,inline"`
+	OfString                                                      param.Opt[string]                                                 `json:",omitzero,inline"`
 	paramUnion
 }
 
 func (u SessionExecuteParamsAgentConfigModelUnion) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion(u, u.OfSessionExecutesAgentConfigModelVertexModelConfigObject, u.OfSessionExecutesAgentConfigModelGenericModelConfigObject, u.OfString)
+	return param.MarshalUnion(u, u.OfSessionExecutesAgentConfigModelVertexModelConfigObject,
+		u.OfSessionExecutesAgentConfigModelAzureEntraModelConfigObject,
+		u.OfSessionExecutesAgentConfigModelAzureAPIKeyModelConfigObject,
+		u.OfSessionExecutesAgentConfigModelGenericModelConfigObject,
+		u.OfString)
 }
 func (u *SessionExecuteParamsAgentConfigModelUnion) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
@@ -1737,6 +2524,10 @@ func (u *SessionExecuteParamsAgentConfigModelUnion) UnmarshalJSON(data []byte) e
 func (u *SessionExecuteParamsAgentConfigModelUnion) asAny() any {
 	if !param.IsOmitted(u.OfSessionExecutesAgentConfigModelVertexModelConfigObject) {
 		return u.OfSessionExecutesAgentConfigModelVertexModelConfigObject
+	} else if !param.IsOmitted(u.OfSessionExecutesAgentConfigModelAzureEntraModelConfigObject) {
+		return u.OfSessionExecutesAgentConfigModelAzureEntraModelConfigObject
+	} else if !param.IsOmitted(u.OfSessionExecutesAgentConfigModelAzureAPIKeyModelConfigObject) {
+		return u.OfSessionExecutesAgentConfigModelAzureAPIKeyModelConfigObject
 	} else if !param.IsOmitted(u.OfSessionExecutesAgentConfigModelGenericModelConfigObject) {
 		return u.OfSessionExecutesAgentConfigModelGenericModelConfigObject
 	} else if !param.IsOmitted(u.OfString) {
@@ -1746,17 +2537,9 @@ func (u *SessionExecuteParamsAgentConfigModelUnion) asAny() any {
 }
 
 // Returns a pointer to the underlying variant's property, if present.
-func (u SessionExecuteParamsAgentConfigModelUnion) GetAuth() *SessionExecuteParamsAgentConfigModelVertexModelConfigObjectAuth {
-	if vt := u.OfSessionExecutesAgentConfigModelVertexModelConfigObject; vt != nil {
-		return &vt.Auth
-	}
-	return nil
-}
-
-// Returns a pointer to the underlying variant's property, if present.
-func (u SessionExecuteParamsAgentConfigModelUnion) GetProviderOptions() *SessionExecuteParamsAgentConfigModelVertexModelConfigObjectProviderOptions {
-	if vt := u.OfSessionExecutesAgentConfigModelVertexModelConfigObject; vt != nil {
-		return &vt.ProviderOptions
+func (u SessionExecuteParamsAgentConfigModelUnion) GetOpenAIEndpointFormat() *string {
+	if vt := u.OfSessionExecutesAgentConfigModelGenericModelConfigObject; vt != nil {
+		return &vt.OpenAIEndpointFormat
 	}
 	return nil
 }
@@ -1764,6 +2547,10 @@ func (u SessionExecuteParamsAgentConfigModelUnion) GetProviderOptions() *Session
 // Returns a pointer to the underlying variant's property, if present.
 func (u SessionExecuteParamsAgentConfigModelUnion) GetModelName() *string {
 	if vt := u.OfSessionExecutesAgentConfigModelVertexModelConfigObject; vt != nil {
+		return (*string)(&vt.ModelName)
+	} else if vt := u.OfSessionExecutesAgentConfigModelAzureEntraModelConfigObject; vt != nil {
+		return (*string)(&vt.ModelName)
+	} else if vt := u.OfSessionExecutesAgentConfigModelAzureAPIKeyModelConfigObject; vt != nil {
 		return (*string)(&vt.ModelName)
 	} else if vt := u.OfSessionExecutesAgentConfigModelGenericModelConfigObject; vt != nil {
 		return (*string)(&vt.ModelName)
@@ -1775,6 +2562,10 @@ func (u SessionExecuteParamsAgentConfigModelUnion) GetModelName() *string {
 func (u SessionExecuteParamsAgentConfigModelUnion) GetProvider() *string {
 	if vt := u.OfSessionExecutesAgentConfigModelVertexModelConfigObject; vt != nil {
 		return (*string)(&vt.Provider)
+	} else if vt := u.OfSessionExecutesAgentConfigModelAzureEntraModelConfigObject; vt != nil {
+		return (*string)(&vt.Provider)
+	} else if vt := u.OfSessionExecutesAgentConfigModelAzureAPIKeyModelConfigObject; vt != nil {
+		return (*string)(&vt.Provider)
 	} else if vt := u.OfSessionExecutesAgentConfigModelGenericModelConfigObject; vt != nil {
 		return (*string)(&vt.Provider)
 	}
@@ -1784,6 +2575,8 @@ func (u SessionExecuteParamsAgentConfigModelUnion) GetProvider() *string {
 // Returns a pointer to the underlying variant's property, if present.
 func (u SessionExecuteParamsAgentConfigModelUnion) GetAPIKey() *string {
 	if vt := u.OfSessionExecutesAgentConfigModelVertexModelConfigObject; vt != nil && vt.APIKey.Valid() {
+		return &vt.APIKey.Value
+	} else if vt := u.OfSessionExecutesAgentConfigModelAzureAPIKeyModelConfigObject; vt != nil && vt.APIKey.Valid() {
 		return &vt.APIKey.Value
 	} else if vt := u.OfSessionExecutesAgentConfigModelGenericModelConfigObject; vt != nil && vt.APIKey.Valid() {
 		return &vt.APIKey.Value
@@ -1795,8 +2588,218 @@ func (u SessionExecuteParamsAgentConfigModelUnion) GetAPIKey() *string {
 func (u SessionExecuteParamsAgentConfigModelUnion) GetBaseURL() *string {
 	if vt := u.OfSessionExecutesAgentConfigModelVertexModelConfigObject; vt != nil && vt.BaseURL.Valid() {
 		return &vt.BaseURL.Value
+	} else if vt := u.OfSessionExecutesAgentConfigModelAzureEntraModelConfigObject; vt != nil && vt.BaseURL.Valid() {
+		return &vt.BaseURL.Value
+	} else if vt := u.OfSessionExecutesAgentConfigModelAzureAPIKeyModelConfigObject; vt != nil && vt.BaseURL.Valid() {
+		return &vt.BaseURL.Value
 	} else if vt := u.OfSessionExecutesAgentConfigModelGenericModelConfigObject; vt != nil && vt.BaseURL.Valid() {
 		return &vt.BaseURL.Value
+	}
+	return nil
+}
+
+// Returns a subunion which exports methods to access subproperties
+//
+// Or use AsAny() to get the underlying value
+func (u SessionExecuteParamsAgentConfigModelUnion) GetAuth() (res sessionExecuteParamsAgentConfigModelUnionAuth) {
+	if vt := u.OfSessionExecutesAgentConfigModelVertexModelConfigObject; vt != nil {
+		res.any = &vt.Auth
+	} else if vt := u.OfSessionExecutesAgentConfigModelAzureEntraModelConfigObject; vt != nil {
+		res.any = &vt.Auth
+	}
+	return
+}
+
+// Can have the runtime types
+// [*SessionExecuteParamsAgentConfigModelVertexModelConfigObjectAuth],
+// [*SessionExecuteParamsAgentConfigModelAzureEntraModelConfigObjectAuth]
+type sessionExecuteParamsAgentConfigModelUnionAuth struct{ any }
+
+// Use the following switch statement to get the type of the union:
+//
+//	switch u.AsAny().(type) {
+//	case *stagehand.SessionExecuteParamsAgentConfigModelVertexModelConfigObjectAuth:
+//	case *stagehand.SessionExecuteParamsAgentConfigModelAzureEntraModelConfigObjectAuth:
+//	default:
+//	    fmt.Errorf("not present")
+//	}
+func (u sessionExecuteParamsAgentConfigModelUnionAuth) AsAny() any { return u.any }
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionExecuteParamsAgentConfigModelUnionAuth) GetCredentials() *SessionExecuteParamsAgentConfigModelVertexModelConfigObjectAuthCredentials {
+	switch vt := u.any.(type) {
+	case *SessionExecuteParamsAgentConfigModelVertexModelConfigObjectAuth:
+		return &vt.Credentials
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionExecuteParamsAgentConfigModelUnionAuth) GetProjectID() *string {
+	switch vt := u.any.(type) {
+	case *SessionExecuteParamsAgentConfigModelVertexModelConfigObjectAuth:
+		return paramutil.AddrIfPresent(vt.ProjectID)
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionExecuteParamsAgentConfigModelUnionAuth) GetScopes() *SessionExecuteParamsAgentConfigModelVertexModelConfigObjectAuthScopesUnion {
+	switch vt := u.any.(type) {
+	case *SessionExecuteParamsAgentConfigModelVertexModelConfigObjectAuth:
+		return &vt.Scopes
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionExecuteParamsAgentConfigModelUnionAuth) GetUniverseDomain() *string {
+	switch vt := u.any.(type) {
+	case *SessionExecuteParamsAgentConfigModelVertexModelConfigObjectAuth:
+		return paramutil.AddrIfPresent(vt.UniverseDomain)
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionExecuteParamsAgentConfigModelUnionAuth) GetToken() *string {
+	switch vt := u.any.(type) {
+	case *SessionExecuteParamsAgentConfigModelAzureEntraModelConfigObjectAuth:
+		return &vt.Token
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionExecuteParamsAgentConfigModelUnionAuth) GetType() *string {
+	switch vt := u.any.(type) {
+	case *SessionExecuteParamsAgentConfigModelVertexModelConfigObjectAuth:
+		return (*string)(&vt.Type)
+	case *SessionExecuteParamsAgentConfigModelAzureEntraModelConfigObjectAuth:
+		return (*string)(&vt.Type)
+	}
+	return nil
+}
+
+// Returns a subunion which exports methods to access subproperties
+//
+// Or use AsAny() to get the underlying value
+func (u SessionExecuteParamsAgentConfigModelUnion) GetProviderOptions() (res sessionExecuteParamsAgentConfigModelUnionProviderOptions) {
+	if vt := u.OfSessionExecutesAgentConfigModelVertexModelConfigObject; vt != nil {
+		res.any = &vt.ProviderOptions
+	} else if vt := u.OfSessionExecutesAgentConfigModelAzureEntraModelConfigObject; vt != nil {
+		res.any = &vt.ProviderOptions
+	} else if vt := u.OfSessionExecutesAgentConfigModelAzureAPIKeyModelConfigObject; vt != nil {
+		res.any = &vt.ProviderOptions
+	}
+	return
+}
+
+// Can have the runtime types
+// [*SessionExecuteParamsAgentConfigModelVertexModelConfigObjectProviderOptions],
+// [*SessionExecuteParamsAgentConfigModelAzureEntraModelConfigObjectProviderOptions],
+// [*SessionExecuteParamsAgentConfigModelAzureAPIKeyModelConfigObjectProviderOptions]
+type sessionExecuteParamsAgentConfigModelUnionProviderOptions struct{ any }
+
+// Use the following switch statement to get the type of the union:
+//
+//	switch u.AsAny().(type) {
+//	case *stagehand.SessionExecuteParamsAgentConfigModelVertexModelConfigObjectProviderOptions:
+//	case *stagehand.SessionExecuteParamsAgentConfigModelAzureEntraModelConfigObjectProviderOptions:
+//	case *stagehand.SessionExecuteParamsAgentConfigModelAzureAPIKeyModelConfigObjectProviderOptions:
+//	default:
+//	    fmt.Errorf("not present")
+//	}
+func (u sessionExecuteParamsAgentConfigModelUnionProviderOptions) AsAny() any { return u.any }
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionExecuteParamsAgentConfigModelUnionProviderOptions) GetVertex() *SessionExecuteParamsAgentConfigModelVertexModelConfigObjectProviderOptionsVertex {
+	switch vt := u.any.(type) {
+	case *SessionExecuteParamsAgentConfigModelVertexModelConfigObjectProviderOptions:
+		return &vt.Vertex
+	}
+	return nil
+}
+
+// Returns a subunion which exports methods to access subproperties
+//
+// Or use AsAny() to get the underlying value
+func (u sessionExecuteParamsAgentConfigModelUnionProviderOptions) GetAzure() (res sessionExecuteParamsAgentConfigModelUnionProviderOptionsAzure) {
+	switch vt := u.any.(type) {
+	case *SessionExecuteParamsAgentConfigModelAzureEntraModelConfigObjectProviderOptions:
+		res.any = &vt.Azure
+	case *SessionExecuteParamsAgentConfigModelAzureAPIKeyModelConfigObjectProviderOptions:
+		res.any = &vt.Azure
+	}
+	return res
+}
+
+// Can have the runtime types
+// [*SessionExecuteParamsAgentConfigModelAzureEntraModelConfigObjectProviderOptionsAzure],
+// [*SessionExecuteParamsAgentConfigModelAzureAPIKeyModelConfigObjectProviderOptionsAzure]
+type sessionExecuteParamsAgentConfigModelUnionProviderOptionsAzure struct{ any }
+
+// Use the following switch statement to get the type of the union:
+//
+//	switch u.AsAny().(type) {
+//	case *stagehand.SessionExecuteParamsAgentConfigModelAzureEntraModelConfigObjectProviderOptionsAzure:
+//	case *stagehand.SessionExecuteParamsAgentConfigModelAzureAPIKeyModelConfigObjectProviderOptionsAzure:
+//	default:
+//	    fmt.Errorf("not present")
+//	}
+func (u sessionExecuteParamsAgentConfigModelUnionProviderOptionsAzure) AsAny() any { return u.any }
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionExecuteParamsAgentConfigModelUnionProviderOptionsAzure) GetAPIVersion() *string {
+	switch vt := u.any.(type) {
+	case *SessionExecuteParamsAgentConfigModelAzureEntraModelConfigObjectProviderOptionsAzure:
+		return paramutil.AddrIfPresent(vt.APIVersion)
+	case *SessionExecuteParamsAgentConfigModelAzureAPIKeyModelConfigObjectProviderOptionsAzure:
+		return paramutil.AddrIfPresent(vt.APIVersion)
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionExecuteParamsAgentConfigModelUnionProviderOptionsAzure) GetBaseURL() *string {
+	switch vt := u.any.(type) {
+	case *SessionExecuteParamsAgentConfigModelAzureEntraModelConfigObjectProviderOptionsAzure:
+		return paramutil.AddrIfPresent(vt.BaseURL)
+	case *SessionExecuteParamsAgentConfigModelAzureAPIKeyModelConfigObjectProviderOptionsAzure:
+		return paramutil.AddrIfPresent(vt.BaseURL)
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionExecuteParamsAgentConfigModelUnionProviderOptionsAzure) GetResourceName() *string {
+	switch vt := u.any.(type) {
+	case *SessionExecuteParamsAgentConfigModelAzureEntraModelConfigObjectProviderOptionsAzure:
+		return paramutil.AddrIfPresent(vt.ResourceName)
+	case *SessionExecuteParamsAgentConfigModelAzureAPIKeyModelConfigObjectProviderOptionsAzure:
+		return paramutil.AddrIfPresent(vt.ResourceName)
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionExecuteParamsAgentConfigModelUnionProviderOptionsAzure) GetUseDeploymentBasedURLs() *bool {
+	switch vt := u.any.(type) {
+	case *SessionExecuteParamsAgentConfigModelAzureEntraModelConfigObjectProviderOptionsAzure:
+		return paramutil.AddrIfPresent(vt.UseDeploymentBasedURLs)
+	case *SessionExecuteParamsAgentConfigModelAzureAPIKeyModelConfigObjectProviderOptionsAzure:
+		return paramutil.AddrIfPresent(vt.UseDeploymentBasedURLs)
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's Headers property, if present.
+func (u sessionExecuteParamsAgentConfigModelUnionProviderOptionsAzure) GetHeaders() map[string]string {
+	switch vt := u.any.(type) {
+	case *SessionExecuteParamsAgentConfigModelAzureEntraModelConfigObjectProviderOptionsAzure:
+		return vt.Headers
+	case *SessionExecuteParamsAgentConfigModelAzureAPIKeyModelConfigObjectProviderOptionsAzure:
+		return vt.Headers
 	}
 	return nil
 }
@@ -1804,6 +2807,10 @@ func (u SessionExecuteParamsAgentConfigModelUnion) GetBaseURL() *string {
 // Returns a pointer to the underlying variant's Headers property, if present.
 func (u SessionExecuteParamsAgentConfigModelUnion) GetHeaders() map[string]string {
 	if vt := u.OfSessionExecutesAgentConfigModelVertexModelConfigObject; vt != nil {
+		return vt.Headers
+	} else if vt := u.OfSessionExecutesAgentConfigModelAzureEntraModelConfigObject; vt != nil {
+		return vt.Headers
+	} else if vt := u.OfSessionExecutesAgentConfigModelAzureAPIKeyModelConfigObject; vt != nil {
 		return vt.Headers
 	} else if vt := u.OfSessionExecutesAgentConfigModelGenericModelConfigObject; vt != nil {
 		return vt.Headers
@@ -1966,6 +2973,161 @@ func (r *SessionExecuteParamsAgentConfigModelVertexModelConfigObjectProviderOpti
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// The properties Auth, ModelName, Provider, ProviderOptions are required.
+type SessionExecuteParamsAgentConfigModelAzureEntraModelConfigObject struct {
+	// Azure provider authentication configuration
+	Auth SessionExecuteParamsAgentConfigModelAzureEntraModelConfigObjectAuth `json:"auth,omitzero" api:"required"`
+	// Model name string with provider prefix (e.g., 'openai/gpt-5-nano')
+	ModelName string `json:"modelName" api:"required"`
+	// Azure provider-specific model configuration
+	ProviderOptions SessionExecuteParamsAgentConfigModelAzureEntraModelConfigObjectProviderOptions `json:"providerOptions,omitzero" api:"required"`
+	// Base URL for the model provider
+	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
+	// Custom headers sent with every request to the model provider
+	Headers map[string]string `json:"headers,omitzero"`
+	// Azure OpenAI model provider
+	//
+	// This field can be elided, and will marshal its zero value as "azure".
+	Provider constant.Azure `json:"provider" default:"azure"`
+	paramObj
+}
+
+func (r SessionExecuteParamsAgentConfigModelAzureEntraModelConfigObject) MarshalJSON() (data []byte, err error) {
+	type shadow SessionExecuteParamsAgentConfigModelAzureEntraModelConfigObject
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionExecuteParamsAgentConfigModelAzureEntraModelConfigObject) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Azure provider authentication configuration
+//
+// The properties Token, Type are required.
+type SessionExecuteParamsAgentConfigModelAzureEntraModelConfigObjectAuth struct {
+	// Microsoft Entra ID bearer token for Azure OpenAI
+	Token string `json:"token" api:"required"`
+	// Use a Microsoft Entra ID bearer token for authentication
+	//
+	// This field can be elided, and will marshal its zero value as "azureEntraId".
+	Type constant.AzureEntraID `json:"type" default:"azureEntraId"`
+	paramObj
+}
+
+func (r SessionExecuteParamsAgentConfigModelAzureEntraModelConfigObjectAuth) MarshalJSON() (data []byte, err error) {
+	type shadow SessionExecuteParamsAgentConfigModelAzureEntraModelConfigObjectAuth
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionExecuteParamsAgentConfigModelAzureEntraModelConfigObjectAuth) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Azure provider-specific model configuration
+//
+// The property Azure is required.
+type SessionExecuteParamsAgentConfigModelAzureEntraModelConfigObjectProviderOptions struct {
+	// Azure OpenAI provider-specific settings
+	Azure SessionExecuteParamsAgentConfigModelAzureEntraModelConfigObjectProviderOptionsAzure `json:"azure,omitzero" api:"required"`
+	paramObj
+}
+
+func (r SessionExecuteParamsAgentConfigModelAzureEntraModelConfigObjectProviderOptions) MarshalJSON() (data []byte, err error) {
+	type shadow SessionExecuteParamsAgentConfigModelAzureEntraModelConfigObjectProviderOptions
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionExecuteParamsAgentConfigModelAzureEntraModelConfigObjectProviderOptions) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Azure OpenAI provider-specific settings
+type SessionExecuteParamsAgentConfigModelAzureEntraModelConfigObjectProviderOptionsAzure struct {
+	// Azure OpenAI API version
+	APIVersion param.Opt[string] `json:"apiVersion,omitzero"`
+	// Base URL for the Azure OpenAI provider
+	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
+	// Azure OpenAI resource name
+	ResourceName param.Opt[string] `json:"resourceName,omitzero"`
+	// Whether to use deployment-based Azure OpenAI URLs
+	UseDeploymentBasedURLs param.Opt[bool] `json:"useDeploymentBasedUrls,omitzero"`
+	// Custom headers sent with every request to the Azure OpenAI provider
+	Headers map[string]string `json:"headers,omitzero"`
+	paramObj
+}
+
+func (r SessionExecuteParamsAgentConfigModelAzureEntraModelConfigObjectProviderOptionsAzure) MarshalJSON() (data []byte, err error) {
+	type shadow SessionExecuteParamsAgentConfigModelAzureEntraModelConfigObjectProviderOptionsAzure
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionExecuteParamsAgentConfigModelAzureEntraModelConfigObjectProviderOptionsAzure) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// The properties ModelName, Provider, ProviderOptions are required.
+type SessionExecuteParamsAgentConfigModelAzureAPIKeyModelConfigObject struct {
+	// Model name string with provider prefix (e.g., 'openai/gpt-5-nano')
+	ModelName string `json:"modelName" api:"required"`
+	// Azure provider-specific model configuration
+	ProviderOptions SessionExecuteParamsAgentConfigModelAzureAPIKeyModelConfigObjectProviderOptions `json:"providerOptions,omitzero" api:"required"`
+	// API key for the model provider
+	APIKey param.Opt[string] `json:"apiKey,omitzero"`
+	// Base URL for the model provider
+	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
+	// Custom headers sent with every request to the model provider
+	Headers map[string]string `json:"headers,omitzero"`
+	// Azure OpenAI model provider
+	//
+	// This field can be elided, and will marshal its zero value as "azure".
+	Provider constant.Azure `json:"provider" default:"azure"`
+	paramObj
+}
+
+func (r SessionExecuteParamsAgentConfigModelAzureAPIKeyModelConfigObject) MarshalJSON() (data []byte, err error) {
+	type shadow SessionExecuteParamsAgentConfigModelAzureAPIKeyModelConfigObject
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionExecuteParamsAgentConfigModelAzureAPIKeyModelConfigObject) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Azure provider-specific model configuration
+//
+// The property Azure is required.
+type SessionExecuteParamsAgentConfigModelAzureAPIKeyModelConfigObjectProviderOptions struct {
+	// Azure OpenAI provider-specific settings
+	Azure SessionExecuteParamsAgentConfigModelAzureAPIKeyModelConfigObjectProviderOptionsAzure `json:"azure,omitzero" api:"required"`
+	paramObj
+}
+
+func (r SessionExecuteParamsAgentConfigModelAzureAPIKeyModelConfigObjectProviderOptions) MarshalJSON() (data []byte, err error) {
+	type shadow SessionExecuteParamsAgentConfigModelAzureAPIKeyModelConfigObjectProviderOptions
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionExecuteParamsAgentConfigModelAzureAPIKeyModelConfigObjectProviderOptions) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Azure OpenAI provider-specific settings
+type SessionExecuteParamsAgentConfigModelAzureAPIKeyModelConfigObjectProviderOptionsAzure struct {
+	// Azure OpenAI API version
+	APIVersion param.Opt[string] `json:"apiVersion,omitzero"`
+	// Base URL for the Azure OpenAI provider
+	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
+	// Azure OpenAI resource name
+	ResourceName param.Opt[string] `json:"resourceName,omitzero"`
+	// Whether to use deployment-based Azure OpenAI URLs
+	UseDeploymentBasedURLs param.Opt[bool] `json:"useDeploymentBasedUrls,omitzero"`
+	// Custom headers sent with every request to the Azure OpenAI provider
+	Headers map[string]string `json:"headers,omitzero"`
+	paramObj
+}
+
+func (r SessionExecuteParamsAgentConfigModelAzureAPIKeyModelConfigObjectProviderOptionsAzure) MarshalJSON() (data []byte, err error) {
+	type shadow SessionExecuteParamsAgentConfigModelAzureAPIKeyModelConfigObjectProviderOptionsAzure
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionExecuteParamsAgentConfigModelAzureAPIKeyModelConfigObjectProviderOptionsAzure) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // The property ModelName is required.
 type SessionExecuteParamsAgentConfigModelGenericModelConfigObject struct {
 	// Model name string with provider prefix (e.g., 'openai/gpt-5-nano')
@@ -1976,6 +3138,11 @@ type SessionExecuteParamsAgentConfigModelGenericModelConfigObject struct {
 	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
 	// Custom headers sent with every request to the model provider
 	Headers map[string]string `json:"headers,omitzero"`
+	// Wire format used by an OpenAI-compatible endpoint. Defaults to the Responses
+	// API; use chat for Chat Completions-only endpoints.
+	//
+	// Any of "responses", "chat".
+	OpenAIEndpointFormat string `json:"openaiEndpointFormat,omitzero"`
 	// AI provider for the model (or provide a baseURL endpoint instead)
 	//
 	// Any of "openai", "anthropic", "google", "microsoft", "bedrock".
@@ -1992,6 +3159,9 @@ func (r *SessionExecuteParamsAgentConfigModelGenericModelConfigObject) Unmarshal
 }
 
 func init() {
+	apijson.RegisterFieldValidator[SessionExecuteParamsAgentConfigModelGenericModelConfigObject](
+		"openaiEndpointFormat", "responses", "chat",
+	)
 	apijson.RegisterFieldValidator[SessionExecuteParamsAgentConfigModelGenericModelConfigObject](
 		"provider", "openai", "anthropic", "google", "microsoft", "bedrock",
 	)
@@ -2154,14 +3324,20 @@ func (r *SessionExtractParamsOptions) UnmarshalJSON(data []byte) error {
 //
 // Use [param.IsOmitted] to confirm if a field is set.
 type SessionExtractParamsOptionsModelUnion struct {
-	OfSessionExtractsOptionsModelVertexModelConfigObject  *SessionExtractParamsOptionsModelVertexModelConfigObject  `json:",omitzero,inline"`
-	OfSessionExtractsOptionsModelGenericModelConfigObject *SessionExtractParamsOptionsModelGenericModelConfigObject `json:",omitzero,inline"`
-	OfString                                              param.Opt[string]                                         `json:",omitzero,inline"`
+	OfSessionExtractsOptionsModelVertexModelConfigObject      *SessionExtractParamsOptionsModelVertexModelConfigObject      `json:",omitzero,inline"`
+	OfSessionExtractsOptionsModelAzureEntraModelConfigObject  *SessionExtractParamsOptionsModelAzureEntraModelConfigObject  `json:",omitzero,inline"`
+	OfSessionExtractsOptionsModelAzureAPIKeyModelConfigObject *SessionExtractParamsOptionsModelAzureAPIKeyModelConfigObject `json:",omitzero,inline"`
+	OfSessionExtractsOptionsModelGenericModelConfigObject     *SessionExtractParamsOptionsModelGenericModelConfigObject     `json:",omitzero,inline"`
+	OfString                                                  param.Opt[string]                                             `json:",omitzero,inline"`
 	paramUnion
 }
 
 func (u SessionExtractParamsOptionsModelUnion) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion(u, u.OfSessionExtractsOptionsModelVertexModelConfigObject, u.OfSessionExtractsOptionsModelGenericModelConfigObject, u.OfString)
+	return param.MarshalUnion(u, u.OfSessionExtractsOptionsModelVertexModelConfigObject,
+		u.OfSessionExtractsOptionsModelAzureEntraModelConfigObject,
+		u.OfSessionExtractsOptionsModelAzureAPIKeyModelConfigObject,
+		u.OfSessionExtractsOptionsModelGenericModelConfigObject,
+		u.OfString)
 }
 func (u *SessionExtractParamsOptionsModelUnion) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
@@ -2170,6 +3346,10 @@ func (u *SessionExtractParamsOptionsModelUnion) UnmarshalJSON(data []byte) error
 func (u *SessionExtractParamsOptionsModelUnion) asAny() any {
 	if !param.IsOmitted(u.OfSessionExtractsOptionsModelVertexModelConfigObject) {
 		return u.OfSessionExtractsOptionsModelVertexModelConfigObject
+	} else if !param.IsOmitted(u.OfSessionExtractsOptionsModelAzureEntraModelConfigObject) {
+		return u.OfSessionExtractsOptionsModelAzureEntraModelConfigObject
+	} else if !param.IsOmitted(u.OfSessionExtractsOptionsModelAzureAPIKeyModelConfigObject) {
+		return u.OfSessionExtractsOptionsModelAzureAPIKeyModelConfigObject
 	} else if !param.IsOmitted(u.OfSessionExtractsOptionsModelGenericModelConfigObject) {
 		return u.OfSessionExtractsOptionsModelGenericModelConfigObject
 	} else if !param.IsOmitted(u.OfString) {
@@ -2179,17 +3359,9 @@ func (u *SessionExtractParamsOptionsModelUnion) asAny() any {
 }
 
 // Returns a pointer to the underlying variant's property, if present.
-func (u SessionExtractParamsOptionsModelUnion) GetAuth() *SessionExtractParamsOptionsModelVertexModelConfigObjectAuth {
-	if vt := u.OfSessionExtractsOptionsModelVertexModelConfigObject; vt != nil {
-		return &vt.Auth
-	}
-	return nil
-}
-
-// Returns a pointer to the underlying variant's property, if present.
-func (u SessionExtractParamsOptionsModelUnion) GetProviderOptions() *SessionExtractParamsOptionsModelVertexModelConfigObjectProviderOptions {
-	if vt := u.OfSessionExtractsOptionsModelVertexModelConfigObject; vt != nil {
-		return &vt.ProviderOptions
+func (u SessionExtractParamsOptionsModelUnion) GetOpenAIEndpointFormat() *string {
+	if vt := u.OfSessionExtractsOptionsModelGenericModelConfigObject; vt != nil {
+		return &vt.OpenAIEndpointFormat
 	}
 	return nil
 }
@@ -2197,6 +3369,10 @@ func (u SessionExtractParamsOptionsModelUnion) GetProviderOptions() *SessionExtr
 // Returns a pointer to the underlying variant's property, if present.
 func (u SessionExtractParamsOptionsModelUnion) GetModelName() *string {
 	if vt := u.OfSessionExtractsOptionsModelVertexModelConfigObject; vt != nil {
+		return (*string)(&vt.ModelName)
+	} else if vt := u.OfSessionExtractsOptionsModelAzureEntraModelConfigObject; vt != nil {
+		return (*string)(&vt.ModelName)
+	} else if vt := u.OfSessionExtractsOptionsModelAzureAPIKeyModelConfigObject; vt != nil {
 		return (*string)(&vt.ModelName)
 	} else if vt := u.OfSessionExtractsOptionsModelGenericModelConfigObject; vt != nil {
 		return (*string)(&vt.ModelName)
@@ -2208,6 +3384,10 @@ func (u SessionExtractParamsOptionsModelUnion) GetModelName() *string {
 func (u SessionExtractParamsOptionsModelUnion) GetProvider() *string {
 	if vt := u.OfSessionExtractsOptionsModelVertexModelConfigObject; vt != nil {
 		return (*string)(&vt.Provider)
+	} else if vt := u.OfSessionExtractsOptionsModelAzureEntraModelConfigObject; vt != nil {
+		return (*string)(&vt.Provider)
+	} else if vt := u.OfSessionExtractsOptionsModelAzureAPIKeyModelConfigObject; vt != nil {
+		return (*string)(&vt.Provider)
 	} else if vt := u.OfSessionExtractsOptionsModelGenericModelConfigObject; vt != nil {
 		return (*string)(&vt.Provider)
 	}
@@ -2217,6 +3397,8 @@ func (u SessionExtractParamsOptionsModelUnion) GetProvider() *string {
 // Returns a pointer to the underlying variant's property, if present.
 func (u SessionExtractParamsOptionsModelUnion) GetAPIKey() *string {
 	if vt := u.OfSessionExtractsOptionsModelVertexModelConfigObject; vt != nil && vt.APIKey.Valid() {
+		return &vt.APIKey.Value
+	} else if vt := u.OfSessionExtractsOptionsModelAzureAPIKeyModelConfigObject; vt != nil && vt.APIKey.Valid() {
 		return &vt.APIKey.Value
 	} else if vt := u.OfSessionExtractsOptionsModelGenericModelConfigObject; vt != nil && vt.APIKey.Valid() {
 		return &vt.APIKey.Value
@@ -2228,8 +3410,218 @@ func (u SessionExtractParamsOptionsModelUnion) GetAPIKey() *string {
 func (u SessionExtractParamsOptionsModelUnion) GetBaseURL() *string {
 	if vt := u.OfSessionExtractsOptionsModelVertexModelConfigObject; vt != nil && vt.BaseURL.Valid() {
 		return &vt.BaseURL.Value
+	} else if vt := u.OfSessionExtractsOptionsModelAzureEntraModelConfigObject; vt != nil && vt.BaseURL.Valid() {
+		return &vt.BaseURL.Value
+	} else if vt := u.OfSessionExtractsOptionsModelAzureAPIKeyModelConfigObject; vt != nil && vt.BaseURL.Valid() {
+		return &vt.BaseURL.Value
 	} else if vt := u.OfSessionExtractsOptionsModelGenericModelConfigObject; vt != nil && vt.BaseURL.Valid() {
 		return &vt.BaseURL.Value
+	}
+	return nil
+}
+
+// Returns a subunion which exports methods to access subproperties
+//
+// Or use AsAny() to get the underlying value
+func (u SessionExtractParamsOptionsModelUnion) GetAuth() (res sessionExtractParamsOptionsModelUnionAuth) {
+	if vt := u.OfSessionExtractsOptionsModelVertexModelConfigObject; vt != nil {
+		res.any = &vt.Auth
+	} else if vt := u.OfSessionExtractsOptionsModelAzureEntraModelConfigObject; vt != nil {
+		res.any = &vt.Auth
+	}
+	return
+}
+
+// Can have the runtime types
+// [*SessionExtractParamsOptionsModelVertexModelConfigObjectAuth],
+// [*SessionExtractParamsOptionsModelAzureEntraModelConfigObjectAuth]
+type sessionExtractParamsOptionsModelUnionAuth struct{ any }
+
+// Use the following switch statement to get the type of the union:
+//
+//	switch u.AsAny().(type) {
+//	case *stagehand.SessionExtractParamsOptionsModelVertexModelConfigObjectAuth:
+//	case *stagehand.SessionExtractParamsOptionsModelAzureEntraModelConfigObjectAuth:
+//	default:
+//	    fmt.Errorf("not present")
+//	}
+func (u sessionExtractParamsOptionsModelUnionAuth) AsAny() any { return u.any }
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionExtractParamsOptionsModelUnionAuth) GetCredentials() *SessionExtractParamsOptionsModelVertexModelConfigObjectAuthCredentials {
+	switch vt := u.any.(type) {
+	case *SessionExtractParamsOptionsModelVertexModelConfigObjectAuth:
+		return &vt.Credentials
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionExtractParamsOptionsModelUnionAuth) GetProjectID() *string {
+	switch vt := u.any.(type) {
+	case *SessionExtractParamsOptionsModelVertexModelConfigObjectAuth:
+		return paramutil.AddrIfPresent(vt.ProjectID)
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionExtractParamsOptionsModelUnionAuth) GetScopes() *SessionExtractParamsOptionsModelVertexModelConfigObjectAuthScopesUnion {
+	switch vt := u.any.(type) {
+	case *SessionExtractParamsOptionsModelVertexModelConfigObjectAuth:
+		return &vt.Scopes
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionExtractParamsOptionsModelUnionAuth) GetUniverseDomain() *string {
+	switch vt := u.any.(type) {
+	case *SessionExtractParamsOptionsModelVertexModelConfigObjectAuth:
+		return paramutil.AddrIfPresent(vt.UniverseDomain)
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionExtractParamsOptionsModelUnionAuth) GetToken() *string {
+	switch vt := u.any.(type) {
+	case *SessionExtractParamsOptionsModelAzureEntraModelConfigObjectAuth:
+		return &vt.Token
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionExtractParamsOptionsModelUnionAuth) GetType() *string {
+	switch vt := u.any.(type) {
+	case *SessionExtractParamsOptionsModelVertexModelConfigObjectAuth:
+		return (*string)(&vt.Type)
+	case *SessionExtractParamsOptionsModelAzureEntraModelConfigObjectAuth:
+		return (*string)(&vt.Type)
+	}
+	return nil
+}
+
+// Returns a subunion which exports methods to access subproperties
+//
+// Or use AsAny() to get the underlying value
+func (u SessionExtractParamsOptionsModelUnion) GetProviderOptions() (res sessionExtractParamsOptionsModelUnionProviderOptions) {
+	if vt := u.OfSessionExtractsOptionsModelVertexModelConfigObject; vt != nil {
+		res.any = &vt.ProviderOptions
+	} else if vt := u.OfSessionExtractsOptionsModelAzureEntraModelConfigObject; vt != nil {
+		res.any = &vt.ProviderOptions
+	} else if vt := u.OfSessionExtractsOptionsModelAzureAPIKeyModelConfigObject; vt != nil {
+		res.any = &vt.ProviderOptions
+	}
+	return
+}
+
+// Can have the runtime types
+// [*SessionExtractParamsOptionsModelVertexModelConfigObjectProviderOptions],
+// [*SessionExtractParamsOptionsModelAzureEntraModelConfigObjectProviderOptions],
+// [*SessionExtractParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptions]
+type sessionExtractParamsOptionsModelUnionProviderOptions struct{ any }
+
+// Use the following switch statement to get the type of the union:
+//
+//	switch u.AsAny().(type) {
+//	case *stagehand.SessionExtractParamsOptionsModelVertexModelConfigObjectProviderOptions:
+//	case *stagehand.SessionExtractParamsOptionsModelAzureEntraModelConfigObjectProviderOptions:
+//	case *stagehand.SessionExtractParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptions:
+//	default:
+//	    fmt.Errorf("not present")
+//	}
+func (u sessionExtractParamsOptionsModelUnionProviderOptions) AsAny() any { return u.any }
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionExtractParamsOptionsModelUnionProviderOptions) GetVertex() *SessionExtractParamsOptionsModelVertexModelConfigObjectProviderOptionsVertex {
+	switch vt := u.any.(type) {
+	case *SessionExtractParamsOptionsModelVertexModelConfigObjectProviderOptions:
+		return &vt.Vertex
+	}
+	return nil
+}
+
+// Returns a subunion which exports methods to access subproperties
+//
+// Or use AsAny() to get the underlying value
+func (u sessionExtractParamsOptionsModelUnionProviderOptions) GetAzure() (res sessionExtractParamsOptionsModelUnionProviderOptionsAzure) {
+	switch vt := u.any.(type) {
+	case *SessionExtractParamsOptionsModelAzureEntraModelConfigObjectProviderOptions:
+		res.any = &vt.Azure
+	case *SessionExtractParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptions:
+		res.any = &vt.Azure
+	}
+	return res
+}
+
+// Can have the runtime types
+// [*SessionExtractParamsOptionsModelAzureEntraModelConfigObjectProviderOptionsAzure],
+// [*SessionExtractParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptionsAzure]
+type sessionExtractParamsOptionsModelUnionProviderOptionsAzure struct{ any }
+
+// Use the following switch statement to get the type of the union:
+//
+//	switch u.AsAny().(type) {
+//	case *stagehand.SessionExtractParamsOptionsModelAzureEntraModelConfigObjectProviderOptionsAzure:
+//	case *stagehand.SessionExtractParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptionsAzure:
+//	default:
+//	    fmt.Errorf("not present")
+//	}
+func (u sessionExtractParamsOptionsModelUnionProviderOptionsAzure) AsAny() any { return u.any }
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionExtractParamsOptionsModelUnionProviderOptionsAzure) GetAPIVersion() *string {
+	switch vt := u.any.(type) {
+	case *SessionExtractParamsOptionsModelAzureEntraModelConfigObjectProviderOptionsAzure:
+		return paramutil.AddrIfPresent(vt.APIVersion)
+	case *SessionExtractParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptionsAzure:
+		return paramutil.AddrIfPresent(vt.APIVersion)
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionExtractParamsOptionsModelUnionProviderOptionsAzure) GetBaseURL() *string {
+	switch vt := u.any.(type) {
+	case *SessionExtractParamsOptionsModelAzureEntraModelConfigObjectProviderOptionsAzure:
+		return paramutil.AddrIfPresent(vt.BaseURL)
+	case *SessionExtractParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptionsAzure:
+		return paramutil.AddrIfPresent(vt.BaseURL)
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionExtractParamsOptionsModelUnionProviderOptionsAzure) GetResourceName() *string {
+	switch vt := u.any.(type) {
+	case *SessionExtractParamsOptionsModelAzureEntraModelConfigObjectProviderOptionsAzure:
+		return paramutil.AddrIfPresent(vt.ResourceName)
+	case *SessionExtractParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptionsAzure:
+		return paramutil.AddrIfPresent(vt.ResourceName)
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionExtractParamsOptionsModelUnionProviderOptionsAzure) GetUseDeploymentBasedURLs() *bool {
+	switch vt := u.any.(type) {
+	case *SessionExtractParamsOptionsModelAzureEntraModelConfigObjectProviderOptionsAzure:
+		return paramutil.AddrIfPresent(vt.UseDeploymentBasedURLs)
+	case *SessionExtractParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptionsAzure:
+		return paramutil.AddrIfPresent(vt.UseDeploymentBasedURLs)
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's Headers property, if present.
+func (u sessionExtractParamsOptionsModelUnionProviderOptionsAzure) GetHeaders() map[string]string {
+	switch vt := u.any.(type) {
+	case *SessionExtractParamsOptionsModelAzureEntraModelConfigObjectProviderOptionsAzure:
+		return vt.Headers
+	case *SessionExtractParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptionsAzure:
+		return vt.Headers
 	}
 	return nil
 }
@@ -2237,6 +3629,10 @@ func (u SessionExtractParamsOptionsModelUnion) GetBaseURL() *string {
 // Returns a pointer to the underlying variant's Headers property, if present.
 func (u SessionExtractParamsOptionsModelUnion) GetHeaders() map[string]string {
 	if vt := u.OfSessionExtractsOptionsModelVertexModelConfigObject; vt != nil {
+		return vt.Headers
+	} else if vt := u.OfSessionExtractsOptionsModelAzureEntraModelConfigObject; vt != nil {
+		return vt.Headers
+	} else if vt := u.OfSessionExtractsOptionsModelAzureAPIKeyModelConfigObject; vt != nil {
 		return vt.Headers
 	} else if vt := u.OfSessionExtractsOptionsModelGenericModelConfigObject; vt != nil {
 		return vt.Headers
@@ -2399,6 +3795,161 @@ func (r *SessionExtractParamsOptionsModelVertexModelConfigObjectProviderOptionsV
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// The properties Auth, ModelName, Provider, ProviderOptions are required.
+type SessionExtractParamsOptionsModelAzureEntraModelConfigObject struct {
+	// Azure provider authentication configuration
+	Auth SessionExtractParamsOptionsModelAzureEntraModelConfigObjectAuth `json:"auth,omitzero" api:"required"`
+	// Model name string with provider prefix (e.g., 'openai/gpt-5-nano')
+	ModelName string `json:"modelName" api:"required"`
+	// Azure provider-specific model configuration
+	ProviderOptions SessionExtractParamsOptionsModelAzureEntraModelConfigObjectProviderOptions `json:"providerOptions,omitzero" api:"required"`
+	// Base URL for the model provider
+	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
+	// Custom headers sent with every request to the model provider
+	Headers map[string]string `json:"headers,omitzero"`
+	// Azure OpenAI model provider
+	//
+	// This field can be elided, and will marshal its zero value as "azure".
+	Provider constant.Azure `json:"provider" default:"azure"`
+	paramObj
+}
+
+func (r SessionExtractParamsOptionsModelAzureEntraModelConfigObject) MarshalJSON() (data []byte, err error) {
+	type shadow SessionExtractParamsOptionsModelAzureEntraModelConfigObject
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionExtractParamsOptionsModelAzureEntraModelConfigObject) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Azure provider authentication configuration
+//
+// The properties Token, Type are required.
+type SessionExtractParamsOptionsModelAzureEntraModelConfigObjectAuth struct {
+	// Microsoft Entra ID bearer token for Azure OpenAI
+	Token string `json:"token" api:"required"`
+	// Use a Microsoft Entra ID bearer token for authentication
+	//
+	// This field can be elided, and will marshal its zero value as "azureEntraId".
+	Type constant.AzureEntraID `json:"type" default:"azureEntraId"`
+	paramObj
+}
+
+func (r SessionExtractParamsOptionsModelAzureEntraModelConfigObjectAuth) MarshalJSON() (data []byte, err error) {
+	type shadow SessionExtractParamsOptionsModelAzureEntraModelConfigObjectAuth
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionExtractParamsOptionsModelAzureEntraModelConfigObjectAuth) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Azure provider-specific model configuration
+//
+// The property Azure is required.
+type SessionExtractParamsOptionsModelAzureEntraModelConfigObjectProviderOptions struct {
+	// Azure OpenAI provider-specific settings
+	Azure SessionExtractParamsOptionsModelAzureEntraModelConfigObjectProviderOptionsAzure `json:"azure,omitzero" api:"required"`
+	paramObj
+}
+
+func (r SessionExtractParamsOptionsModelAzureEntraModelConfigObjectProviderOptions) MarshalJSON() (data []byte, err error) {
+	type shadow SessionExtractParamsOptionsModelAzureEntraModelConfigObjectProviderOptions
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionExtractParamsOptionsModelAzureEntraModelConfigObjectProviderOptions) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Azure OpenAI provider-specific settings
+type SessionExtractParamsOptionsModelAzureEntraModelConfigObjectProviderOptionsAzure struct {
+	// Azure OpenAI API version
+	APIVersion param.Opt[string] `json:"apiVersion,omitzero"`
+	// Base URL for the Azure OpenAI provider
+	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
+	// Azure OpenAI resource name
+	ResourceName param.Opt[string] `json:"resourceName,omitzero"`
+	// Whether to use deployment-based Azure OpenAI URLs
+	UseDeploymentBasedURLs param.Opt[bool] `json:"useDeploymentBasedUrls,omitzero"`
+	// Custom headers sent with every request to the Azure OpenAI provider
+	Headers map[string]string `json:"headers,omitzero"`
+	paramObj
+}
+
+func (r SessionExtractParamsOptionsModelAzureEntraModelConfigObjectProviderOptionsAzure) MarshalJSON() (data []byte, err error) {
+	type shadow SessionExtractParamsOptionsModelAzureEntraModelConfigObjectProviderOptionsAzure
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionExtractParamsOptionsModelAzureEntraModelConfigObjectProviderOptionsAzure) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// The properties ModelName, Provider, ProviderOptions are required.
+type SessionExtractParamsOptionsModelAzureAPIKeyModelConfigObject struct {
+	// Model name string with provider prefix (e.g., 'openai/gpt-5-nano')
+	ModelName string `json:"modelName" api:"required"`
+	// Azure provider-specific model configuration
+	ProviderOptions SessionExtractParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptions `json:"providerOptions,omitzero" api:"required"`
+	// API key for the model provider
+	APIKey param.Opt[string] `json:"apiKey,omitzero"`
+	// Base URL for the model provider
+	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
+	// Custom headers sent with every request to the model provider
+	Headers map[string]string `json:"headers,omitzero"`
+	// Azure OpenAI model provider
+	//
+	// This field can be elided, and will marshal its zero value as "azure".
+	Provider constant.Azure `json:"provider" default:"azure"`
+	paramObj
+}
+
+func (r SessionExtractParamsOptionsModelAzureAPIKeyModelConfigObject) MarshalJSON() (data []byte, err error) {
+	type shadow SessionExtractParamsOptionsModelAzureAPIKeyModelConfigObject
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionExtractParamsOptionsModelAzureAPIKeyModelConfigObject) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Azure provider-specific model configuration
+//
+// The property Azure is required.
+type SessionExtractParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptions struct {
+	// Azure OpenAI provider-specific settings
+	Azure SessionExtractParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptionsAzure `json:"azure,omitzero" api:"required"`
+	paramObj
+}
+
+func (r SessionExtractParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptions) MarshalJSON() (data []byte, err error) {
+	type shadow SessionExtractParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptions
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionExtractParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptions) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Azure OpenAI provider-specific settings
+type SessionExtractParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptionsAzure struct {
+	// Azure OpenAI API version
+	APIVersion param.Opt[string] `json:"apiVersion,omitzero"`
+	// Base URL for the Azure OpenAI provider
+	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
+	// Azure OpenAI resource name
+	ResourceName param.Opt[string] `json:"resourceName,omitzero"`
+	// Whether to use deployment-based Azure OpenAI URLs
+	UseDeploymentBasedURLs param.Opt[bool] `json:"useDeploymentBasedUrls,omitzero"`
+	// Custom headers sent with every request to the Azure OpenAI provider
+	Headers map[string]string `json:"headers,omitzero"`
+	paramObj
+}
+
+func (r SessionExtractParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptionsAzure) MarshalJSON() (data []byte, err error) {
+	type shadow SessionExtractParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptionsAzure
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionExtractParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptionsAzure) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // The property ModelName is required.
 type SessionExtractParamsOptionsModelGenericModelConfigObject struct {
 	// Model name string with provider prefix (e.g., 'openai/gpt-5-nano')
@@ -2409,6 +3960,11 @@ type SessionExtractParamsOptionsModelGenericModelConfigObject struct {
 	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
 	// Custom headers sent with every request to the model provider
 	Headers map[string]string `json:"headers,omitzero"`
+	// Wire format used by an OpenAI-compatible endpoint. Defaults to the Responses
+	// API; use chat for Chat Completions-only endpoints.
+	//
+	// Any of "responses", "chat".
+	OpenAIEndpointFormat string `json:"openaiEndpointFormat,omitzero"`
 	// AI provider for the model (or provide a baseURL endpoint instead)
 	//
 	// Any of "openai", "anthropic", "google", "microsoft", "bedrock".
@@ -2425,6 +3981,9 @@ func (r *SessionExtractParamsOptionsModelGenericModelConfigObject) UnmarshalJSON
 }
 
 func init() {
+	apijson.RegisterFieldValidator[SessionExtractParamsOptionsModelGenericModelConfigObject](
+		"openaiEndpointFormat", "responses", "chat",
+	)
 	apijson.RegisterFieldValidator[SessionExtractParamsOptionsModelGenericModelConfigObject](
 		"provider", "openai", "anthropic", "google", "microsoft", "bedrock",
 	)
@@ -2544,14 +4103,20 @@ func (r *SessionObserveParamsOptions) UnmarshalJSON(data []byte) error {
 //
 // Use [param.IsOmitted] to confirm if a field is set.
 type SessionObserveParamsOptionsModelUnion struct {
-	OfSessionObservesOptionsModelVertexModelConfigObject  *SessionObserveParamsOptionsModelVertexModelConfigObject  `json:",omitzero,inline"`
-	OfSessionObservesOptionsModelGenericModelConfigObject *SessionObserveParamsOptionsModelGenericModelConfigObject `json:",omitzero,inline"`
-	OfString                                              param.Opt[string]                                         `json:",omitzero,inline"`
+	OfSessionObservesOptionsModelVertexModelConfigObject      *SessionObserveParamsOptionsModelVertexModelConfigObject      `json:",omitzero,inline"`
+	OfSessionObservesOptionsModelAzureEntraModelConfigObject  *SessionObserveParamsOptionsModelAzureEntraModelConfigObject  `json:",omitzero,inline"`
+	OfSessionObservesOptionsModelAzureAPIKeyModelConfigObject *SessionObserveParamsOptionsModelAzureAPIKeyModelConfigObject `json:",omitzero,inline"`
+	OfSessionObservesOptionsModelGenericModelConfigObject     *SessionObserveParamsOptionsModelGenericModelConfigObject     `json:",omitzero,inline"`
+	OfString                                                  param.Opt[string]                                             `json:",omitzero,inline"`
 	paramUnion
 }
 
 func (u SessionObserveParamsOptionsModelUnion) MarshalJSON() ([]byte, error) {
-	return param.MarshalUnion(u, u.OfSessionObservesOptionsModelVertexModelConfigObject, u.OfSessionObservesOptionsModelGenericModelConfigObject, u.OfString)
+	return param.MarshalUnion(u, u.OfSessionObservesOptionsModelVertexModelConfigObject,
+		u.OfSessionObservesOptionsModelAzureEntraModelConfigObject,
+		u.OfSessionObservesOptionsModelAzureAPIKeyModelConfigObject,
+		u.OfSessionObservesOptionsModelGenericModelConfigObject,
+		u.OfString)
 }
 func (u *SessionObserveParamsOptionsModelUnion) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, u)
@@ -2560,6 +4125,10 @@ func (u *SessionObserveParamsOptionsModelUnion) UnmarshalJSON(data []byte) error
 func (u *SessionObserveParamsOptionsModelUnion) asAny() any {
 	if !param.IsOmitted(u.OfSessionObservesOptionsModelVertexModelConfigObject) {
 		return u.OfSessionObservesOptionsModelVertexModelConfigObject
+	} else if !param.IsOmitted(u.OfSessionObservesOptionsModelAzureEntraModelConfigObject) {
+		return u.OfSessionObservesOptionsModelAzureEntraModelConfigObject
+	} else if !param.IsOmitted(u.OfSessionObservesOptionsModelAzureAPIKeyModelConfigObject) {
+		return u.OfSessionObservesOptionsModelAzureAPIKeyModelConfigObject
 	} else if !param.IsOmitted(u.OfSessionObservesOptionsModelGenericModelConfigObject) {
 		return u.OfSessionObservesOptionsModelGenericModelConfigObject
 	} else if !param.IsOmitted(u.OfString) {
@@ -2569,17 +4138,9 @@ func (u *SessionObserveParamsOptionsModelUnion) asAny() any {
 }
 
 // Returns a pointer to the underlying variant's property, if present.
-func (u SessionObserveParamsOptionsModelUnion) GetAuth() *SessionObserveParamsOptionsModelVertexModelConfigObjectAuth {
-	if vt := u.OfSessionObservesOptionsModelVertexModelConfigObject; vt != nil {
-		return &vt.Auth
-	}
-	return nil
-}
-
-// Returns a pointer to the underlying variant's property, if present.
-func (u SessionObserveParamsOptionsModelUnion) GetProviderOptions() *SessionObserveParamsOptionsModelVertexModelConfigObjectProviderOptions {
-	if vt := u.OfSessionObservesOptionsModelVertexModelConfigObject; vt != nil {
-		return &vt.ProviderOptions
+func (u SessionObserveParamsOptionsModelUnion) GetOpenAIEndpointFormat() *string {
+	if vt := u.OfSessionObservesOptionsModelGenericModelConfigObject; vt != nil {
+		return &vt.OpenAIEndpointFormat
 	}
 	return nil
 }
@@ -2587,6 +4148,10 @@ func (u SessionObserveParamsOptionsModelUnion) GetProviderOptions() *SessionObse
 // Returns a pointer to the underlying variant's property, if present.
 func (u SessionObserveParamsOptionsModelUnion) GetModelName() *string {
 	if vt := u.OfSessionObservesOptionsModelVertexModelConfigObject; vt != nil {
+		return (*string)(&vt.ModelName)
+	} else if vt := u.OfSessionObservesOptionsModelAzureEntraModelConfigObject; vt != nil {
+		return (*string)(&vt.ModelName)
+	} else if vt := u.OfSessionObservesOptionsModelAzureAPIKeyModelConfigObject; vt != nil {
 		return (*string)(&vt.ModelName)
 	} else if vt := u.OfSessionObservesOptionsModelGenericModelConfigObject; vt != nil {
 		return (*string)(&vt.ModelName)
@@ -2598,6 +4163,10 @@ func (u SessionObserveParamsOptionsModelUnion) GetModelName() *string {
 func (u SessionObserveParamsOptionsModelUnion) GetProvider() *string {
 	if vt := u.OfSessionObservesOptionsModelVertexModelConfigObject; vt != nil {
 		return (*string)(&vt.Provider)
+	} else if vt := u.OfSessionObservesOptionsModelAzureEntraModelConfigObject; vt != nil {
+		return (*string)(&vt.Provider)
+	} else if vt := u.OfSessionObservesOptionsModelAzureAPIKeyModelConfigObject; vt != nil {
+		return (*string)(&vt.Provider)
 	} else if vt := u.OfSessionObservesOptionsModelGenericModelConfigObject; vt != nil {
 		return (*string)(&vt.Provider)
 	}
@@ -2607,6 +4176,8 @@ func (u SessionObserveParamsOptionsModelUnion) GetProvider() *string {
 // Returns a pointer to the underlying variant's property, if present.
 func (u SessionObserveParamsOptionsModelUnion) GetAPIKey() *string {
 	if vt := u.OfSessionObservesOptionsModelVertexModelConfigObject; vt != nil && vt.APIKey.Valid() {
+		return &vt.APIKey.Value
+	} else if vt := u.OfSessionObservesOptionsModelAzureAPIKeyModelConfigObject; vt != nil && vt.APIKey.Valid() {
 		return &vt.APIKey.Value
 	} else if vt := u.OfSessionObservesOptionsModelGenericModelConfigObject; vt != nil && vt.APIKey.Valid() {
 		return &vt.APIKey.Value
@@ -2618,8 +4189,218 @@ func (u SessionObserveParamsOptionsModelUnion) GetAPIKey() *string {
 func (u SessionObserveParamsOptionsModelUnion) GetBaseURL() *string {
 	if vt := u.OfSessionObservesOptionsModelVertexModelConfigObject; vt != nil && vt.BaseURL.Valid() {
 		return &vt.BaseURL.Value
+	} else if vt := u.OfSessionObservesOptionsModelAzureEntraModelConfigObject; vt != nil && vt.BaseURL.Valid() {
+		return &vt.BaseURL.Value
+	} else if vt := u.OfSessionObservesOptionsModelAzureAPIKeyModelConfigObject; vt != nil && vt.BaseURL.Valid() {
+		return &vt.BaseURL.Value
 	} else if vt := u.OfSessionObservesOptionsModelGenericModelConfigObject; vt != nil && vt.BaseURL.Valid() {
 		return &vt.BaseURL.Value
+	}
+	return nil
+}
+
+// Returns a subunion which exports methods to access subproperties
+//
+// Or use AsAny() to get the underlying value
+func (u SessionObserveParamsOptionsModelUnion) GetAuth() (res sessionObserveParamsOptionsModelUnionAuth) {
+	if vt := u.OfSessionObservesOptionsModelVertexModelConfigObject; vt != nil {
+		res.any = &vt.Auth
+	} else if vt := u.OfSessionObservesOptionsModelAzureEntraModelConfigObject; vt != nil {
+		res.any = &vt.Auth
+	}
+	return
+}
+
+// Can have the runtime types
+// [*SessionObserveParamsOptionsModelVertexModelConfigObjectAuth],
+// [*SessionObserveParamsOptionsModelAzureEntraModelConfigObjectAuth]
+type sessionObserveParamsOptionsModelUnionAuth struct{ any }
+
+// Use the following switch statement to get the type of the union:
+//
+//	switch u.AsAny().(type) {
+//	case *stagehand.SessionObserveParamsOptionsModelVertexModelConfigObjectAuth:
+//	case *stagehand.SessionObserveParamsOptionsModelAzureEntraModelConfigObjectAuth:
+//	default:
+//	    fmt.Errorf("not present")
+//	}
+func (u sessionObserveParamsOptionsModelUnionAuth) AsAny() any { return u.any }
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionObserveParamsOptionsModelUnionAuth) GetCredentials() *SessionObserveParamsOptionsModelVertexModelConfigObjectAuthCredentials {
+	switch vt := u.any.(type) {
+	case *SessionObserveParamsOptionsModelVertexModelConfigObjectAuth:
+		return &vt.Credentials
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionObserveParamsOptionsModelUnionAuth) GetProjectID() *string {
+	switch vt := u.any.(type) {
+	case *SessionObserveParamsOptionsModelVertexModelConfigObjectAuth:
+		return paramutil.AddrIfPresent(vt.ProjectID)
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionObserveParamsOptionsModelUnionAuth) GetScopes() *SessionObserveParamsOptionsModelVertexModelConfigObjectAuthScopesUnion {
+	switch vt := u.any.(type) {
+	case *SessionObserveParamsOptionsModelVertexModelConfigObjectAuth:
+		return &vt.Scopes
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionObserveParamsOptionsModelUnionAuth) GetUniverseDomain() *string {
+	switch vt := u.any.(type) {
+	case *SessionObserveParamsOptionsModelVertexModelConfigObjectAuth:
+		return paramutil.AddrIfPresent(vt.UniverseDomain)
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionObserveParamsOptionsModelUnionAuth) GetToken() *string {
+	switch vt := u.any.(type) {
+	case *SessionObserveParamsOptionsModelAzureEntraModelConfigObjectAuth:
+		return &vt.Token
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionObserveParamsOptionsModelUnionAuth) GetType() *string {
+	switch vt := u.any.(type) {
+	case *SessionObserveParamsOptionsModelVertexModelConfigObjectAuth:
+		return (*string)(&vt.Type)
+	case *SessionObserveParamsOptionsModelAzureEntraModelConfigObjectAuth:
+		return (*string)(&vt.Type)
+	}
+	return nil
+}
+
+// Returns a subunion which exports methods to access subproperties
+//
+// Or use AsAny() to get the underlying value
+func (u SessionObserveParamsOptionsModelUnion) GetProviderOptions() (res sessionObserveParamsOptionsModelUnionProviderOptions) {
+	if vt := u.OfSessionObservesOptionsModelVertexModelConfigObject; vt != nil {
+		res.any = &vt.ProviderOptions
+	} else if vt := u.OfSessionObservesOptionsModelAzureEntraModelConfigObject; vt != nil {
+		res.any = &vt.ProviderOptions
+	} else if vt := u.OfSessionObservesOptionsModelAzureAPIKeyModelConfigObject; vt != nil {
+		res.any = &vt.ProviderOptions
+	}
+	return
+}
+
+// Can have the runtime types
+// [*SessionObserveParamsOptionsModelVertexModelConfigObjectProviderOptions],
+// [*SessionObserveParamsOptionsModelAzureEntraModelConfigObjectProviderOptions],
+// [*SessionObserveParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptions]
+type sessionObserveParamsOptionsModelUnionProviderOptions struct{ any }
+
+// Use the following switch statement to get the type of the union:
+//
+//	switch u.AsAny().(type) {
+//	case *stagehand.SessionObserveParamsOptionsModelVertexModelConfigObjectProviderOptions:
+//	case *stagehand.SessionObserveParamsOptionsModelAzureEntraModelConfigObjectProviderOptions:
+//	case *stagehand.SessionObserveParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptions:
+//	default:
+//	    fmt.Errorf("not present")
+//	}
+func (u sessionObserveParamsOptionsModelUnionProviderOptions) AsAny() any { return u.any }
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionObserveParamsOptionsModelUnionProviderOptions) GetVertex() *SessionObserveParamsOptionsModelVertexModelConfigObjectProviderOptionsVertex {
+	switch vt := u.any.(type) {
+	case *SessionObserveParamsOptionsModelVertexModelConfigObjectProviderOptions:
+		return &vt.Vertex
+	}
+	return nil
+}
+
+// Returns a subunion which exports methods to access subproperties
+//
+// Or use AsAny() to get the underlying value
+func (u sessionObserveParamsOptionsModelUnionProviderOptions) GetAzure() (res sessionObserveParamsOptionsModelUnionProviderOptionsAzure) {
+	switch vt := u.any.(type) {
+	case *SessionObserveParamsOptionsModelAzureEntraModelConfigObjectProviderOptions:
+		res.any = &vt.Azure
+	case *SessionObserveParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptions:
+		res.any = &vt.Azure
+	}
+	return res
+}
+
+// Can have the runtime types
+// [*SessionObserveParamsOptionsModelAzureEntraModelConfigObjectProviderOptionsAzure],
+// [*SessionObserveParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptionsAzure]
+type sessionObserveParamsOptionsModelUnionProviderOptionsAzure struct{ any }
+
+// Use the following switch statement to get the type of the union:
+//
+//	switch u.AsAny().(type) {
+//	case *stagehand.SessionObserveParamsOptionsModelAzureEntraModelConfigObjectProviderOptionsAzure:
+//	case *stagehand.SessionObserveParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptionsAzure:
+//	default:
+//	    fmt.Errorf("not present")
+//	}
+func (u sessionObserveParamsOptionsModelUnionProviderOptionsAzure) AsAny() any { return u.any }
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionObserveParamsOptionsModelUnionProviderOptionsAzure) GetAPIVersion() *string {
+	switch vt := u.any.(type) {
+	case *SessionObserveParamsOptionsModelAzureEntraModelConfigObjectProviderOptionsAzure:
+		return paramutil.AddrIfPresent(vt.APIVersion)
+	case *SessionObserveParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptionsAzure:
+		return paramutil.AddrIfPresent(vt.APIVersion)
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionObserveParamsOptionsModelUnionProviderOptionsAzure) GetBaseURL() *string {
+	switch vt := u.any.(type) {
+	case *SessionObserveParamsOptionsModelAzureEntraModelConfigObjectProviderOptionsAzure:
+		return paramutil.AddrIfPresent(vt.BaseURL)
+	case *SessionObserveParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptionsAzure:
+		return paramutil.AddrIfPresent(vt.BaseURL)
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionObserveParamsOptionsModelUnionProviderOptionsAzure) GetResourceName() *string {
+	switch vt := u.any.(type) {
+	case *SessionObserveParamsOptionsModelAzureEntraModelConfigObjectProviderOptionsAzure:
+		return paramutil.AddrIfPresent(vt.ResourceName)
+	case *SessionObserveParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptionsAzure:
+		return paramutil.AddrIfPresent(vt.ResourceName)
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's property, if present.
+func (u sessionObserveParamsOptionsModelUnionProviderOptionsAzure) GetUseDeploymentBasedURLs() *bool {
+	switch vt := u.any.(type) {
+	case *SessionObserveParamsOptionsModelAzureEntraModelConfigObjectProviderOptionsAzure:
+		return paramutil.AddrIfPresent(vt.UseDeploymentBasedURLs)
+	case *SessionObserveParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptionsAzure:
+		return paramutil.AddrIfPresent(vt.UseDeploymentBasedURLs)
+	}
+	return nil
+}
+
+// Returns a pointer to the underlying variant's Headers property, if present.
+func (u sessionObserveParamsOptionsModelUnionProviderOptionsAzure) GetHeaders() map[string]string {
+	switch vt := u.any.(type) {
+	case *SessionObserveParamsOptionsModelAzureEntraModelConfigObjectProviderOptionsAzure:
+		return vt.Headers
+	case *SessionObserveParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptionsAzure:
+		return vt.Headers
 	}
 	return nil
 }
@@ -2627,6 +4408,10 @@ func (u SessionObserveParamsOptionsModelUnion) GetBaseURL() *string {
 // Returns a pointer to the underlying variant's Headers property, if present.
 func (u SessionObserveParamsOptionsModelUnion) GetHeaders() map[string]string {
 	if vt := u.OfSessionObservesOptionsModelVertexModelConfigObject; vt != nil {
+		return vt.Headers
+	} else if vt := u.OfSessionObservesOptionsModelAzureEntraModelConfigObject; vt != nil {
+		return vt.Headers
+	} else if vt := u.OfSessionObservesOptionsModelAzureAPIKeyModelConfigObject; vt != nil {
 		return vt.Headers
 	} else if vt := u.OfSessionObservesOptionsModelGenericModelConfigObject; vt != nil {
 		return vt.Headers
@@ -2789,6 +4574,161 @@ func (r *SessionObserveParamsOptionsModelVertexModelConfigObjectProviderOptionsV
 	return apijson.UnmarshalRoot(data, r)
 }
 
+// The properties Auth, ModelName, Provider, ProviderOptions are required.
+type SessionObserveParamsOptionsModelAzureEntraModelConfigObject struct {
+	// Azure provider authentication configuration
+	Auth SessionObserveParamsOptionsModelAzureEntraModelConfigObjectAuth `json:"auth,omitzero" api:"required"`
+	// Model name string with provider prefix (e.g., 'openai/gpt-5-nano')
+	ModelName string `json:"modelName" api:"required"`
+	// Azure provider-specific model configuration
+	ProviderOptions SessionObserveParamsOptionsModelAzureEntraModelConfigObjectProviderOptions `json:"providerOptions,omitzero" api:"required"`
+	// Base URL for the model provider
+	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
+	// Custom headers sent with every request to the model provider
+	Headers map[string]string `json:"headers,omitzero"`
+	// Azure OpenAI model provider
+	//
+	// This field can be elided, and will marshal its zero value as "azure".
+	Provider constant.Azure `json:"provider" default:"azure"`
+	paramObj
+}
+
+func (r SessionObserveParamsOptionsModelAzureEntraModelConfigObject) MarshalJSON() (data []byte, err error) {
+	type shadow SessionObserveParamsOptionsModelAzureEntraModelConfigObject
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionObserveParamsOptionsModelAzureEntraModelConfigObject) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Azure provider authentication configuration
+//
+// The properties Token, Type are required.
+type SessionObserveParamsOptionsModelAzureEntraModelConfigObjectAuth struct {
+	// Microsoft Entra ID bearer token for Azure OpenAI
+	Token string `json:"token" api:"required"`
+	// Use a Microsoft Entra ID bearer token for authentication
+	//
+	// This field can be elided, and will marshal its zero value as "azureEntraId".
+	Type constant.AzureEntraID `json:"type" default:"azureEntraId"`
+	paramObj
+}
+
+func (r SessionObserveParamsOptionsModelAzureEntraModelConfigObjectAuth) MarshalJSON() (data []byte, err error) {
+	type shadow SessionObserveParamsOptionsModelAzureEntraModelConfigObjectAuth
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionObserveParamsOptionsModelAzureEntraModelConfigObjectAuth) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Azure provider-specific model configuration
+//
+// The property Azure is required.
+type SessionObserveParamsOptionsModelAzureEntraModelConfigObjectProviderOptions struct {
+	// Azure OpenAI provider-specific settings
+	Azure SessionObserveParamsOptionsModelAzureEntraModelConfigObjectProviderOptionsAzure `json:"azure,omitzero" api:"required"`
+	paramObj
+}
+
+func (r SessionObserveParamsOptionsModelAzureEntraModelConfigObjectProviderOptions) MarshalJSON() (data []byte, err error) {
+	type shadow SessionObserveParamsOptionsModelAzureEntraModelConfigObjectProviderOptions
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionObserveParamsOptionsModelAzureEntraModelConfigObjectProviderOptions) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Azure OpenAI provider-specific settings
+type SessionObserveParamsOptionsModelAzureEntraModelConfigObjectProviderOptionsAzure struct {
+	// Azure OpenAI API version
+	APIVersion param.Opt[string] `json:"apiVersion,omitzero"`
+	// Base URL for the Azure OpenAI provider
+	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
+	// Azure OpenAI resource name
+	ResourceName param.Opt[string] `json:"resourceName,omitzero"`
+	// Whether to use deployment-based Azure OpenAI URLs
+	UseDeploymentBasedURLs param.Opt[bool] `json:"useDeploymentBasedUrls,omitzero"`
+	// Custom headers sent with every request to the Azure OpenAI provider
+	Headers map[string]string `json:"headers,omitzero"`
+	paramObj
+}
+
+func (r SessionObserveParamsOptionsModelAzureEntraModelConfigObjectProviderOptionsAzure) MarshalJSON() (data []byte, err error) {
+	type shadow SessionObserveParamsOptionsModelAzureEntraModelConfigObjectProviderOptionsAzure
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionObserveParamsOptionsModelAzureEntraModelConfigObjectProviderOptionsAzure) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// The properties ModelName, Provider, ProviderOptions are required.
+type SessionObserveParamsOptionsModelAzureAPIKeyModelConfigObject struct {
+	// Model name string with provider prefix (e.g., 'openai/gpt-5-nano')
+	ModelName string `json:"modelName" api:"required"`
+	// Azure provider-specific model configuration
+	ProviderOptions SessionObserveParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptions `json:"providerOptions,omitzero" api:"required"`
+	// API key for the model provider
+	APIKey param.Opt[string] `json:"apiKey,omitzero"`
+	// Base URL for the model provider
+	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
+	// Custom headers sent with every request to the model provider
+	Headers map[string]string `json:"headers,omitzero"`
+	// Azure OpenAI model provider
+	//
+	// This field can be elided, and will marshal its zero value as "azure".
+	Provider constant.Azure `json:"provider" default:"azure"`
+	paramObj
+}
+
+func (r SessionObserveParamsOptionsModelAzureAPIKeyModelConfigObject) MarshalJSON() (data []byte, err error) {
+	type shadow SessionObserveParamsOptionsModelAzureAPIKeyModelConfigObject
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionObserveParamsOptionsModelAzureAPIKeyModelConfigObject) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Azure provider-specific model configuration
+//
+// The property Azure is required.
+type SessionObserveParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptions struct {
+	// Azure OpenAI provider-specific settings
+	Azure SessionObserveParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptionsAzure `json:"azure,omitzero" api:"required"`
+	paramObj
+}
+
+func (r SessionObserveParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptions) MarshalJSON() (data []byte, err error) {
+	type shadow SessionObserveParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptions
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionObserveParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptions) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// Azure OpenAI provider-specific settings
+type SessionObserveParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptionsAzure struct {
+	// Azure OpenAI API version
+	APIVersion param.Opt[string] `json:"apiVersion,omitzero"`
+	// Base URL for the Azure OpenAI provider
+	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
+	// Azure OpenAI resource name
+	ResourceName param.Opt[string] `json:"resourceName,omitzero"`
+	// Whether to use deployment-based Azure OpenAI URLs
+	UseDeploymentBasedURLs param.Opt[bool] `json:"useDeploymentBasedUrls,omitzero"`
+	// Custom headers sent with every request to the Azure OpenAI provider
+	Headers map[string]string `json:"headers,omitzero"`
+	paramObj
+}
+
+func (r SessionObserveParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptionsAzure) MarshalJSON() (data []byte, err error) {
+	type shadow SessionObserveParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptionsAzure
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *SessionObserveParamsOptionsModelAzureAPIKeyModelConfigObjectProviderOptionsAzure) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 // The property ModelName is required.
 type SessionObserveParamsOptionsModelGenericModelConfigObject struct {
 	// Model name string with provider prefix (e.g., 'openai/gpt-5-nano')
@@ -2799,6 +4739,11 @@ type SessionObserveParamsOptionsModelGenericModelConfigObject struct {
 	BaseURL param.Opt[string] `json:"baseURL,omitzero" format:"uri"`
 	// Custom headers sent with every request to the model provider
 	Headers map[string]string `json:"headers,omitzero"`
+	// Wire format used by an OpenAI-compatible endpoint. Defaults to the Responses
+	// API; use chat for Chat Completions-only endpoints.
+	//
+	// Any of "responses", "chat".
+	OpenAIEndpointFormat string `json:"openaiEndpointFormat,omitzero"`
 	// AI provider for the model (or provide a baseURL endpoint instead)
 	//
 	// Any of "openai", "anthropic", "google", "microsoft", "bedrock".
@@ -2815,6 +4760,9 @@ func (r *SessionObserveParamsOptionsModelGenericModelConfigObject) UnmarshalJSON
 }
 
 func init() {
+	apijson.RegisterFieldValidator[SessionObserveParamsOptionsModelGenericModelConfigObject](
+		"openaiEndpointFormat", "responses", "chat",
+	)
 	apijson.RegisterFieldValidator[SessionObserveParamsOptionsModelGenericModelConfigObject](
 		"provider", "openai", "anthropic", "google", "microsoft", "bedrock",
 	)
