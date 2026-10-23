@@ -23,9 +23,11 @@ import (
 const (
 	stagehandRepo    = "browserbase/stagehand"
 	defaultUserAgent = "stagehand-go/local"
-	sdkLang          = "go"
-	apiTimeout       = 15 * time.Second
-	downloadTimeout  = 10 * time.Minute
+	// Includes the October 2026 Node.js and Undici security fixes.
+	defaultServerVersion = "stagehand-server-v3/v3.7.7"
+	sdkLang              = "go"
+	apiTimeout           = 15 * time.Second
+	downloadTimeout      = 10 * time.Minute
 )
 
 var downloadMu sync.Mutex
@@ -136,7 +138,7 @@ func ResolveBinaryPath() (string, error) {
 
 	version := os.Getenv("STAGEHAND_SERVER_VERSION")
 	if version == "" {
-		version = "latest"
+		version = defaultServerVersion
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), downloadTimeout)
@@ -148,7 +150,7 @@ func ResolveBinaryPath() (string, error) {
 	}
 
 	if err := downloadBinary(ctx, tag, cachePath); err != nil {
-		return "", fmt.Errorf("failed to download latest stagehand driver binary to: %w (possibly blocked by firewall or sandbox settings). %s", err, manualDownloadHint(filename, cachePath))
+		return "", fmt.Errorf("failed to download stagehand driver binary to: %w (possibly blocked by firewall or sandbox settings). %s", err, manualDownloadHint(filename, cachePath))
 	}
 
 	return cachePath, nil
@@ -160,7 +162,7 @@ type releaseInfo struct {
 
 func manualDownloadHint(filename, destPath string) string {
 	return fmt.Sprintf(
-		"To continue, download the %s driver binary from the latest release on https://github.com/%s/releases and save it to: %s",
+		"To continue, download the %s driver binary for the selected server version from https://github.com/%s/releases and save it to: %s",
 		filename,
 		stagehandRepo,
 		destPath,
@@ -261,13 +263,13 @@ func downloadBinary(ctx context.Context, version, destPath string) error {
 
 // ServerManager manages the lifecycle of local mode.
 type ServerManager struct {
-	binaryPath           string
-	cmd                  *exec.Cmd
-	baseURL              string
-	modelAPIKey          string
-	browserbaseAPIKey    string
-	mu                   sync.Mutex
-	started              bool
+	binaryPath        string
+	cmd               *exec.Cmd
+	baseURL           string
+	modelAPIKey       string
+	browserbaseAPIKey string
+	mu                sync.Mutex
+	started           bool
 }
 
 const (

@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.21.1 (2026-10-23)
+
+Full Changelog: [v3.21.0...v3.21.1](https://github.com/browserbase/stagehand-go/compare/v3.21.0...v3.21.1)
+
+### Bug Fixes
+
+* **security:** default local-server downloads to [server v3.7.7](https://github.com/browserbase/stagehand/releases/tag/stagehand-server-v3/v3.7.7), which includes Node.js 24.22.1 and Undici 7.30.1 with the October 2026 security fixes. Upgrade the Go SDK, rebuild, and restart applications to download the patched binary into a new SDK-versioned cache directory. Explicit `STAGEHAND_SERVER_VERSION` overrides remain supported; update any override that selects an older server release.
+
 ## 3.21.0 (2026-05-27)
 
 Full Changelog: [v3.20.0...v3.21.0](https://github.com/browserbase/stagehand-go/compare/v3.20.0...v3.21.0)
