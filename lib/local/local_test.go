@@ -72,6 +72,45 @@ func TestResolveBinaryPath_UsesCacheWithoutNetwork(t *testing.T) {
 	}
 }
 
+func TestResolveBinaryPath_DefaultDownloadsPatchedVersionIgnoringOldCache(t *testing.T) {
+	withTempHome(t)
+	t.Setenv("STAGEHAND_SERVER_VERSION", "")
+	root, path := expectedCachePath(t)
+	oldPath := filepath.Join(filepath.Dir(root), "go_3.21.0", binaryFilename())
+	if err := os.MkdirAll(filepath.Dir(oldPath), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(oldPath, []byte("old binary"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+
+	downloads := 0
+	setDefaultTransport(t, roundTripperFunc(func(req *http.Request) (*http.Response, error) {
+		want := "https://github.com/browserbase/stagehand/releases/download/stagehand-server-v3/v3.7.7/" + binaryFilename()
+		if req.URL.String() != want {
+			t.Fatalf("unexpected request: %s", req.URL.String())
+		}
+		downloads++
+		return &http.Response{StatusCode: http.StatusOK, Body: io.NopCloser(strings.NewReader("patched binary"))}, nil
+	}))
+
+	got, err := ResolveBinaryPath()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got != path || downloads != 1 {
+		t.Fatalf("expected one download to %s, got %d downloads to %s", path, downloads, got)
+	}
+	data, err := os.ReadFile(got)
+	if err != nil || string(data) != "patched binary" {
+		t.Fatalf("expected patched binary, got %q, err=%v", data, err)
+	}
+	data, err = os.ReadFile(oldPath)
+	if err != nil || string(data) != "old binary" {
+		t.Fatalf("old SDK cache changed: %q, err=%v", data, err)
+	}
+}
+
 func TestResolveBinaryPath_DownloadsWithPinnedVersion(t *testing.T) {
 	withTempHome(t)
 	t.Setenv("STAGEHAND_SERVER_VERSION", "stagehand-server-v3/v0.0.1")
@@ -123,6 +162,7 @@ func TestResolveBinaryPath_DownloadsWithPinnedVersion(t *testing.T) {
 
 func TestResolveBinaryPath_ResolvesLatestTag(t *testing.T) {
 	withTempHome(t)
+	t.Setenv("STAGEHAND_SERVER_VERSION", "latest")
 	filename := binaryFilename()
 
 	var callsMu sync.Mutex
